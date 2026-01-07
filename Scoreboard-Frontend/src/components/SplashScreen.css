@@ -1,0 +1,32 @@
+.splashScreen {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	height: 100dvh;
+	width: 100%;
+
+	background-color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	.logo {
+		margin-top: -50px;
+		height: 250px;
+	}
+	.irp {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		font-weight: 600;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}
+.splashScreen > .irp > img {
+	height: 150px;
+	margin-top: -1.5rem;
+}

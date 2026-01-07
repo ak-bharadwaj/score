@@ -1,0 +1,105 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family: Montserrat, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+		monospace;
+	white-space: pre-wrap;
+}
+
+.fjalla {
+	font-family: Fjalla One, Arial, Helvetica, sans-serif;
+}
+
+:root {
+	--red: #f23030;
+	--dark_blue: #0554a5;
+	--light_blue: #40c4eb;
+	--shadow_grey: #d6d6d6;
+}
+
+.styledInput {
+	font-size: 14px;
+	background-color: color-mix(in srgb, var(--shadow_grey) 20%, #fff 80%);
+	border: none;
+	border-bottom: 1px solid black;
+	border-top-right-radius: 4px;
+	border-top-left-radius: 4px;
+	padding-left: 4px;
+	padding-top: 4px;
+}
+.styledInput:focus {
+	outline: none;
+	border-bottom: 1px solid var(--light_blue);
+}
+
+input[type="submit"],
+.styledButton {
+	text-transform: capitalize;
+	border: none;
+	border-radius: 5px;
+	padding: 8px 12px;
+	background-color: var(--dark_blue);
+	color: #fff;
+	font-size: 14px;
+	font-family: Montserrat;
+	font-weight: 600;
+}
+input[type="submit"]:hover,
+.styledButton:hover {
+	background-color: color-mix(in srgb, var(--dark_blue) 90%, #fff 10%);
+}
+input[type="submit"]:active,
+.styledButton:active {
+	background-color: var(--dark_blue);
+}
+
+.noTextTransform {
+	text-transform: none;
+}
+
+.wire {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.4rem;
+	font-weight: 600;
+	background: -webkit-linear-gradient(var(--light_blue), var(--dark_blue));
+	background: linear-gradient(135deg, var(--light_blue), var(--dark_blue));
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+.navbar {
+	height: 10vh;
+}
+.liveEvents {
+	min-height: 20vh;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	display: flex;
+	overflow-x: scroll;
+	scroll-snap-type: x proximity;
+}
+
+.footer {
+	height: 50vh;
+}
+@media screen and (max-width: 1000px) {
+	.navbar {
+		height: 70px;
+	}
+	.liveEvents {
+		padding-left: 0;
+		padding-right: 0;
+	}
+}

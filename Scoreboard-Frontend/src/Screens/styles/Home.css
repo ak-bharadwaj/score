@@ -1,0 +1,41 @@
+.content {
+	display: flex;
+	flex-direction: column;
+}
+
+.bottomContainer {
+	display: flex;
+}
+
+.rightContainer {
+	flex-grow: 1;
+	min-height: 50vh;
+	border-left: 3px solid #ebeef0;
+}
+
+@media screen and (min-width: 900px) {
+	.home.liveEvents {
+		justify-content: center;
+		overflow-x: unset;
+		scroll-snap-type: unset;
+		flex-wrap: wrap;
+		gap: 0.1rem;
+	}
+}
+
+@media screen and (min-width: 1150px) {
+	.leftContainer {
+		width: 70vw;
+	}
+}
+
+@media screen and (max-width: 1150px) {
+	.bottomContainer {
+		flex-direction: column;
+	}
+
+	.rightContainer {
+		border: 0;
+		border-top: 3px solid #ebeef0;
+	}
+}

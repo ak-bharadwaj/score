@@ -1,0 +1,81 @@
+.resultsLogsContainer {
+	padding: 0 5px;
+	padding-bottom: 2em;
+
+	.resultLog {
+		border-bottom: 1px solid gainsboro;
+		padding: 10px;
+		margin-bottom: 3px;
+
+		.winner {
+			color: green;
+		}
+		.loser {
+			color: red;
+		}
+	}
+
+	.athletic-result-log {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.tooltip {
+		cursor: pointer;
+		font-size: 1rem;
+		color: var(--dark_blue);
+		position: relative;
+		margin-right: 10px;
+		display: inline-block;
+		border-bottom: 1px solid var(--dark_blue); /* If you want dots under the hoverable text */
+	}
+}
+.resultLog > a {
+	color: var(--dark_blue);
+	border-bottom: 1px solid var(--dark_blue);
+	text-decoration: none;
+}
+
+.dialogue {
+	position: fixed;
+	height: 100vh;
+	width: 100vw;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	background-color: #00000040;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	.dialogue-box {
+		background-color: white;
+		min-width: 40vw;
+		min-height: 50vh;
+		padding: 10px 20px 16px 20px;
+		border-radius: 16px;
+
+		.dialogue-box-head {
+			padding: 0px 20px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			border-bottom: 1px solid gainsboro;
+
+			.dialogue-close {
+				font-size: 2em;
+				cursor: pointer;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.dialogue .dialogue-box {
+		width: 100vh;
+		height: 100vh;
+		border-radius: 0px;
+	}
+}

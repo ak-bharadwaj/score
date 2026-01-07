@@ -1,0 +1,40 @@
+{
+  "name": "inter-iit-scoreboard-server",
+  "version": "1.0.0",
+  "description": "This is the server for the scoreboard for the Inter-IIT-sports-meet made by Karan Gandhi",
+  "main": "index.ts",
+  "author": "Karan-Gandhi",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\"",
+    "build": "tsc -p . && tsoa spec-and-routes",
+    "swagger": "tsoa spec-and-routes",
+    "test": "ts-jest",
+    "seed:admin": "node scripts/seedAdmin.js"
+  },
+  "dependencies": {
+    "@types/cors": "^2.8.15",
+    "@types/express": "^4.17.20",
+    "@types/jsonwebtoken": "^9.0.4",
+    "@types/swagger-jsdoc": "^6.0.3",
+    "@types/swagger-ui-express": "^4.1.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "compression": "^1.7.4",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.6.3",
+    "socket.io": "^4.7.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.7.5",
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.1",
+    "tsoa": "^5.1.1",
+    "typescript": "^5.2.2"
+  }
+}

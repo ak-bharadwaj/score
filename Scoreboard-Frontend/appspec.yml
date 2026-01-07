@@ -1,0 +1,6 @@
+version: 0.0
+os: linux
+files:
+  - source: /build
+    destination: /home/ec2-user/Scoreboard-backend/client/build
+file_exists_behavior: OVERWRITE

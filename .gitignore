@@ -1,0 +1,41 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+coverage/
+.cache/
+out/
+
+# TypeScript
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.*.local
+
+# Logs
+logs/
+*.log
+lerna-debug.log
+
+# Editor/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Docker/local runtime
+*.pid
+
+# Local data
+data/db/
+
+# Project builds
+Scoreboard-backend/client/build/
+Scoreboard-Frontend/build/

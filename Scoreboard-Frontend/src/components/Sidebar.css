@@ -1,0 +1,45 @@
+.sidebar {
+	height: 100dvh;
+	width: 100px;
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+	.items {
+		flex-grow: 1;
+	}
+
+	.item {
+		cursor: pointer;
+		padding: 10px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		.title {
+			text-align: center;
+		}
+	}
+	.item:hover {
+		background-color: #ebebeb;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.sidebar {
+		position: fixed;
+		bottom: 0;
+		z-index: 999;
+		background-color: white;
+		height: min-content;
+		width: 100vw;
+
+		.items {
+			display: flex;
+
+			.item {
+				flex-grow: 1;
+			}
+		}
+	}
+}

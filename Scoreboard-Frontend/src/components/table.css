@@ -1,0 +1,89 @@
+/* excel-like-table.css */
+
+.excel-like-table {
+	width: 100%;
+	left: 0%;
+	margin-top: 60px;
+	border-collapse: collapse;
+	transition: position 1000ms ease;
+}
+
+.timing {
+	font-family: "open sans" !important;
+	font-weight: 200;
+}
+
+#result-table {
+	width: 70%;
+	left: 15%;
+	margin-top: 10px;
+}
+.excel-like-table th,
+.excel-like-table td {
+	padding: 8px 12px;
+	border: 1px solid #ccc;
+	text-align: left;
+}
+
+.excel-like-table th {
+	background-color: #f2f2f2;
+}
+
+.excel-like-table tr:nth-child(even) {
+	background-color: #f5f5f5;
+}
+
+.excel-like-table tr:hover {
+	background-color: #e0e0e0;
+}
+
+/* Style table borders */
+.excel-like-table th,
+.excel-like-table td {
+	border: 1px solid #ddd; /* Light gray border */
+}
+
+/* Style header border-bottom */
+.excel-like-table th {
+	border-bottom: 2px solid #000; /* Black border */
+}
+/* @media all and (max-width:1300px) {
+  .excel-like-table {
+      font-size: 1.3rem;
+  }
+} */
+@media all and (max-width: 991px) {
+	.excel-like-table {
+		font-size: 1rem;
+	}
+	.list-text {
+		padding: 30px;
+	}
+}
+@media all and (max-width: 768px) {
+	.excel-like-table {
+		font-size: 0.8rem;
+	}
+}
+@media all and (max-width: 676px) {
+	.excel-like-table {
+		font-size: 0.7rem;
+	}
+}
+@media all and (max-width: 479px) {
+	.excel-like-table {
+		font-size: 0.6rem;
+	}
+	.Results-div {
+		width: 90% !important;
+	}
+	#result-table {
+		width: 85%;
+		left: 7.5%;
+	}
+}
+@media all and (max-width: 479px) {
+	.excel-like-table {
+		font-size: 0.5rem;
+	}
+}

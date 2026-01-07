@@ -1,0 +1,32 @@
+.admin-container {
+	display: flex;
+
+	.admin-content {
+		flex-grow: 1;
+		height: 100vh;
+		overflow-y: scroll;
+	}
+	.floatingDialogBox {
+		z-index: 1000;
+		position: fixed;
+		right: 15px;
+		top: 15px;
+		background-color: white;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+		border-radius: 5px;
+
+		.styledButton {
+			display: flex;
+			align-items: center;
+		}
+
+		.user-name-text {
+			margin-right: 10px;
+		}
+	}
+	.floatingDialogBox > div {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+}

@@ -1,0 +1,16 @@
+.schedule-container {
+	min-height: 100dvh;
+	display: flex;
+	justify-content: center;
+	.allEvents {
+		height: unset;
+		width: clamp(0px, 100%, 1100px);
+	}
+}
+@media screen and (max-width: 950px) {
+	.schedule-container {
+		.allEvents {
+			width: 500px;
+		}
+	}
+}

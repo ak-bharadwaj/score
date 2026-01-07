@@ -1,0 +1,13 @@
+.main > .liveAbleEvents {
+	margin-top: 1em;
+}
+.main > .liveAbleEvents > div {
+	padding: 10px;
+	box-shadow: 0 0 2px 0 rgb(106, 106, 106);
+	margin-block-end: 1px;
+}
+.main > .liveAbleEvents > div > ul {
+	margin-block-start: 0.5em;
+	margin-block-end: 0.5em;
+	list-style-type: upper-alpha;
+}

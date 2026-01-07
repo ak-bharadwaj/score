@@ -1,0 +1,116 @@
+.CRTDH-desc {
+	font-size: 1.4rem;
+	font-family: "open sans";
+}
+.CRTDH-name-footer1 {
+	font-size: 1.7rem;
+	font-family: Raleway, sans-serif;
+	margin-bottom: 30px;
+	margin-top: 0;
+}
+.credits a {
+	color: white;
+}
+.credits a:hover {
+	color: rgb(108, 179, 255);
+}
+.quick-links {
+	font-size: 1.4rem;
+	padding-bottom: 20px;
+}
+
+.quick-links-link {
+	text-decoration: none;
+	color: #fff;
+}
+.head-office-address {
+	font-size: 1.4rem;
+	margin-top: 0;
+}
+.Head-office {
+	display: flex;
+	align-items: center;
+	margin-top: 0;
+	font-size: 1.4rem;
+	font-weight: 600;
+}
+.social-icons span {
+	color: white;
+	display: flex;
+	justify-content: flex-start;
+}
+.social-icons span > a > svg {
+	color: white;
+	font-size: 2rem;
+	margin: 5px;
+}
+.social-icons span,
+.fa-brands {
+	font-size: 40px;
+	border-radius: 50%;
+	margin: 0px 5px;
+}
+
+.social-icons span .fb1 {
+	padding: 6px 6px;
+	color: #fff;
+	border: 1px solid #fff;
+}
+.social-icons span .fb1:hover {
+	color: #1e2f37;
+	background-color: #fff;
+}
+
+.social-icons span .insta1 {
+	padding: 6px 8px;
+	color: #fff;
+	border: 1px solid #fff;
+	/* border: 3px solid #e95950; */
+	/* background: linear-gradient(#1e2f37, #1e2f37) padding-box,
+    linear-gradient(#6559ca, #bc318f 30%, #e33f5f 50%, #f77638 70%, #fec66d 100%) border-box; */
+	border-radius: 19px;
+}
+.social-icons span .insta1:hover {
+	color: #1f2f37;
+	background-color: #fff;
+}
+
+.social-icons span .youtube1 {
+	padding: 6px 6px;
+	color: #fff;
+	border: 1px solid #fff;
+}
+.social-icons span .youtube1:hover {
+	color: #1f2f37;
+	background-color: #fff;
+}
+.social-icons span .linkedin1 {
+	padding: 6px 8px;
+	color: #fff;
+	border: 1px solid #fff;
+}
+.social-icons span .linkedin1:hover {
+	color: #1f2f37;
+	background-color: #fff;
+}
+.email-link {
+	color: #fff;
+}
+.email-link:hover {
+	color: #fff;
+}
+@media all and (max-width: 768px) {
+	.footer-text {
+		font-size: 3vw;
+	}
+}
+@media all and (max-width: 479px) {
+	.quick-links-block {
+		width: 100vw;
+		padding: 20px 100px 20px 20px !important;
+	}
+}
+
+.quick-links:hover {
+	color: rgb(0, 212, 166);
+}
