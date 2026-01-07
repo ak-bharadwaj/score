@@ -98,6 +98,19 @@ function Header() {
 
 	const handleScheduleLink = () => scrollToId("schedule-section");
 	const handleResultsLink = () => scrollToId("results-section");
+
+	// Allow hiding the navbar for kiosk/user-role displays via URL param
+	// Usage: add ?hideNav=1 or ?kiosk=1 to the URL
+	const hideNav = (() => {
+		try {
+			const params = new URLSearchParams(window.location.search);
+			return params.get("hideNav") === "1" || params.get("kiosk") === "1";
+		} catch {
+			return false;
+		}
+	})();
+
+	if (hideNav) return null;
 	return (
 		<section className="header">
 			<div className="logos">
