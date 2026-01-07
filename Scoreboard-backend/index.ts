@@ -20,9 +20,11 @@ const app = express();
 app.use(express.json());
 app.use(compression());
 app.use(cors(CorsConfig));
-const docsServe = (swaggerUi as any).serve;
-const docsSetup = (swaggerUi as any).setup(swaggerConfig);
-app.use("/api/docs", docsServe, docsSetup);
+// Mount Swagger UI via a Router to avoid type conflicts between different express type instances
+const docsRouter = express.Router();
+docsRouter.use((swaggerUi as any).serve);
+docsRouter.get("/", (swaggerUi as any).setup(swaggerConfig));
+app.use("/api/docs", docsRouter);
 app.use(express.static(path.join(__dirname, "../client/build"), { maxAge: "1d", etag: true }));
 
 app.use((req, res, next) => {
