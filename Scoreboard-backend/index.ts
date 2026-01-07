@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { config } from "dotenv";
 import swaggerUi from "swagger-ui-express";
+import type { RequestHandler } from "express";
 import compression from "compression";
 
 import AuthRoutes from "./routes/AuthRoutes";
@@ -20,7 +21,8 @@ const app = express();
 app.use(express.json());
 app.use(compression());
 app.use(cors(CorsConfig));
-app.use("/api/docs", swaggerUi.serve as any, swaggerUi.setup(swaggerConfig) as any);
+const swaggerSetupHandler: RequestHandler = swaggerUi.setup(swaggerConfig);
+app.use("/api/docs", ...swaggerUi.serve, swaggerSetupHandler);
 app.use(express.static(path.join(__dirname, "../client/build"), { maxAge: "1d", etag: true }));
 
 app.use((req, res, next) => {
