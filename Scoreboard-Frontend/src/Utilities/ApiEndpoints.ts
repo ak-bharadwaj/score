@@ -5,7 +5,9 @@ import { FootballScore } from "../types/FootballEvent";
 import { Participant } from "../types/AthleticsEvent";
 
 export const RootURL =
-	process.env.NODE_ENV === "production" ? "/" : "http://localhost:5000/";
+	process.env.NODE_ENV === "production"
+		? process.env.REACT_APP_API_ORIGIN || "/"
+		: "http://localhost:5000/";
 
 const ServerURL = RootURL + "api/"; //URL for API Endpoints
 
