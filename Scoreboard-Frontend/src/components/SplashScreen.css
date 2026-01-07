@@ -1,32 +1,95 @@
-.splashScreen {
+.splash-container {
 	position: fixed;
 	top: 0;
 	left: 0;
-	z-index: 1;
-	height: 100dvh;
-	width: 100%;
-
-	background-color: white;
+	width: 100vw;
+	height: 100vh;
+	background-color: #050505;
 	display: flex;
-	justify-content: center;
 	align-items: center;
-
-	.logo {
-		margin-top: -50px;
-		height: 250px;
-	}
-	.irp {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		font-weight: 600;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
+	justify-content: center;
+	z-index: 9999;
 }
-.splashScreen > .irp > img {
-	height: 150px;
-	margin-top: -1.5rem;
+
+.splash-content {
+	text-align: center;
+	width: 400px;
+}
+
+.splash-logo-circle {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	background: #111;
+	margin: 0 auto 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid #333;
+	overflow: hidden;
+	position: relative;
+}
+
+.splash-logo-circle::after {
+	content: '';
+	position: absolute;
+	top: -5px;
+	left: -5px;
+	right: -5px;
+	bottom: -5px;
+	border-top: 2px solid #ff3b30;
+	border-radius: 50%;
+	animation: spin 1s infinite linear;
+}
+
+.splash-img {
+	width: 70%;
+	filter: grayscale(100%);
+}
+
+.splash-text h1 {
+	font-family: 'Fjalla One', sans-serif;
+	color: white;
+	font-size: 1.8rem;
+	margin: 0;
+	letter-spacing: 2px;
+}
+
+.splash-text h2 {
+	font-family: 'Roboto Mono', monospace;
+	color: #ff3b30;
+	font-size: 0.9rem;
+	margin: 5px 0 30px;
+	letter-spacing: 4px;
+}
+
+.splash-loader {
+	width: 100%;
+	height: 4px;
+	background: #222;
+	border-radius: 2px;
+	overflow: hidden;
+	margin-bottom: 10px;
+}
+
+.loader-bar {
+	height: 100%;
+	background: #ff3b30;
+	transition: width 0.1s linear;
+}
+
+.splash-status {
+	font-family: 'Roboto Mono', monospace;
+	color: #555;
+	font-size: 0.8rem;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
 }

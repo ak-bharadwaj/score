@@ -1,0 +1,113 @@
+.points-table-container {
+    background: var(--secondary-bg);
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    border: 1px solid var(--border-color);
+}
+
+.points-table {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.points-header {
+    display: flex;
+    background: #333;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #ccc;
+    font-family: 'Fjalla One', sans-serif;
+    text-transform: uppercase;
+}
+
+.points-row-wrapper {
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.points-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 59, 48, 0.2) 0%, rgba(255, 59, 48, 0.05) 100%);
+    border-radius: 4px;
+    z-index: 0;
+    width: 0;
+    /* Animate to full width */
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.points-row {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    padding: 12px 10px;
+    border-radius: 4px;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    /* Keep border on row? Maybe wrapper? kept on row for now */
+    transition: transform 0.2s ease, background 0.2s;
+    animation: slideIn 0.5s ease-out forwards;
+    opacity: 0;
+}
+
+.points-row:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+    border-left: 3px solid var(--accent-color);
+}
+
+.col-rank {
+    width: 30px;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.col-team {
+    flex: 1;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.col-stat {
+    width: 40px;
+    text-align: center;
+}
+
+.col-pts {
+    width: 50px;
+    text-align: center;
+    font-weight: bold;
+    color: #ffcc00;
+    /* Gold */
+    font-size: 1.1rem;
+}
+
+.win {
+    color: #4caf50;
+}
+
+.loss {
+    color: #f44336;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

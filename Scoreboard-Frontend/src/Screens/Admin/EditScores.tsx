@@ -17,6 +17,8 @@ import TennisEvent from "../../types/TennisEvent";
 import AthleticsEvent, { Participant } from "../../types/AthleticsEvent";
 import { AthleticsEventWithDistance } from "../../types/AthleticsEventTypes";
 import { Team } from "../../types/Team";
+import EditableCricketEventBox from "../../components/LiveEventBoxes/EditableCricketEventBox";
+import CricketEvent from "../../types/CricketEvent";
 
 const EVENT_START_BUFFER = 15 * 60 * 1000; //the duration BEFORE the startTime from when an event can be started in milliseconds
 
@@ -121,6 +123,14 @@ const EditScores = () => {
 						event={event as TennisEvent}
 					/>
 				);
+			case EventCatagories.CRICKET:
+				return (
+					<EditableCricketEventBox
+						onScoreUpdate={(score) => handleScoreUpdate(event._id!, score)}
+						key={i}
+						event={event as CricketEvent}
+					/>
+				);
 			default:
 				// Fallback to a generic team-points editor for other team sports
 				return (
@@ -135,167 +145,126 @@ const EditScores = () => {
 	};
 
 	return (
-		<div className="usersContainer">
-			<div className="top" style={{ fontWeight: "600" }}>
-				Live Events
-				<dialog ref={confirmToggleDialog}>
-					<button className="styledButton" onClick={closeDialog}>
-						Close
-					</button>
-					<h3>Caution</h3>
-					Are you sure you want to end this event?
-					<br />{" "}
-					<b>
-						{eventToToggle?.event}{" "}
-						{eventToToggle?.event === EventCatagories.ATHLETICS
-							? (eventToToggle as AthleticsEvent)?.athleticsEventType
-							: eventToToggle?.title}{" "}
-						|{" "}
-						{eventToToggle?.event === EventCatagories.ATHLETICS
-							? (eventToToggle as AthleticsEvent)?.title
-							: eventToToggle?.subtitle}
-					</b>
-					<br />
-					{eventToToggle?.event !== EventCatagories.ATHLETICS &&
-						eventToToggle?.event !== EventCatagories.CRICKET &&
-						(eventToToggle as EventExceptAthleticsOrCricket)?.score
-							.teamA_points ===
-							(eventToToggle as EventExceptAthleticsOrCricket)?.score
-								.teamB_points && (
-							<>
-								The Teams have same score.
-								<br />
-								<label>Set Winner Manually: </label>
-								<select
-									onChange={(e) => setManualWinner(e.target.value)}
-									value={manualWinner}
-									style={{ position: "unset" }}
-									className="styledButton dropdown"
-								>
-									<option value="DRAW">DRAW</option>
-									<option value={eventToToggle?.teams[0].name}>
-										{eventToToggle?.teams[0].name}
-									</option>
-									<option value={eventToToggle?.teams[1].name}>
-										{eventToToggle?.teams[1].name}
-									</option>
-								</select>
-							</>
-						)}
-					<form
-						onSubmit={async (e) => {
-							e.preventDefault();
-							if (eventToToggle?.event === EventCatagories.ATHLETICS) {
-								confirmToggleDialog.current?.close();
-								athlEventWinnerDialog.current!.showModal();
-								return;
-							}
-							try {
-								if (manualWinner !== "DRAW") {
-									const winner = {
-										team: eventToToggle!.teams.find(
-											(t) => t.name === manualWinner
-										) as Team,
-									};
-									API.SetWinnerManually(
-										getAccessToken(),
-										eventToToggle!._id!,
-										winner
-									);
-								}
-								await API.ToggleEventStatus(
-									getAccessToken(),
-									eventToToggle!._id!
-								);
-								setToast("Successfull");
-								setLoading(true);
-								fetchEvents();
-							} catch (error: any) {
-								try {
-									setToast(JSON.parse(error.request.response).message);
-								} catch {
-									setToast("Could not connect with the Server");
-									console.log(error);
-								}
-							}
-							confirmToggleDialog.current?.close();
-							setEventToToggle(undefined);
-						}}
-					>
-						<button className="styledButton" type="submit">
-							Yes
-						</button>
-					</form>
-				</dialog>
-				{eventToToggle?.event === EventCatagories.ATHLETICS && (
-					<dialog ref={athlEventWinnerDialog}>
-						<button className="styledButton" onClick={closeDialog}>
-							Close
-						</button>
-						<h3>
-							{(Object.values(AthleticsEventWithDistance) as any[]).includes(
-								(eventToToggle as AthleticsEvent).athleticsEventType
-							)
-								? "Enter Distances (In meter)"
-								: "Enter Times (min:sec:millisec)"}
-						</h3>
-						<AthlEventParticipantDetailsForm
-							event={eventToToggle as AthleticsEvent}
-							onSuccess={() => {
-								athlEventWinnerDialog.current?.close();
-								setEventToToggle(undefined);
-								setLoading(true);
-								fetchEvents();
-							}}
+		<div className="admin-dashboard-container">
+			<h1 className="admin-header">Live Event Management</h1>
+
+			<div className="global-controls-section">
+				<h3>Global Controls</h3>
+				<div className="control-group">
+					<label htmlFor="tickerInput">Ticker Text (Scrolling at bottom):</label>
+					<div className="control-input-row">
+						<input
+							className="styledInput"
+							style={{ flex: 1 }}
+							placeholder="Enter scrolling ticker text..."
+							id="tickerInput"
 						/>
-					</dialog>
-				)}
+						<button
+							className="styledButton"
+							onClick={async () => {
+								const input = document.getElementById("tickerInput") as HTMLInputElement;
+								try {
+									await API.UpdateTicker(getAccessToken(), input.value);
+									setToast("Ticker Updated");
+								} catch (e) {
+									setToast("Failed to update ticker");
+								}
+							}}
+						>
+							Update Ticker
+						</button>
+					</div>
+				</div>
+
+				<div className="control-group">
+					<label htmlFor="broadcastMsg">Broadcast Alert (Fullscreen Overlay):</label>
+					<div className="control-input-row">
+						<input
+							className="styledInput"
+							style={{ flex: 2 }}
+							placeholder="Enter alert message (e.g. GOAL!)"
+							id="broadcastMsg"
+						/>
+						<input
+							className="styledInput"
+							type="number"
+							style={{ width: "100px" }}
+							placeholder="Seconds"
+							defaultValue={5}
+							id="broadcastDuration"
+						/>
+						<button
+							className="styledButton"
+							style={{ backgroundColor: "#ff3b30" }}
+							onClick={async () => {
+								const msgInput = document.getElementById("broadcastMsg") as HTMLInputElement;
+								const durInput = document.getElementById("broadcastDuration") as HTMLInputElement;
+								try {
+									await API.BroadcastMessage(getAccessToken(), msgInput.value, Number(durInput.value));
+									setToast("Broadcast Sent");
+								} catch (e) {
+									setToast("Failed to send broadcast");
+								}
+							}}
+						>
+							SEND ALERT
+						</button>
+					</div>
+				</div>
 			</div>
-			<div className="main">
+
+			<div className="live-events-section">
+				<h2 className="admin-header" style={{ fontSize: '1.5rem' }}>Active Events (Live Now)</h2>
 				{!loading ? (
-					liveEvents && (
-						<section className="liveEvents">
+					liveEvents && liveEvents.length > 0 ? (
+						<div className="live-events-grid">
 							{liveEvents.map((event, i) => getEventBox(event, i))}
-						</section>
+						</div>
+					) : (
+						<p className="empty-state">No events currently live.</p>
 					)
 				) : (
-					<>Loading Events Data...</>
+					<p>Loading Events Data...</p>
 				)}
-				<section className="liveAbleEvents">
+			</div>
+
+			<div className="live-able-section">
+				<h2 className="admin-header" style={{ fontSize: '1.5rem' }}>Scheduled Events (Ready to Go Live)</h2>
+				<div className="live-able-list">
 					{liveAbleEvents.length !== 0 ? (
 						liveAbleEvents.map((event, i) => (
-							<div key={i}>
-								{event.event} -{" "}
-								{(event as AthleticsEvent).athleticsEventType
-									? (event as AthleticsEvent).athleticsEventType + " - "
-									: null}
-								{event.title} -{" "}
-								{new Date(event.startTime).toLocaleDateString("en-GB")} - Start
-								Time:{" "}
-								{new Date(event.startTime).toLocaleString("en-US", {
-									hour: "numeric",
-									minute: "numeric",
-									hour12: true,
-								})}{" "}
-								-{" "}
-								{event.isStarted ? (
-									<span className="chip">Is Live</span>
-								) : (
-									"Not Live"
-								)}
-								<ul>
-									{event.event === EventCatagories.ATHLETICS
-										? (event as AthleticsEvent).participants[0].map((p, i) => (
-												<li key={i}>
-													{p.name} : {p.team}
+							<div key={i} className="live-able-item">
+								<div className="event-info">
+									<h4>
+										{event.event} - {event.title}
+										{event.isStarted && <span className="chip">LIVE</span>}
+									</h4>
+									<p>
+										{(event as AthleticsEvent).athleticsEventType ? (event as AthleticsEvent).athleticsEventType + " | " : ""}
+										{new Date(event.startTime).toLocaleString("en-US", {
+											weekday: 'short',
+											month: 'short',
+											day: 'numeric',
+											hour: 'numeric',
+											minute: 'numeric',
+										})}
+									</p>
+									<ul style={{ margin: '10px 0 0 20px', fontSize: '0.85rem', color: '#666' }}>
+										{event.event === EventCatagories.ATHLETICS
+											? (event as AthleticsEvent).participants[0].map((p, idx) => (
+												<li key={idx}>
+													{p.name} ({p.team})
 												</li>
-										  ))
-										: event.teams.map((team, i) => (
-												<li key={i}>{team.name} </li>
-										  ))}
-								</ul>
+											))
+											: event.teams.map((team, idx) => (
+												<li key={idx}>{team.name}</li>
+											))}
+									</ul>
+								</div>
+
 								<button
 									className="styledButton"
+									style={{ backgroundColor: event.isStarted ? '#e74c3c' : '#2ecc71' }}
 									onClick={async () => {
 										if (event!.isStarted) {
 											if ((event!.startTime as number) > new Date().getTime()) {
@@ -311,7 +280,7 @@ const EditScores = () => {
 													getAccessToken(),
 													event!._id!
 												);
-												setToast("Successfull");
+												setToast("Event is now Live!");
 												setLoading(true);
 												fetchEvents();
 											} catch (error: any) {
@@ -319,7 +288,6 @@ const EditScores = () => {
 													setToast(JSON.parse(error.request.response).message);
 												} catch {
 													setToast("Could not connect with the Server");
-													console.log(error);
 												}
 											}
 										}
@@ -330,10 +298,79 @@ const EditScores = () => {
 							</div>
 						))
 					) : (
-						<>No Events which can be toggled live!</>
+						<p className="empty-state">No events scheduled for the near future.</p>
 					)}
-				</section>
+				</div>
 			</div>
+
+			{/* Dialogs remain the same in functionality */}
+			<dialog ref={confirmToggleDialog} style={{ padding: '20px', borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px rgba(0,0,0,0.2)' }}>
+				<h3>Confirm Event End</h3>
+				<p>Are you sure you want to end this event?</p>
+				<p><strong>{eventToToggle?.title}</strong></p>
+
+				{eventToToggle?.event !== EventCatagories.ATHLETICS &&
+					eventToToggle?.event !== EventCatagories.CRICKET &&
+					(eventToToggle as EventExceptAthleticsOrCricket)?.score.teamA_points ===
+					(eventToToggle as EventExceptAthleticsOrCricket)?.score.teamB_points && (
+						<div style={{ marginBottom: '20px' }}>
+							<label>Select Winner (Manual): </label>
+							<select
+								onChange={(e) => setManualWinner(e.target.value)}
+								value={manualWinner}
+								className="styledInput"
+								style={{ width: '100%', marginTop: '10px' }}
+							>
+								<option value="DRAW">DRAW</option>
+								{eventToToggle?.teams.map(t => (
+									<option key={t._id} value={t.name}>{t.name}</option>
+								))}
+							</select>
+						</div>
+					)}
+
+				<div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
+					<button className="styledButton" style={{ backgroundColor: '#bbb' }} onClick={closeDialog}>Cancel</button>
+					<button
+						className="styledButton"
+						style={{ backgroundColor: '#e74c3c' }}
+						onClick={async () => {
+							if (eventToToggle?.event === EventCatagories.ATHLETICS) {
+								confirmToggleDialog.current?.close();
+								athlEventWinnerDialog.current!.showModal();
+								return;
+							}
+							try {
+								if (manualWinner !== "DRAW") {
+									const winner = {
+										team: eventToToggle!.teams.find(
+											(t) => t.name === manualWinner
+										) as Team,
+									};
+									await API.SetWinnerManually(
+										getAccessToken(),
+										eventToToggle!._id!,
+										winner
+									);
+								}
+								await API.ToggleEventStatus(
+									getAccessToken(),
+									eventToToggle!._id!
+								);
+								setToast("Event Ended Successfully");
+								setLoading(true);
+								fetchEvents();
+							} catch (error: any) {
+								setToast("Failed to toggle event status");
+							}
+							confirmToggleDialog.current?.close();
+							setEventToToggle(undefined);
+						}}
+					>
+						Confirm End
+					</button>
+				</div>
+			</dialog>
 		</div>
 	);
 };

@@ -1,0 +1,238 @@
+.winner-tree-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    /* Highest priority */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: 'Fjalla One', sans-serif;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.winner-tree-overlay.fade-in {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.winner-tree-overlay.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.tree-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.tree-title {
+    font-size: 3rem;
+    color: var(--accent-color);
+    letter-spacing: 5px;
+    text-shadow: 0 0 20px rgba(255, 59, 48, 0.5);
+    margin-bottom: 2rem;
+}
+
+.bracket-structure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bracket-level {
+    display: flex;
+    gap: 5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.matchup {
+    margin-bottom: 0;
+}
+
+.team-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 150px;
+    opacity: 0;
+    /* Hidden initially */
+}
+
+.champion-node {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(0, 0, 0, 0.5));
+    border: 2px solid gold;
+    width: 200px;
+    box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+}
+
+.team-logo-small {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.team-logo-large {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.team-logo-placeholder {
+    width: 60px;
+    height: 60px;
+    background: #333;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #aaa;
+}
+
+.team-logo-placeholder.large {
+    width: 100px;
+    height: 100px;
+    font-size: 3rem;
+}
+
+.team-name {
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.highlight {
+    color: gold;
+    font-size: 1.5rem;
+}
+
+.vs-connector {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #555;
+    background: #111;
+    padding: 10px;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.bracket-lines {
+    margin: -20px 0;
+    opacity: 0;
+}
+
+.crown-icon {
+    font-size: 2rem;
+    margin-bottom: -10px;
+    z-index: 20;
+    animation: bounce 1s infinite alternate;
+}
+
+.win-badge {
+    background: gold;
+    color: black;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+/* Animation Classes */
+.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.invisible {
+    opacity: 0;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.5s forwards;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.5s forwards;
+}
+
+.pop-in {
+    animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.draw-lines {
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

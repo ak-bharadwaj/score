@@ -7,4 +7,5 @@ export default interface Team {
     bronze: number;
   };
   points: number;
+  logoUrl?: string;
 }

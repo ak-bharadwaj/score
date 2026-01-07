@@ -109,6 +109,7 @@ const AdminDashboard = () => {
 								teams={allTeams}
 								onTeamAdd={handleAddTeam}
 								onTeamDelete={handleDeleteTeam}
+								onTeamUpdate={handleUpdateTeam}
 							/>
 						),
 					},
@@ -247,6 +248,17 @@ const AdminDashboard = () => {
 				setToast("Could not connect with the Server");
 				console.log(error);
 			}
+		}
+	};
+
+	const handleUpdateTeam = async (id: string, teamToUpdate: Partial<Team>) => {
+		try {
+			await API.UpdateTeam(getAccessToken(), id, teamToUpdate);
+			await fetchTeams();
+			setToast("Updated Team");
+		} catch (error: any) {
+			setToast("Failed to Update");
+			console.log(error);
 		}
 	};
 

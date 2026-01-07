@@ -26,6 +26,11 @@ const teamSchema = new Schema<Team>({
     type: Number,
     required: true,
   },
+  logoUrl: {
+    type: String,
+    default: "",
+    required: false
+  }
 });
 
 const TeamModel = model<Team>("Teams", teamSchema);

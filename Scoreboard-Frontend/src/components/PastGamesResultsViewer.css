@@ -1,36 +1,150 @@
 .resultsLogsContainer {
-	padding: 0 5px;
-	padding-bottom: 2em;
-
-	.resultLog {
-		border-bottom: 1px solid gainsboro;
-		padding: 10px;
-		margin-bottom: 3px;
-
-		.winner {
-			color: green;
-		}
-		.loser {
-			color: red;
-		}
-	}
-
-	.athletic-result-log {
-		display: flex;
-		justify-content: space-between;
-	}
-
-	.tooltip {
-		cursor: pointer;
-		font-size: 1rem;
-		color: var(--dark_blue);
-		position: relative;
-		margin-right: 10px;
-		display: inline-block;
-		border-bottom: 1px solid var(--dark_blue); /* If you want dots under the hoverable text */
-	}
+	padding: 10px;
+	padding-bottom: 3em;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
 }
-.resultLog > a {
+
+.result-card {
+	background: rgba(40, 40, 40, 0.7);
+	border: 1px solid #444;
+	border-radius: 12px;
+	padding: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	border-left: 6px solid #555;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.result-card:hover {
+	background: rgba(50, 50, 50, 0.9);
+	transform: scale(1.02);
+	border-left-color: var(--accent-color);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.result-card-header {
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.8rem;
+	color: var(--secondary-text);
+	text-transform: uppercase;
+	letter-spacing: 1.5px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	padding-bottom: 8px;
+	font-weight: 500;
+}
+
+.result-card-body {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 15px;
+}
+
+.team-result {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex: 1;
+}
+
+.team-result.is-winner .team-name {
+	color: #00ff00;
+	font-weight: 700;
+	text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.team-result.is-winner .team-score {
+	color: #00ff00;
+	font-size: 1.5rem;
+}
+
+.result-logo {
+	width: 36px;
+	height: 36px;
+	object-fit: contain;
+	filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.team-name {
+	font-size: 1rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex: 1;
+	letter-spacing: 0.5px;
+}
+
+.team-score {
+	font-size: 1.3rem;
+	font-weight: bold;
+	min-width: 30px;
+	text-align: center;
+	font-family: 'Fjalla One', sans-serif;
+}
+
+.vs-divider {
+	font-size: 0.8rem;
+	color: #777;
+	font-weight: bold;
+	background: rgba(255, 255, 255, 0.05);
+	padding: 4px 8px;
+	border-radius: 4px;
+}
+
+.result-card-footer {
+	text-align: center;
+	padding-top: 8px;
+	border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.winner-announcement {
+	font-size: 0.9rem;
+	font-weight: bold;
+	color: var(--accent-color);
+	letter-spacing: 2px;
+	text-transform: uppercase;
+}
+
+.team-info-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	flex: 1;
+}
+
+.team-score-sub {
+	font-size: 0.9rem;
+	color: var(--secondary-text);
+	font-family: 'Roboto', sans-serif;
+	font-weight: 500;
+}
+
+.view-details-link {
+	display: inline-block;
+	color: #fff;
+	text-decoration: none;
+	background: rgba(255, 255, 255, 0.1);
+	padding: 6px 16px;
+	border-radius: 20px;
+	font-size: 0.75rem;
+	font-weight: bold;
+	transition: all 0.2s ease;
+	cursor: pointer;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.view-details-link:hover {
+	background: var(--accent-color);
+	border-color: transparent;
+	transform: translateY(-2px);
+}
+
+.resultLog>a {
 	color: var(--dark_blue);
 	border-bottom: 1px solid var(--dark_blue);
 	text-decoration: none;

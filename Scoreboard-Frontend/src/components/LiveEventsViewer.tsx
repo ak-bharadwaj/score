@@ -77,7 +77,12 @@ const LiveEventsViewer = ({
 						/>
 					))
 				) : (
-					<>No Live Events Right Now!</>
+					<div className="broadcast-standby">
+						<div className="standby-icon">📡</div>
+						<div className="standby-title">NO LIVE EVENTS</div>
+						<div className="standby-subtitle">STAY TUNED FOR UPCOMING MATCHES</div>
+						<div className="standby-pulse"></div>
+					</div>
 				)}
 			</div>
 		</>

@@ -1,17 +1,43 @@
+import { useEffect, useState } from "react";
 import "./SplashScreen.css";
+// We can use these or replace with CSS shapes if logos fail to load
 import interIITLogo from "../imgs/interIIT-logo.webp";
-import irnpLogo from "../imgs/IRP Logo.svg";
 
 const SplashScreen = () => {
+	const [progress, setProgress] = useState(0);
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setProgress((prev) => {
+				if (prev >= 100) {
+					clearInterval(interval);
+					return 100;
+				}
+				return prev + Math.random() * 10;
+			});
+		}, 100);
+		return () => clearInterval(interval);
+	}, []);
+
 	return (
-		<>
-			<div className="splashScreen">
-				<img className="logo" src={interIITLogo} alt="InterIIT 2023 logo" />
-				<div className="irp">
-					Developed Under <img src={irnpLogo} alt="IR&P Logo"></img>
+		<div className="splash-container">
+			<div className="splash-content">
+				<div className="splash-logo-circle">
+					{/* Fallback to text if img missing, or use img */}
+					<img src={interIITLogo} alt="Inter IIT" className="splash-img" />
+				</div>
+				<div className="splash-text">
+					<h1>INTER IIT SPORTS MEET</h1>
+					<h2>BROADCAST SYSTEM</h2>
+				</div>
+				<div className="splash-loader">
+					<div className="loader-bar" style={{ width: `${Math.min(progress, 100)}%` }}></div>
+				</div>
+				<div className="splash-status">
+					INITIALIZING SYSTEM... {Math.floor(progress)}%
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

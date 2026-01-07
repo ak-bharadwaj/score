@@ -76,6 +76,7 @@ export const toggleEventStarted = async (id: string) => {
 
   if (event.isStarted) {
     event.isCompleted = true;
+    event.endTime = Date.now();
     if (event.event !== EventCatagories.ATHLETICS && event.event !== EventCatagories.CRICKET) {
       if (!event.score) throw EventScoreDoesntExist;
 

@@ -1,136 +1,111 @@
-.allEvents {
-	min-height: 60vh;
-	padding: 10px;
+.upcoming-cards-grid {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 10px 0;
 }
-.allEvents > div {
-	position: relative;
-	height: 100px;
-	border: 3px solid #f2f5f7;
-	margin-block-end: 1px;
+
+.upcoming-card {
+	background: linear-gradient(145deg, #1a1a1a, #222);
+	border-radius: 12px;
+	padding: 16px;
+	border: 1px solid #333;
+	border-left: 4px solid var(--accent-color);
+	transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.upcoming-card:hover {
+	background: linear-gradient(145deg, #222, #2a2a2a);
+	transform: translateX(6px);
+	border-color: #444;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.upcoming-card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 12px;
+}
+
+.upcoming-sport {
+	font-size: 0.75rem;
+	color: var(--accent-color);
+	letter-spacing: 2px;
+	text-transform: uppercase;
+}
+
+.upcoming-time-badge {
+	font-size: 0.8rem;
+	background: rgba(255, 255, 255, 0.05);
+	padding: 3px 10px;
+	border-radius: 4px;
+	color: #fff;
+}
+
+.upcoming-card-title {
+	font-size: 1.1rem;
+	color: #fff;
+	margin-bottom: 14px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.upcoming-teams-row {
 	display: flex;
 	align-items: center;
-	font-size: 1.4rem;
-
-	.tooltip {
-		font-size: 1rem;
-		color: var(--dark_blue);
-		position: relative;
-		margin-right: 10px;
-		display: inline-block;
-		border-bottom: 1px solid var(--dark_blue); /* If you want dots under the hoverable text */
-	}
-
-	/* Tooltip text */
-	.tooltip .tooltiptext {
-		visibility: hidden;
-		background-color: var(--dark_blue);
-		color: #fff;
-		text-align: center;
-		padding: 5px 15px;
-
-		/* Position the tooltip text*/
-		position: absolute;
-		right: 105%;
-		top: -30px;
-		z-index: 1;
-	}
-
-	/* Show the tooltip text when you mouse over the tooltip container */
-	.tooltip:hover .tooltiptext {
-		visibility: visible;
-	}
+	gap: 15px;
+	margin-bottom: 14px;
 }
-.allEvents > div > .tooltip .tooltiptext > div {
+
+.upcoming-team {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex: 1;
+}
+
+.upcoming-mini-logo {
+	width: 28px;
+	height: 28px;
+	object-fit: contain;
+	filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.upcoming-team-name {
+	font-size: 0.9rem;
+	color: #aaa;
 	white-space: nowrap;
-	padding: 2px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
-.allEvents > div > ul::before {
-	content: "Teams:";
-	position: absolute;
-	left: -30px;
-	top: 0;
-	bottom: 0;
+
+.upcoming-vs {
+	font-size: 0.8rem;
+	color: #555;
+	font-weight: bold;
+}
+
+.upcoming-card-footer {
+	border-top: 1px solid rgba(255, 255, 255, 0.05);
+	padding-top: 12px;
 	display: flex;
-	align-items: center;
-}
-.allEvents > div > ul {
-	position: absolute;
-	right: 0;
-	margin-block-start: 0.5em;
-	margin-block-end: 0.5em;
-	margin-right: 10px;
-	list-style-type: upper-alpha;
-	font-size: 1rem;
-}
-.allEvents > div > .vertical-line-blue {
-	background-color: #0d4fad;
-	height: 50%;
-	margin-right: 40px;
-	width: 5px;
-}
-.allEvents > div > .vertical-line-grey {
-	background-color: #ebeef0;
-	height: 50%;
-	margin: 0 30px;
-	width: 3px;
-}
-.allEvents > div > span {
-	margin-right: 30px;
+	justify-content: flex-end;
 }
 
-@media screen and (max-width: 950px) {
-	.allEvents > div {
-		flex-direction: column;
-		height: auto;
-		font-size: 1.2rem;
+.upcoming-date {
+	font-size: 0.75rem;
+	color: #666;
+	letter-spacing: 1px;
+}
 
-		.tooltip {
-			margin-right: 0;
-			margin-bottom: 10px;
-		}
-
-		.tooltip .tooltiptext {
-			top: 100%;
-			right: unset;
-			margin-left: -110%;
-		}
-	}
-	.allEvents > div > .event-event {
-		margin-top: 10px;
-	}
-	.allEvents > div > .vertical-line-blue {
-		position: absolute;
-		left: 0;
-		top: 0;
-		bottom: 0;
-		width: 5px;
-		height: 100%;
-	}
-	.allEvents > div > span {
-		margin-top: 10px;
-		margin-right: 0;
-	}
-	.allEvents > div > ul::before {
-		position: absolute;
-		left: 10px;
-		top: -1rem;
-		display: unset;
-	}
-	.allEvents > div > ul {
-		position: relative;
-		margin-block-start: 0;
-		margin-block-end: 0;
-		margin-right: 0;
-		margin-top: 15px;
-		margin-bottom: 10px;
-		width: 100%;
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-evenly;
-		padding-inline-start: 0;
-		padding: 0 20px;
-	}
-	.allEvents > div > ul > li {
-		margin-left: 1.1rem;
-	}
+.no-events-placeholder {
+	color: #666;
+	font-style: italic;
+	text-align: center;
+	padding: 40px 20px;
+	background: rgba(0, 0, 0, 0.2);
+	border-radius: 12px;
+	border: 1px dashed #333;
 }

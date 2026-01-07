@@ -8,9 +8,8 @@ interface AthleticsGamesResultLogProps {
 }
 
 const formatTime = (time: number) => {
-	return `${Math.floor(time / (60 * 1000))}m ${
-		Math.floor(time % (60 * 1000)) / 1000
-	}s`;
+	return `${Math.floor(time / (60 * 1000))}m ${Math.floor(time % (60 * 1000)) / 1000
+		}s`;
 };
 
 const AthleticsGamesResultLog: React.FC<AthleticsGamesResultLogProps> = ({
@@ -44,7 +43,7 @@ const AthleticsGamesResultLog: React.FC<AthleticsGamesResultLogProps> = ({
 										<th>Team</th>
 										<th>
 											{!!event.winner?.participants &&
-											!!event.winner?.participants[0].distance
+												!!event.winner?.participants[0].distance
 												? "Distance"
 												: "Time"}
 										</th>
@@ -73,14 +72,19 @@ const AthleticsGamesResultLog: React.FC<AthleticsGamesResultLogProps> = ({
 					</div>
 				</div>
 			)}
-			<div className="resultLog fjalla athletic-result-log">
-				<span>
-					{formatEventName(event.athleticsEventType)} {event.title} concluded.
-				</span>
-				<div className="tooltip" onClick={() => setDialogueOpen(true)}>
-					View Results
+			<div className="result-card fjalla">
+				<div className="result-card-header">
+					<span className="event-type">{formatEventName(event.athleticsEventType)}</span>
+					<span className="event-title">{event.title}</span>
 				</div>
-				{/* TODO: Add view results */}
+				<div className="result-card-body" style={{ justifyContent: 'center', padding: '10px 0' }}>
+					<span style={{ fontSize: '1.2rem', color: '#00ff00', fontWeight: 'bold' }}>EVENT CONCLUDED</span>
+				</div>
+				<div className="result-card-footer">
+					<div className="view-details-link" onClick={() => setDialogueOpen(true)}>
+						VIEW FINAL STANDINGS
+					</div>
+				</div>
 			</div>
 		</>
 	);

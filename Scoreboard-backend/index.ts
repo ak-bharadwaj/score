@@ -10,6 +10,7 @@ import { CorsConfig } from "./config/CorsConfig";
 import swaggerConfig from "./config/swagger.json";
 import { createAndStartServer } from "./utils/ServerUtils";
 import EventRoutes from "./routes/EventRoutes";
+import GlobalRoutes from "./routes/GlobalRoutes";
 import path from "path";
 
 config();
@@ -34,6 +35,7 @@ app.use((req, res, next) => {
 app.use("/api/auth", AuthRoutes);
 app.use("/api/admin", AdminRoutes);
 app.use("/api/events", EventRoutes);
+app.use("/api/global", GlobalRoutes);
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build/index.html"));

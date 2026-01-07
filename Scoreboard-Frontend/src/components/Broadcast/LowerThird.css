@@ -1,0 +1,109 @@
+.lower-third-container {
+    position: fixed;
+    bottom: 120px;
+    /* Above ticker */
+    left: 100px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    z-index: 990;
+    font-family: 'Outfit', sans-serif;
+    transform: translateX(-120%);
+    /* Start off-screen left */
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.lower-third-container.enter {
+    transform: translateX(0);
+}
+
+.lower-third-container.exit {
+    transform: translateX(-120%);
+}
+
+.lt-blue-strip {
+    width: 6px;
+    height: 70px;
+    background: #0ea5e9;
+    margin-right: -2px;
+    /* Connect */
+    z-index: 2;
+}
+
+.lt-content {
+    background: rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    padding: 10px 24px 10px 16px;
+    border-radius: 0 4px 4px 0;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 300px;
+}
+
+.lt-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 16px;
+    border: 2px solid #0ea5e9;
+}
+
+.lt-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.lt-title {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.1;
+}
+
+.lt-subtitle {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* Mobile Adjustment */
+@media (max-width: 768px) {
+    .lower-third-container {
+        left: 20px;
+        bottom: 160px;
+        /* Higher up */
+        transform: translateY(100px);
+        /* Slide up instead of left */
+        opacity: 0;
+        transition: all 0.5s ease;
+    }
+
+    .lower-third-container.enter {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .lower-third-container.exit {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+
+    .lt-content {
+        min-width: auto;
+        padding-right: 16px;
+    }
+
+    .lt-title {
+        font-size: 1rem;
+    }
+
+    .lt-subtitle {
+        font-size: 0.8rem;
+    }
+}

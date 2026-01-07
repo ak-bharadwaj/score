@@ -94,6 +94,19 @@ const API = {
 			},
 		}),
 
+	UpdateTeam: (accessToken: string, id: string, team: Partial<Team>) =>
+		axios.patch(
+			ServerURL + "admin/teams/" + id,
+			{
+				...team,
+			},
+			{
+				headers: {
+					Authorization: accessToken,
+				},
+			}
+		),
+
 	GetUsers: (accessToken: string) =>
 		axios.get(ServerURL + "admin/users", {
 			headers: {
@@ -160,5 +173,22 @@ const API = {
 				refreshToken: refreshToken,
 			},
 		}),
+
+	// Global Config (Broadcast, Ticker)
+	GetGlobalConfig: () => axios.get(ServerURL + "global/config"),
+
+	BroadcastMessage: (accessToken: string, message: string, duration: number) =>
+		axios.post(
+			ServerURL + "global/broadcast",
+			{ message, duration },
+			{ headers: { Authorization: accessToken } }
+		),
+
+	UpdateTicker: (accessToken: string, text: string) =>
+		axios.post(
+			ServerURL + "global/ticker",
+			{ text },
+			{ headers: { Authorization: accessToken } }
+		),
 };
 export default API;

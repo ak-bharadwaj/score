@@ -1,97 +1,104 @@
 .liveEventBox.chess {
 	--theme_color: rgb(52, 52, 52);
 }
+
 .liveEventBox.cricket {
 	--theme_color: #2255a4;
 }
+
 .liveEventBox.squash {
 	--theme_color: rgb(233, 73, 15);
 }
+
 .liveEventBox.tennis {
 	--theme_color: #9cd10b;
 }
+
 .liveEventBox {
-	margin: 5px;
-	padding: 5px;
-	width: clamp(340px, 85vw, 1000px);
-	min-width: clamp(320px, 75vw, 980px);
+	margin: 0;
+	padding: 20px;
+	width: 100%;
+	box-sizing: border-box;
 	--theme_color: #04aa6d;
-	border-radius: 10px;
-	scroll-snap-align: center;
-	box-shadow: 0 5px 10px rgba(0, 57, 111, 0.15);
-	padding-bottom: 12px;
-	border: 1px solid gainsboro;
-
-	.VS {
-		font-size: 1.3rem;
-		color: var(--theme_color);
-		margin-block-start: 0.5em;
-		margin-block-end: 0.5em;
-	}
-
-	.eventCategory {
-		background-color: color-mix(in srgb, var(--theme_color) 80%, white 20%);
-		color: white;
-		font-size: 18px;
-		margin: 5px;
-		padding: 2px;
-		padding-right: 5px;
-		border-radius: 5px;
-		display: flex;
-		width: min-content;
-		align-items: center;
-		gap: 3px;
-	}
-	.hr {
-		margin-top: 1rem;
-		margin-bottom: 1rem;
-		border: 0;
-		border-top: 1px solid rgba(0, 0, 0, 0.1);
-	}
-	.footballScoresContainer {
-		text-transform: uppercase;
-		display: flex;
-		justify-content: space-around;
-		align-items: center;
-		background-color: white;
-		color: black;
-		margin-bottom: 10px;
-	}
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #e0e0e0;
+	border-radius: 12px;
+	background: #ffffff;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.liveEventBox h3 {
-	margin: 0px;
-	font-weight: 500;
+.liveEventBox:hover {
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.team-logo-mini {
+	width: 28px;
+	height: 28px;
+	object-fit: contain;
+}
+
+.footballScoresContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	width: 100%;
+}
+
+.score-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	padding: 10px;
+	background: #fbfbfb;
+	border-radius: 8px;
+	border: 1px solid #f0f0f0;
+}
+
+.team-info {
+	display: flex;
+	align-items: center;
+	flex: 1;
+	gap: 12px;
+}
+
+.team-name-compact {
+	font-size: 1rem !important;
+	font-weight: 600 !important;
+	margin: 0 !important;
+	color: #333;
+}
+
+.score-display-mini {
+	font-size: 1.5rem !important;
+	font-weight: 900;
+	color: var(--theme_color);
+	margin: 0 15px;
+	min-width: 30px;
 	text-align: center;
 }
-.eventCategory > span {
-	white-space: nowrap;
-}
-.footballScoresContainer h3 {
-	display: inline;
-}
-.footballScoresContainer > div {
+
+.admin-score-controls {
 	display: flex;
-	border-radius: 5px;
-	flex-direction: column;
+	flex-direction: row;
 	align-items: center;
-}
-.footballScoresContainer > div > p {
-	margin: 0.5em;
-	padding: 7px;
-	border-top: groove black 3px;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
-	font-size: 1.7rem;
-	font-weight: 600;
-	background-color: var(--theme_color);
-	color: white;
+	gap: 8px;
 }
 
-.footballScoresContainer h3 {
-	font-size: 1.4rem;
+.admin-score-controls {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+	width: 100%;
+	margin-top: 5px;
 }
 
-.footballScoresContainer > div > span {
-	font-size: 1.4rem;
+.admin-score-controls .styledButton {
+	width: 100%;
+	padding: 5px;
+	font-size: 0.8rem;
 }

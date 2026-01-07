@@ -2,7 +2,7 @@ import Event from "./Event";
 import { Team } from "./Team";
 
 export default interface FootballEvent extends Event {
-	teams: { name: string; points: number }[];
+	teams: { name: string; points: number; logoUrl?: string }[];
 	winner?: {
 		team: Team;
 	};

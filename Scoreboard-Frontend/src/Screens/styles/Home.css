@@ -1,41 +1,299 @@
-.content {
+/* Professional Sports Channel Theme */
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+	--primary-bg: #121212;
+	--secondary-bg: #1e1e1e;
+	--accent-color: #ff3b30;
+	--text-color: #ffffff;
+	--secondary-text: #a0a0a0;
+	--card-bg: rgba(30, 30, 30, 0.8);
+	--border-color: #333;
+}
+
+body {
+	background-color: var(--primary-bg);
+	color: var(--text-color);
+	font-family: 'Roboto', sans-serif;
+	margin: 0;
+	overflow-x: hidden;
+}
+
+.sports-channel-layout {
+	min-height: 100vh;
+	background: radial-gradient(circle at top right, #2a2a2a, #121212);
 	display: flex;
 	flex-direction: column;
 }
 
-.bottomContainer {
+/* 3-Column Layout */
+.main-content-3col {
 	display: flex;
+	flex: 1;
+	padding: 20px;
+	gap: 20px;
+	max-width: 1920px;
+	margin: 0 auto;
+	width: 100%;
+	box-sizing: border-box;
+	height: calc(100vh - 140px);
+	/* Fill screen minus header/footer */
 }
 
-.rightContainer {
+.col-side {
+	flex: 3.5;
+	/* ~30% */
+	min-width: 300px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	height: 100%;
+}
+
+.col-center {
+	flex: 4.5;
+	/* ~40% */
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	height: 100%;
+}
+
+.live-broadcast-area {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	gap: 15px;
+}
+
+.section-header-small {
+	font-family: 'Fjalla One', sans-serif;
+	color: var(--secondary-text);
+	font-size: 0.9rem;
+	letter-spacing: 2px;
+	margin: 0 0 10px 0;
+	border-left: 3px solid var(--accent-color);
+	padding-left: 10px;
+}
+
+/* Scrollable containers for side panels */
+.scroll-container {
+	overflow-y: auto;
+	padding-right: 12px;
+	scroll-behavior: smooth;
+}
+
+.scroll-container::-webkit-scrollbar {
+	width: 4px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+	background: rgba(255, 255, 255, 0.02);
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 2px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+	background: var(--accent-color);
+}
+
+/* Styling for full sections in side panels */
+.upcoming-section-full,
+.past-section-full {
+	background: var(--secondary-bg);
+	padding: 15px;
+	border-radius: 8px;
+	border: 1px solid var(--border-color);
+	display: flex;
+	flex-direction: column;
+	height: calc(100vh - 180px);
+	/* Fill available vertical space */
 	flex-grow: 1;
-	min-height: 50vh;
-	border-left: 3px solid #ebeef0;
 }
 
-@media screen and (min-width: 900px) {
-	.home.liveEvents {
-		justify-content: center;
-		overflow-x: unset;
-		scroll-snap-type: unset;
-		flex-wrap: wrap;
-		gap: 0.1rem;
+.upcoming-container {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.mini-event-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 14px;
+	background: rgba(255, 255, 255, 0.05);
+	border-radius: 6px;
+	border: 1px solid rgba(255, 255, 255, 0.03);
+	transition: all 0.2s ease;
+}
+
+.mini-event-row:hover {
+	background: rgba(255, 255, 255, 0.08);
+	transform: translateX(4px);
+}
+
+.mini-time {
+	font-size: 0.8rem;
+	font-weight: bold;
+	color: var(--accent-color);
+	font-family: 'Fjalla One', sans-serif;
+}
+
+.mini-title {
+	font-size: 0.9rem;
+	color: #eee;
+	flex: 1;
+	text-align: right;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	margin-left: 15px;
+}
+
+.empty-state {
+	color: #666;
+	text-align: center;
+	padding: 20px;
+	font-style: italic;
+}
+
+.highlight-accent {
+	color: var(--accent-color);
+	font-weight: bold;
+}
+
+.highlight-value {
+	color: #fff;
+	text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Event Boxes Overhaul via Global override if not scoped */
+.liveEventBox {
+	background: var(--card-bg) !important;
+	backdrop-filter: blur(10px);
+	border: 1px solid var(--border-color) !important;
+	border-left: 5px solid var(--accent-color) !important;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+	border-radius: 8px !important;
+	color: white !important;
+	margin-bottom: 20px;
+	/* Spacing between cards */
+	animation: slideUpFade 0.5s ease-out;
+	transition: transform 0.3s ease;
+}
+
+.liveEventBox:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5) !important;
+}
+
+@keyframes slideUpFade {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
 	}
 }
 
-@media screen and (min-width: 1150px) {
-	.leftContainer {
-		width: 70vw;
-	}
+/* Ensure LiveEventsViewer takes full width of Right Panel */
+.live-section {
+	width: 100%;
+	/* flex: 1; maybe allow it to grow */
 }
 
-@media screen and (max-width: 1150px) {
-	.bottomContainer {
+.error-banner {
+	background: #ffcc00;
+	color: black;
+	text-align: center;
+	padding: 10px;
+	font-weight: bold;
+}
+
+.footer-spacer {
+	height: 60px;
+	/* Space for ticker */
+}
+
+@media screen and (max-width: 1100px) {
+	.main-content-3col {
 		flex-direction: column;
+		height: auto;
 	}
 
-	.rightContainer {
-		border: 0;
-		border-top: 3px solid #ebeef0;
+	.col-side,
+	.col-center {
+		flex: none;
+		width: 100%;
+	}
+}
+
+/* Standby Screen */
+.broadcast-standby {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 300px;
+	background: rgba(30, 30, 30, 0.5);
+	border: 2px dashed #444;
+	border-radius: 12px;
+	margin-top: 20px;
+	color: #666;
+	animation: fadeIn 1s ease;
+}
+
+.standby-icon {
+	font-size: 3rem;
+	margin-bottom: 20px;
+	opacity: 0.5;
+}
+
+.standby-title {
+	font-family: 'Fjalla One', sans-serif;
+	font-size: 1.5rem;
+	letter-spacing: 2px;
+	color: #888;
+}
+
+.standby-subtitle {
+	font-family: 'Roboto', sans-serif;
+	font-size: 0.9rem;
+	letter-spacing: 1px;
+	margin-top: 10px;
+	color: #555;
+	text-transform: uppercase;
+}
+
+.standby-pulse {
+	width: 10px;
+	height: 10px;
+	background-color: var(--accent-color);
+	border-radius: 50%;
+	margin-top: 20px;
+	animation: pulseRed 2s infinite;
+}
+
+@keyframes pulseRed {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(255, 59, 48, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(255, 59, 48, 0);
 	}
 }

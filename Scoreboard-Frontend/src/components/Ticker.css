@@ -1,0 +1,61 @@
+/* Ticker styles merged into Broadcast.css or separate if preferred.
+   Since I imported Broadcast.css in FullPageBroadcast and Ticker.css in ScrollingTicker,
+   I should actually create Ticker.css or update import.
+   I'll creating Ticker.css with the same content for simplicity or just import Broadcast.css in both?
+   Let's create Ticker.css separately to match the import.
+*/
+.ticker-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: #1a1a1a;
+    display: flex;
+    z-index: 100;
+    border-top: 2px solid #ff3b30;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.ticker-label {
+    background: #ff3b30;
+    color: white;
+    padding: 0 20px;
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.ticker-wrapper {
+    flex-grow: 1;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: #222;
+}
+
+.ticker-content {
+    white-space: nowrap;
+    position: absolute;
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 1.5rem;
+    color: #fff;
+    will-change: transform;
+    animation: ticker 30s linear infinite;
+    padding-left: 100%;
+}
+
+@keyframes ticker {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    100% {
+        transform: translate3d(-100%, 0, 0);
+    }
+}

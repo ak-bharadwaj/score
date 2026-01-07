@@ -24,18 +24,34 @@ const CricketEventBox = ({ event }: { event: CricketEvent }) => {
 			<hr className="hr" />
 			<div className="footballScoresContainer">
 				<div>
+					{event.teams[0].logoUrl && <img src={event.teams[0].logoUrl} alt="" className="team-logo-mini" />}
 					<h3 className="fjalla">{event.teams[0].name}</h3>
 				</div>
 				<p className=" fjalla VS">VS</p>
 				<div>
+					{event.teams[1].logoUrl && <img src={event.teams[1].logoUrl} alt="" className="team-logo-mini" />}
 					<h3 className="fjalla">{event.teams[1].name}</h3>
 				</div>
 			</div>
 			<hr className="hr" />
 			<div className="footballScoresContainer">
-				<a target="blank" href={event.eventLink}>
-					Live Link
-				</a>
+				<div style={{ textAlign: "center" }}>
+					<h2 className="fjalla score" style={{ margin: "5px" }}>
+						{event.score.teamA_runs}/{event.score.teamA_wickets}
+					</h2>
+					<h4 className="fjalla" style={{ margin: "0" }}>
+						({event.score.teamA_overs})
+					</h4>
+				</div>
+				<p className=" fjalla VS">VS</p>
+				<div style={{ textAlign: "center" }}>
+					<h2 className="fjalla score" style={{ margin: "5px" }}>
+						{event.score.teamB_runs}/{event.score.teamB_wickets}
+					</h2>
+					<h4 className="fjalla" style={{ margin: "0" }}>
+						({event.score.teamB_overs})
+					</h4>
+				</div>
 			</div>
 		</div>
 	);

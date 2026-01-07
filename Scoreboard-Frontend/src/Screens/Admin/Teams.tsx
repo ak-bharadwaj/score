@@ -6,18 +6,26 @@ const Teams = ({
 	teams,
 	onTeamAdd,
 	onTeamDelete,
+	onTeamUpdate
 }: {
 	teams: Team[];
 	onTeamAdd: (teamToAdd: Team) => void;
 	onTeamDelete: (teamToDelete: Team) => void;
+	onTeamUpdate: (id: string, teamToUpdate: Partial<Team>) => void;
 }) => {
 	const addTeamDialog = useRef<HTMLDialogElement | null>(null);
 	const confirmDeleteDialog = useRef<HTMLDialogElement | null>(null);
-	const [newTeamName, setNewTeamName] = useState("");
+	const [teamName, setTeamName] = useState("");
+	const [teamLogo, setTeamLogo] = useState("");
+	const [editingId, setEditingId] = useState<string | null>(null);
+
 	const [teamToDelete, setTeamToDelete] = useState<Team>();
 	const [errorMsg, setErrorMsg] = useState("");
 
 	const openDialog = () => {
+		setEditingId(null);
+		setTeamName("");
+		setTeamLogo("");
 		addTeamDialog.current?.showModal();
 	};
 	const closeDialog = () => {
@@ -25,15 +33,27 @@ const Teams = ({
 		confirmDeleteDialog.current?.close();
 	};
 
-	const handleAddTeam = (e: any) => {
+	const handleSave = (e: any) => {
 		e.preventDefault();
-		if (newTeamName === "") {
+		if (teamName === "") {
 			setErrorMsg("Enter Name!");
 			setTimeout(() => setErrorMsg(""), 3000);
 			return;
 		}
-		onTeamAdd({ name: newTeamName });
+
+		if (editingId) {
+			onTeamUpdate(editingId, { name: teamName, logoUrl: teamLogo });
+		} else {
+			onTeamAdd({ name: teamName, logoUrl: teamLogo });
+		}
 		addTeamDialog.current?.close();
+	};
+
+	const handleEdit = (team: Team) => {
+		setEditingId(team._id || null);
+		setTeamName(team.name);
+		setTeamLogo(team.logoUrl || "");
+		addTeamDialog.current?.showModal();
 	};
 
 	const confirmTeamDelete = (teamToDelete: Team) => {
@@ -51,19 +71,29 @@ const Teams = ({
 					<button className="styledButton" onClick={closeDialog}>
 						Close
 					</button>
-					<h3>Add Team Details</h3>
-					<form onSubmit={handleAddTeam}>
+					<h3>{editingId ? "Edit Team" : "Add Team Details"}</h3>
+					<form onSubmit={handleSave}>
 						<div>
 							<label>Name</label>
 							<input
 								name="Name"
-								onChange={(e) => setNewTeamName(e.target.value)}
-								value={newTeamName}
+								onChange={(e) => setTeamName(e.target.value)}
+								value={teamName}
 								className="styledInput"
 							/>
 						</div>
+						<div style={{ marginTop: '10px' }}>
+							<label>Logo URL (Optional)</label>
+							<input
+								name="LogoUrl"
+								value={teamLogo}
+								onChange={(e) => setTeamLogo(e.target.value)}
+								className="styledInput"
+								placeholder="https://..."
+							/>
+						</div>
 						<button className="styledButton" type="submit">
-							Add
+							{editingId ? "Update" : "Add"}
 						</button>
 					</form>
 					{errorMsg}
@@ -99,7 +129,7 @@ const Teams = ({
 					</thead>
 					<tbody>
 						{teams.map((team, i) => (
-							<TeamRow key={i} team={team} onDelete={confirmTeamDelete} />
+							<TeamRow key={i} team={team} onDelete={confirmTeamDelete} onEdit={handleEdit} />
 						))}
 					</tbody>
 				</table>

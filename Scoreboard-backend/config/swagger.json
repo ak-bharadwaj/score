@@ -1035,6 +1035,9 @@
 				"$ref": "#/components/schemas/FlattenMaps_T_",
 				"description": "Generic types for Document:\n*  T - the type of _id\n*  TQueryHelpers - Object with any helpers that should be mixed into the Query type\n*  DocType - the type of the actual Document created"
 			},
+			"ObjectId": {
+				"type": "string"
+			},
 			"Required_any_": {
 				"properties": {},
 				"type": "object",
@@ -1124,6 +1127,9 @@
 					"points": {
 						"type": "number",
 						"format": "double"
+					},
+					"logoUrl": {
+						"type": "string"
 					}
 				},
 				"required": [
@@ -1137,6 +1143,9 @@
 			"CreateTeamRequest": {
 				"properties": {
 					"name": {
+						"type": "string"
+					},
+					"logoUrl": {
 						"type": "string"
 					}
 				},
@@ -1941,6 +1950,134 @@
 				}
 			}
 		},
+		"/api/global/broadcast": {
+			"post": {
+				"operationId": "Broadcast",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"tags": [
+					"Global"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"duration": {
+										"type": "number",
+										"format": "double"
+									},
+									"message": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"duration",
+									"message"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/global/ticker": {
+			"post": {
+				"operationId": "UpdateTicker",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"tags": [
+					"Global"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"text": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"text"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/global/config": {
+			"get": {
+				"operationId": "GetConfig",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/Document_any.any.any_"
+										},
+										{
+											"properties": {
+												"lastBroadcastDuration": {
+													"type": "number",
+													"format": "double"
+												},
+												"lastBroadcastMessage": {
+													"type": "string"
+												},
+												"tickerText": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"lastBroadcastDuration",
+												"lastBroadcastMessage",
+												"tickerText"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"_id": {
+													"$ref": "#/components/schemas/ObjectId"
+												}
+											},
+											"required": [
+												"_id"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Global"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/api/admin/schedule": {
 			"get": {
 				"operationId": "GetNotCompletedEvents",
@@ -2221,6 +2358,40 @@
 						}
 					}
 				]
+			},
+			"patch": {
+				"operationId": "UpdateTeam",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Updates a team.",
+				"tags": [
+					"Teams"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "- The ID of the team to update.",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateTeamRequest"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/api/admin/teams/{name}/{medal}": {

@@ -15,6 +15,8 @@ import { EventController } from './../controllers/EventController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { FootballController } from './../controllers/FootballController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { GlobalController } from './../controllers/GlobalController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ScheduleController } from './../controllers/ScheduleController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { SquashMenController } from './../controllers/SquashMenController';
@@ -429,6 +431,11 @@ const models: TsoaRoute.Models = {
         "type": {"ref":"FlattenMaps_T_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ObjectId": {
+        "dataType": "refAlias",
+        "type": {"dataType":"string","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Required_any_": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"validators":{}},
@@ -467,6 +474,7 @@ const models: TsoaRoute.Models = {
             "name": {"dataType":"string","required":true},
             "medals": {"dataType":"nestedObjectLiteral","nestedProperties":{"bronze":{"dataType":"double","required":true},"silver":{"dataType":"double","required":true},"gold":{"dataType":"double","required":true}},"required":true},
             "points": {"dataType":"double","required":true},
+            "logoUrl": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -475,6 +483,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "name": {"dataType":"string","required":true},
+            "logoUrl": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -884,6 +893,80 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/global/broadcast',
+            ...(fetchMiddlewares<RequestHandler>(GlobalController)),
+            ...(fetchMiddlewares<RequestHandler>(GlobalController.prototype.broadcast)),
+
+            function GlobalController_broadcast(request: any, response: any, next: any) {
+            const args = {
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"duration":{"dataType":"double","required":true},"message":{"dataType":"string","required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new GlobalController();
+
+
+              const promise = controller.broadcast.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/global/ticker',
+            ...(fetchMiddlewares<RequestHandler>(GlobalController)),
+            ...(fetchMiddlewares<RequestHandler>(GlobalController.prototype.updateTicker)),
+
+            function GlobalController_updateTicker(request: any, response: any, next: any) {
+            const args = {
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"text":{"dataType":"string","required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new GlobalController();
+
+
+              const promise = controller.updateTicker.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/global/config',
+            ...(fetchMiddlewares<RequestHandler>(GlobalController)),
+            ...(fetchMiddlewares<RequestHandler>(GlobalController.prototype.getConfig)),
+
+            function GlobalController_getConfig(request: any, response: any, next: any) {
+            const args = {
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new GlobalController();
+
+
+              const promise = controller.getConfig.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/admin/schedule',
             ...(fetchMiddlewares<RequestHandler>(ScheduleController)),
             ...(fetchMiddlewares<RequestHandler>(ScheduleController.prototype.getNotCompletedEvents)),
@@ -1104,6 +1187,32 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.addMedal.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/api/admin/teams/:id',
+            ...(fetchMiddlewares<RequestHandler>(TeamControllers)),
+            ...(fetchMiddlewares<RequestHandler>(TeamControllers.prototype.updateTeam)),
+
+            function TeamControllers_updateTeam(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                    data: {"in":"body","name":"data","required":true,"ref":"CreateTeamRequest"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new TeamControllers();
+
+
+              const promise = controller.updateTeam.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

@@ -6,61 +6,51 @@ import "./UpcomingEventsViewer.css";
 
 const UpcomingEventsViewer = ({
 	events,
-	heading,
 }: {
 	events: Event[];
-	heading?: React.JSX.Element;
 }) => {
+	if (events.length === 0) {
+		return <div className="no-events-placeholder">No upcoming matches scheduled</div>;
+	}
+
 	return (
-		<div className={events.length !== 0 ? "allEvents" : "allEvents wire"}>
-			{events.length !== 0 && heading}
-			{events.length !== 0 ? (
-				events.map((event, i) => (
-					<div key={i} className="fjalla">
-						<div className="vertical-line-blue"></div>
-						<div className="event-event">{formatEventName(event.event)}</div>
-						<div className="vertical-line-grey"></div>
-						<span>
-							{event.event === EventCatagories.ATHLETICS
-								? (event as AthleticsEvent).athleticsEventType
-								: event.title}
+		<div className="upcoming-cards-grid">
+			{events.map((event, i) => (
+				<div key={i} className="upcoming-card fjalla">
+					<div className="upcoming-card-header">
+						<span className="upcoming-sport">{event.event}</span>
+						<span className="upcoming-time-badge">
+							{new Date(event.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
 						</span>
-						<span>
-							{event.event === EventCatagories.ATHLETICS
-								? (event as AthleticsEvent).title
-								: event.subtitle}
-						</span>
-						<span style={{ color: "rgb(127, 132, 140)", flexGrow: "1" }}>
-							Day {new Date(event.startTime).getDate() - StartingDate + 1} -{" "}
-							{new Date(event.startTime).toLocaleString("en-US", {
-								hour: "numeric",
-								minute: "numeric",
-								hour12: true,
-							})}{" "}
-						</span>
-						{event.event === EventCatagories.ATHLETICS ? (
-							<div className="tooltip">
-								Participants
-								<span className="tooltiptext">
-									{(event as AthleticsEvent).participants[0].map((p, i) => (
-										<div key={i}>
-											{p.name} : {p.team}
-										</div>
-									))}
-								</span>
-							</div>
+					</div>
+
+					<div className="upcoming-card-title">{event.title}</div>
+
+					<div className="upcoming-teams-row">
+						{event.teams && event.teams.length >= 2 ? (
+							<>
+								<div className="upcoming-team">
+									{event.teams[0].logoUrl && <img src={event.teams[0].logoUrl} alt="" className="upcoming-mini-logo" />}
+									<span className="upcoming-team-name">{event.teams[0].name}</span>
+								</div>
+								<div className="upcoming-vs">VS</div>
+								<div className="upcoming-team">
+									{event.teams[1].logoUrl && <img src={event.teams[1].logoUrl} alt="" className="upcoming-mini-logo" />}
+									<span className="upcoming-team-name">{event.teams[1].name}</span>
+								</div>
+							</>
 						) : (
-							<ul>
-								{event.teams.map((team, i) => (
-									<li key={i}>{team.name} </li>
-								))}
-							</ul>
+							<div className="upcoming-subtitle">{event.subtitle}</div>
 						)}
 					</div>
-				))
-			) : (
-				<>No Upcoming Events!</>
-			)}
+
+					<div className="upcoming-card-footer">
+						<span className="upcoming-date">
+							DAY {new Date(event.startTime).getDate() - StartingDate + 1} • {new Date(event.startTime).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+						</span>
+					</div>
+				</div>
+			))}
 		</div>
 	);
 };

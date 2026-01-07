@@ -1,8 +1,8 @@
 import Team from "../types/Teams";
 import TeamModel from "../schemas/TeamModel";
 
-export const addTeam = async (name: string) => {
-  const team: Team = { name, medals: { gold: 0, silver: 0, bronze: 0 }, points: 0 };
+export const addTeam = async (name: string, logoUrl: string = "") => {
+  const team: Team = { name, medals: { gold: 0, silver: 0, bronze: 0 }, points: 0, logoUrl };
   const newTeam = new TeamModel(team);
   await newTeam.save();
 };
@@ -22,4 +22,8 @@ export const addMedal = async (name: string, medal: "gold" | "silver" | "bronze"
   if (!medals) return;
   medals[medal]++;
   return await TeamModel.findOneAndUpdate({ name }, { medals });
+};
+
+export const updateTeam = async (id: string, data: Partial<Team>) => {
+  return await TeamModel.findByIdAndUpdate(id, data, { new: true });
 };

@@ -18,88 +18,49 @@ const FootballEventBox = ({
 				<SportsSoccerIcon />
 				Football
 			</span>
-			<h3 className="fjalla">{event.title}</h3>
-			<h3 style={{ color: "red" }} className="fjalla">
-				{event.subtitle} | Day{" "}
-				{new Date(event.startTime).getDate() - StartingDate + 1} -{" "}
-				{new Date(event.startTime).toLocaleString("en-US", {
-					hour: "numeric",
-					minute: "numeric",
-					hour12: true,
-				})}{" "}
-			</h3>
-
-			<hr className="hr" />
-			<div className="footballScoresContainer">
-				<div>
-					<h3 className="fjalla">{event.teams[0].name}</h3>
-				</div>
-				<p className=" fjalla VS">VS</p>
-				<div>
-					<h3 className="fjalla">{event.teams[1].name}</h3>
-				</div>
+			<div className="event-header-compact">
+				<h3 className="fjalla">{event.title}</h3>
+				<p>{event.subtitle}</p>
 			</div>
-			<hr className="hr" />
+
 			<div className="footballScoresContainer">
-				<div>
-					<span className="fjalla">{event.score.teamA_points}</span>
+				<div className="score-row">
+					<div className="team-info">
+						{event.teams[0].logoUrl && <img src={event.teams[0].logoUrl} alt="" className="team-logo-mini" />}
+						<h3 className="team-name-compact fjalla">{event.teams[0].name}</h3>
+					</div>
+					<div className="score-display-mini fjalla">{event.score.teamA_points}</div>
 					{isAdmin && (
-						<>
-							<button
-								onClick={() => {
-									onScoreUpdate!({
-										...event.score,
-										teamA_points: event.score.teamA_points + 1,
-									});
-								}}
-								className="styledButton"
-							>
-								Add 1
-							</button>
-							<button
-								style={{ marginTop: "5px" }}
-								onClick={() => {
-									onScoreUpdate!({
-										...event.score,
-										teamA_points: event.score.teamA_points - 1,
-									});
-								}}
-								className="styledButton"
-							>
-								Minus 1
-							</button>
-						</>
+						<div className="admin-score-controls">
+							<button onClick={() => onScoreUpdate!({ ...event.score, teamA_points: event.score.teamA_points - 1 })} className="styledButton">-</button>
+							<input
+								type="number"
+								className="styledInput"
+								value={event.score.teamA_points}
+								onChange={(e) => onScoreUpdate!({ ...event.score, teamA_points: Number(e.target.value) })}
+							/>
+							<button onClick={() => onScoreUpdate!({ ...event.score, teamA_points: event.score.teamA_points + 1 })} className="styledButton">+</button>
+						</div>
 					)}
 				</div>
-				<p className=" fjalla VS"></p>
-				<div>
-					<span className="fjalla">{event.score.teamB_points}</span>
+
+				<div className="score-row">
+					<div className="team-info">
+						{event.teams[1].logoUrl && <img src={event.teams[1].logoUrl} alt="" className="team-logo-mini" />}
+						<h3 className="team-name-compact fjalla">{event.teams[1].name}</h3>
+					</div>
+					<div className="score-display-mini fjalla">{event.score.teamB_points}</div>
 					{isAdmin && (
-						<>
-							<button
-								onClick={() => {
-									onScoreUpdate!({
-										...event.score,
-										teamB_points: event.score.teamB_points + 1,
-									});
-								}}
-								className="styledButton"
-							>
-								Add 1
-							</button>
-							<button
-								style={{ marginTop: "5px" }}
-								onClick={() => {
-									onScoreUpdate!({
-										...event.score,
-										teamB_points: event.score.teamB_points - 1,
-									});
-								}}
-								className="styledButton"
-							>
-								Minus 1
-							</button>
-						</>
+						<div className="admin-score-controls">
+							<button onClick={() => onScoreUpdate!({ ...event.score, teamB_points: event.score.teamB_points - 1 })} className="styledButton">-</button>
+							<input
+								type="number"
+								className="styledInput"
+								value={event.score.teamB_points}
+								onChange={(e) => onScoreUpdate!({ ...event.score, teamB_points: Number(e.target.value) })}
+							/>
+							<button onClick={() => onScoreUpdate!({ ...event.score, teamB_points: event.score.teamB_points + 1 })} className="styledButton">+</button>
+						</div>
 					)}
 				</div>
 			</div>

@@ -7,4 +7,5 @@ export type Team = {
 		gold: number;
 	};
 	points?: number;
+	logoUrl?: string; // URL to team logo
 };
