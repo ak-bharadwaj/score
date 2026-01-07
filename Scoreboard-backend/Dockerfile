@@ -24,6 +24,9 @@ COPY --from=backend_build /app /app
 RUN mkdir -p /app/client/build
 COPY --from=frontend /frontend/build /app/client/build
 
+# Ensure TLS trust store is available for MongoDB Atlas
+RUN apk add --no-cache ca-certificates && update-ca-certificates
+
 ENV NODE_ENV=production
 EXPOSE 5000
 CMD ["node", "dist/index.js"]
