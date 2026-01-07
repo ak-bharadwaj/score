@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Header from "../components/Header/header";
 import LiveEventsViewer from "../components/LiveEventsViewer";
 import { socket } from "../Utilities/Socket";
@@ -16,6 +16,8 @@ const Home = () => {
 	const [events, setEvents] = useState<Event[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string>("");
+	const [featuredEvent, setFeaturedEvent] = useState<Event | null>(null);
+	const featuredTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	const liveEvents = useMemo(
 		() => events.filter((event) => event.isStarted),
@@ -61,9 +63,10 @@ const Home = () => {
 	const rotationSeconds = useMemo(() => {
 		const params = new URLSearchParams(window.location.search);
 		const val = params.get("rotate");
-		if (!val) return 0;
+		const fallback = 10;
+		if (!val) return fallback;
 		const n = Number(val);
-		return isNaN(n) ? 0 : Math.max(0, n);
+		return isNaN(n) ? fallback : Math.max(5, n);
 	}, []);
 
 	const updateScoreOfEvent = (score: {}, eventID: string) => {
@@ -75,8 +78,8 @@ const Home = () => {
 	useEffect(() => {
 		const updateEventsStatus = (data: string) => {
 			const eventToBeUpdated = JSON.parse(data);
-			setEvents((prev) =>
-				prev.map((event) =>
+			setEvents((prev) => {
+				const updated = prev.map((event) =>
 					eventToBeUpdated.eventID === event._id
 						? {
 								...event,
@@ -85,8 +88,23 @@ const Home = () => {
 								isCompleted: eventToBeUpdated.isCompleted,
 						  }
 						: event
-				)
-			);
+				);
+
+				if (!eventToBeUpdated.isStarted && eventToBeUpdated.isCompleted) {
+					const endedEvent = updated.find(
+						(evt) => evt._id === eventToBeUpdated.eventID
+					);
+					if (endedEvent) {
+						if (featuredTimeout.current) clearTimeout(featuredTimeout.current);
+						setFeaturedEvent(endedEvent);
+						featuredTimeout.current = setTimeout(
+							() => setFeaturedEvent(null),
+							rotationSeconds * 1000
+						);
+					}
+				}
+				return updated;
+			});
 		};
 
 		socket.on("connect", () => console.log("connected WS"));
@@ -96,6 +114,7 @@ const Home = () => {
 		return () => {
 			socket.off("connect");
 			socket.off("eventStartOrEnd", updateEventsStatus);
+			if (featuredTimeout.current) clearTimeout(featuredTimeout.current);
 		};
 	}, []);
 
@@ -128,8 +147,9 @@ const Home = () => {
 						<LiveEventsViewer
 							onScoreUpdate={updateScoreOfEvent}
 							liveEvents={liveEvents}
-							slideshow={rotationSeconds > 0}
+							slideshow={true}
 							intervalMs={rotationSeconds * 1000}
+							featuredEvent={featuredEvent}
 						/>
 						<div className="bottomContainer">
 							<div className="leftContainer" id="schedule-section">

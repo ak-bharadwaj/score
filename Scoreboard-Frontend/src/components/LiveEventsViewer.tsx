@@ -5,13 +5,15 @@ import { useEffect, useMemo, useState } from "react";
 const LiveEventsViewer = ({
 	liveEvents,
 	onScoreUpdate,
-	slideshow,
+	slideshow = true,
 	intervalMs,
+	featuredEvent,
 }: {
 	liveEvents: Event[];
 	onScoreUpdate: (score: {}, eventID: string) => void;
 	slideshow?: boolean;
 	intervalMs?: number;
+	featuredEvent?: Event | null;
 }) => {
 	const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -21,18 +23,27 @@ const LiveEventsViewer = ({
 	}, [intervalMs]);
 
 	useEffect(() => {
-		if (!slideshow || liveEvents.length <= 1) return;
+		if (liveEvents.length === 0) return;
+		setCurrentIndex((prev) =>
+			Math.min(prev, Math.max(liveEvents.length - 1, 0))
+		);
+	}, [liveEvents.length]);
+
+	useEffect(() => {
+		if (!slideshow || featuredEvent || liveEvents.length <= 1) return;
 		setCurrentIndex(0);
 		const id = setInterval(() => {
 			setCurrentIndex((prev) => (prev + 1) % liveEvents.length);
 		}, sanitizedInterval);
 		return () => clearInterval(id);
-	}, [slideshow, liveEvents.length, sanitizedInterval]);
+	}, [slideshow, liveEvents.length, sanitizedInterval, featuredEvent]);
 
 	const itemsToRender = useMemo(() => {
-		if (slideshow && liveEvents.length > 0) return [liveEvents[currentIndex]];
+		if (featuredEvent) return [featuredEvent];
+		if (slideshow && liveEvents.length > 0)
+			return [liveEvents[Math.min(currentIndex, liveEvents.length - 1)]];
 		return liveEvents;
-	}, [slideshow, liveEvents, currentIndex]);
+	}, [slideshow, liveEvents, currentIndex, featuredEvent]);
 
 	return (
 		<>

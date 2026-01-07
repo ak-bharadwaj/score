@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { User } from "../../types/User";
 import "./Users.css";
 import { UserRole } from "../../types/UserRole";
@@ -18,6 +18,7 @@ const Users = ({
 	const [newPassword, setNewPassword] = useState("");
 	const [errorMsg, setErrorMsg] = useState("");
 	const [newRole, setNewRole] = useState(UserRole.SCORE_EDITOR);
+	const [search, setSearch] = useState("");
 
 	const addUserDialog = useRef<HTMLDialogElement | null>(null);
 
@@ -45,14 +46,52 @@ const Users = ({
 		addUserDialog.current?.close();
 	};
 
+	const filteredUsers = useMemo(
+		() =>
+			users.filter((u) => {
+				if (!search.trim()) return true;
+				const text = search.toLowerCase();
+				return (
+					u.name.toLowerCase().includes(text) ||
+					u.username.toLowerCase().includes(text) ||
+					u.role.toLowerCase().includes(text)
+				);
+			}),
+		[users, search]
+	);
+
+	const adminCount = useMemo(
+		() => users.filter((u) => u.role === UserRole.ADMIN).length,
+		[users]
+	);
+	const editorCount = useMemo(
+		() => users.filter((u) => u.role === UserRole.SCORE_EDITOR).length,
+		[users]
+	);
+
 	return (
 		<div className="usersContainer">
 			<section className="top">
-				<button onClick={openDialog} className="styledButton">
-					Add User
-				</button>
+				<div className="topActions">
+					<div className="statChips">
+						<span className="pill">Total: {users.length}</span>
+						<span className="pill success">Admins: {adminCount}</span>
+						<span className="pill info">Editors: {editorCount}</span>
+					</div>
+					<div className="topControls">
+						<input
+							placeholder="Search name, username or role"
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
+							className="styledInput searchInput"
+						/>
+						<button onClick={openDialog} className="styledButton primary">
+							Add User
+						</button>
+					</div>
+				</div>
 				<dialog ref={addUserDialog}>
-					<button className="styledButton" onClick={closeDialog}>
+					<button className="styledButton ghost" onClick={closeDialog}>
 						Close
 					</button>
 					<h3>Add User Details</h3>
@@ -81,6 +120,7 @@ const Users = ({
 								name="Password"
 								onChange={(e) => setNewPassword(e.target.value)}
 								value={newPassword}
+								type="password"
 								className="styledInput"
 							/>
 						</div>
@@ -101,7 +141,7 @@ const Users = ({
 							Add
 						</button>
 					</form>
-					{errorMsg}
+					{errorMsg && <p className="errorText">{errorMsg}</p>}
 				</dialog>
 			</section>
 			<section className="main">

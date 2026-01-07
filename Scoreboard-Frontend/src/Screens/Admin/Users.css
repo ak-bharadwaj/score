@@ -10,7 +10,65 @@
 		border-radius: 5px;
 		background-color: color-mix(in srgb, var(--light_blue) 50%, white 50%);
 		padding: 10px;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
 	}
+}
+
+.topActions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.topControls {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+}
+
+.searchInput {
+	min-width: 240px;
+}
+
+.statChips {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.pill {
+	padding: 6px 10px;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--shadow_grey) 30%, #fff 70%);
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	font-size: 13px;
+	font-weight: 600;
+	color: #333;
+}
+.pill.success {
+	background: color-mix(in srgb, #28a745 20%, #fff 80%);
+	color: #0f5132;
+	border-color: #cce9d8;
+}
+.pill.info {
+	background: color-mix(in srgb, #0d6efd 15%, #fff 85%);
+	color: #0c3c78;
+	border-color: #d5e2ff;
+}
+
+.primary {
+	box-shadow: 0 6px 18px rgba(5, 84, 165, 0.2);
+}
+
+.ghost {
+	background: transparent;
+	color: #333;
+	border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .usersContainer > .top > dialog {
@@ -32,6 +90,11 @@
 	font-size: 12px;
 }
 .usersContainer > .top > dialog > h3 {
+	text-align: center;
+}
+.usersContainer > .top > dialog .errorText {
+	color: #c53030;
+	font-weight: 600;
 	text-align: center;
 }
 .usersContainer > .top > dialog > form {
@@ -80,5 +143,14 @@
 	.usersContainer {
 		margin: 10px;
 		padding-bottom: 20vh;
+	}
+	.topActions {
+		align-items: flex-start;
+	}
+	.topControls {
+		width: 100%;
+	}
+	.searchInput {
+		flex: 1;
 	}
 }
