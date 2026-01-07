@@ -22,7 +22,7 @@ app.use(compression());
 app.use(cors(CorsConfig));
 // Mount Swagger UI via a Router to avoid type conflicts between different express type instances
 const docsRouter = express.Router();
-docsRouter.use(...(swaggerUi as any).serve);
+docsRouter.use("/", ...(swaggerUi as any).serve);
 docsRouter.get("/", (swaggerUi as any).setup(swaggerConfig));
 app.use("/api/docs", docsRouter);
 app.use(express.static(path.join(__dirname, "../client/build"), { maxAge: "1d", etag: true }));
