@@ -1,6 +1,5 @@
 {
 	"name": "interiit_scores_app_ibp",
-	"homepage": "https://scoreboard.interiit.in/",
 	"version": "1.0.5",
 	"private": true,
 	"dependencies": {
