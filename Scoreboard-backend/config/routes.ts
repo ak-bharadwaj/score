@@ -185,6 +185,7 @@ const models: TsoaRoute.Models = {
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "participants": {"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Participant"}}},
+            "votes": {"dataType":"nestedObjectLiteral","nestedProperties":{"teamB":{"dataType":"double","required":true},"teamA":{"dataType":"double","required":true}}},
             "winner": {"ref":"Winner"},
         },
         "additionalProperties": false,
@@ -213,6 +214,7 @@ const models: TsoaRoute.Models = {
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "participants": {"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Participant"}}},
+            "votes": {"dataType":"nestedObjectLiteral","nestedProperties":{"teamB":{"dataType":"double","required":true},"teamA":{"dataType":"double","required":true}}},
             "winner": {"ref":"Winner"},
         },
         "additionalProperties": false,
@@ -245,6 +247,7 @@ const models: TsoaRoute.Models = {
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "participants": {"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Participant"}}},
+            "votes": {"dataType":"nestedObjectLiteral","nestedProperties":{"teamB":{"dataType":"double","required":true},"teamA":{"dataType":"double","required":true}}},
             "winner": {"ref":"Winner"},
             "eventLink": {"dataType":"string","required":true},
         },
@@ -274,6 +277,7 @@ const models: TsoaRoute.Models = {
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "participants": {"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Participant"}}},
+            "votes": {"dataType":"nestedObjectLiteral","nestedProperties":{"teamB":{"dataType":"double","required":true},"teamA":{"dataType":"double","required":true}}},
             "winner": {"ref":"Winner"},
         },
         "additionalProperties": false,
@@ -302,6 +306,7 @@ const models: TsoaRoute.Models = {
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "participants": {"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Participant"}}},
+            "votes": {"dataType":"nestedObjectLiteral","nestedProperties":{"teamB":{"dataType":"double","required":true},"teamA":{"dataType":"double","required":true}}},
             "winner": {"ref":"Winner"},
         },
         "additionalProperties": false,
@@ -335,6 +340,7 @@ const models: TsoaRoute.Models = {
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "participants": {"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Participant"}}},
+            "votes": {"dataType":"nestedObjectLiteral","nestedProperties":{"teamB":{"dataType":"double","required":true},"teamA":{"dataType":"double","required":true}}},
             "winner": {"ref":"Winner"},
             "matchType": {"ref":"MatchTypes","required":true},
         },
@@ -364,6 +370,7 @@ const models: TsoaRoute.Models = {
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "participants": {"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Participant"}}},
+            "votes": {"dataType":"nestedObjectLiteral","nestedProperties":{"teamB":{"dataType":"double","required":true},"teamA":{"dataType":"double","required":true}}},
             "winner": {"ref":"Winner"},
             "matchType": {"ref":"MatchTypes","required":true},
         },
@@ -396,6 +403,7 @@ const models: TsoaRoute.Models = {
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "participants": {"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Participant"}}},
+            "votes": {"dataType":"nestedObjectLiteral","nestedProperties":{"teamB":{"dataType":"double","required":true},"teamA":{"dataType":"double","required":true}}},
             "winner": {"ref":"Winner"},
             "athleticsEventType": {"ref":"AthleticsEventTypes","required":true},
         },
@@ -483,6 +491,15 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "name": {"dataType":"string","required":true},
+            "logoUrl": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateTeamRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string"},
             "logoUrl": {"dataType":"string"},
         },
         "additionalProperties": false,
@@ -867,6 +884,32 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/events/:id/vote',
+            ...(fetchMiddlewares<RequestHandler>(EventController)),
+            ...(fetchMiddlewares<RequestHandler>(EventController.prototype.vote)),
+
+            function EventController_vote(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"action":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["add"]},{"dataType":"enum","enums":["remove"]}],"required":true},"team":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["A"]},{"dataType":"enum","enums":["B"]}],"required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new EventController();
+
+
+              const promise = controller.vote.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/api/events/football/:id',
             ...(fetchMiddlewares<RequestHandler>(FootballController)),
             ...(fetchMiddlewares<RequestHandler>(FootballController.prototype.updateScore)),
@@ -943,6 +986,31 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/global/featured-event',
+            ...(fetchMiddlewares<RequestHandler>(GlobalController)),
+            ...(fetchMiddlewares<RequestHandler>(GlobalController.prototype.updateFeaturedEvent)),
+
+            function GlobalController_updateFeaturedEvent(request: any, response: any, next: any) {
+            const args = {
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"eventId":{"dataType":"string","required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new GlobalController();
+
+
+              const promise = controller.updateFeaturedEvent.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/global/config',
             ...(fetchMiddlewares<RequestHandler>(GlobalController)),
             ...(fetchMiddlewares<RequestHandler>(GlobalController.prototype.getConfig)),
@@ -1010,6 +1078,30 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.updateExistingEvents.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/api/admin/schedule/all',
+            ...(fetchMiddlewares<RequestHandler>(ScheduleController)),
+            ...(fetchMiddlewares<RequestHandler>(ScheduleController.prototype.deleteAllEvents)),
+
+            function ScheduleController_deleteAllEvents(request: any, response: any, next: any) {
+            const args = {
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new ScheduleController();
+
+
+              const promise = controller.deleteAllEvents.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);
@@ -1200,7 +1292,7 @@ export function RegisterRoutes(app: Router) {
             function TeamControllers_updateTeam(request: any, response: any, next: any) {
             const args = {
                     id: {"in":"path","name":"id","required":true,"dataType":"string"},
-                    data: {"in":"body","name":"data","required":true,"ref":"CreateTeamRequest"},
+                    data: {"in":"body","name":"data","required":true,"ref":"UpdateTeamRequest"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

@@ -36,203 +36,153 @@ body {
 	margin: 0 auto;
 	width: 100%;
 	box-sizing: border-box;
-	height: calc(100vh - 140px);
-	/* Fill screen minus header/footer */
+	min-height: calc(100vh - 140px);
 }
 
 .col-side {
-	flex: 3.5;
-	/* ~30% */
-	min-width: 300px;
+	flex: 3;
+	/* Adjusted from 3.5 */
+	min-width: 320px;
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
-	height: 100%;
 }
 
 .col-center {
-	flex: 4.5;
-	/* ~40% */
+	flex: 6;
+	/* Focused more on center */
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
-	height: 100%;
 }
 
 .live-broadcast-area {
 	display: flex;
 	flex-direction: column;
-	height: 100%;
+	height: auto;
 	gap: 15px;
 }
 
+/* Visibility Improvements */
 .section-header-small {
 	font-family: 'Fjalla One', sans-serif;
-	color: var(--secondary-text);
-	font-size: 0.9rem;
-	letter-spacing: 2px;
-	margin: 0 0 10px 0;
-	border-left: 3px solid var(--accent-color);
-	padding-left: 10px;
+	color: #fff;
+	/* Increased visibility */
+	font-size: 1rem;
+	letter-spacing: 2.5px;
+	margin: 0 0 15px 0;
+	border-left: 4px solid var(--accent-color);
+	padding-left: 12px;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Scrollable containers for side panels */
+/* Scrollable containers - handled by natural scroll on mobile */
 .scroll-container {
 	overflow-y: auto;
-	padding-right: 12px;
+	padding-right: 8px;
 	scroll-behavior: smooth;
+	scrollbar-width: none;
+	/* Firefox */
+	-ms-overflow-style: none;
+	/* IE and Edge */
 }
 
 .scroll-container::-webkit-scrollbar {
-	width: 4px;
+	display: none;
+	/* Chrome, Safari and Opera */
 }
 
-.scroll-container::-webkit-scrollbar-track {
-	background: rgba(255, 255, 255, 0.02);
-}
-
-.scroll-container::-webkit-scrollbar-thumb {
-	background: rgba(255, 255, 255, 0.1);
-	border-radius: 2px;
-}
-
-.scroll-container::-webkit-scrollbar-thumb:hover {
-	background: var(--accent-color);
-}
-
-/* Styling for full sections in side panels */
+/* Panel Sections */
 .upcoming-section-full,
 .past-section-full {
-	background: var(--secondary-bg);
-	padding: 15px;
-	border-radius: 8px;
-	border: 1px solid var(--border-color);
-	display: flex;
-	flex-direction: column;
-	height: calc(100vh - 180px);
-	/* Fill available vertical space */
-	flex-grow: 1;
-}
-
-.upcoming-container {
-	display: flex;
-	flex-direction: column;
-	gap: 12px;
-}
-
-.mini-event-row {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 10px 14px;
-	background: rgba(255, 255, 255, 0.05);
-	border-radius: 6px;
-	border: 1px solid rgba(255, 255, 255, 0.03);
-	transition: all 0.2s ease;
-}
-
-.mini-event-row:hover {
-	background: rgba(255, 255, 255, 0.08);
-	transform: translateX(4px);
-}
-
-.mini-time {
-	font-size: 0.8rem;
-	font-weight: bold;
-	color: var(--accent-color);
-	font-family: 'Fjalla One', sans-serif;
-}
-
-.mini-title {
-	font-size: 0.9rem;
-	color: #eee;
-	flex: 1;
-	text-align: right;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	margin-left: 15px;
-}
-
-.empty-state {
-	color: #666;
-	text-align: center;
+	background: rgba(26, 26, 26, 0.95);
+	/* Slightly darker/more solid for better contrast */
 	padding: 20px;
-	font-style: italic;
+	border-radius: 12px;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	display: flex;
+	flex-direction: column;
+	min-height: 400px;
+	max-height: calc(100vh - 180px);
+	/* Fill available height safely */
+	overflow-y: auto;
+	/* Enable scrolling */
+	scrollbar-width: none;
+	/* Hide for Firefox */
+	-ms-overflow-style: none;
+	/* Hide for IE/Edge */
 }
 
-.highlight-accent {
-	color: var(--accent-color);
-	font-weight: bold;
+.upcoming-section-full::-webkit-scrollbar,
+.past-section-full::-webkit-scrollbar {
+	display: none;
+	/* Hide for Chrome/Safari */
 }
 
-.highlight-value {
-	color: #fff;
-	text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-}
-
-/* Event Boxes Overhaul via Global override if not scoped */
-.liveEventBox {
-	background: var(--card-bg) !important;
-	backdrop-filter: blur(10px);
-	border: 1px solid var(--border-color) !important;
-	border-left: 5px solid var(--accent-color) !important;
-	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
-	border-radius: 8px !important;
-	color: white !important;
-	margin-bottom: 20px;
-	/* Spacing between cards */
-	animation: slideUpFade 0.5s ease-out;
-	transition: transform 0.3s ease;
-}
-
-.liveEventBox:hover {
-	transform: translateY(-5px);
-	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5) !important;
-}
-
-@keyframes slideUpFade {
-	from {
-		opacity: 0;
-		transform: translateY(20px);
-	}
-
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
-/* Ensure LiveEventsViewer takes full width of Right Panel */
-.live-section {
-	width: 100%;
-	/* flex: 1; maybe allow it to grow */
-}
-
-.error-banner {
-	background: #ffcc00;
-	color: black;
-	text-align: center;
-	padding: 10px;
-	font-weight: bold;
-}
-
-.footer-spacer {
-	height: 60px;
-	/* Space for ticker */
-}
-
-@media screen and (max-width: 1100px) {
+/* Responsive Overrides */
+@media screen and (max-width: 1200px) {
 	.main-content-3col {
 		flex-direction: column;
 		height: auto;
+		padding: 15px;
 	}
 
-	.col-side,
 	.col-center {
-		flex: none;
+		order: 1;
+		/* Live first */
 		width: 100%;
+		min-width: 0;
+		height: auto;
+		flex: none;
 	}
+
+	.col-side.left {
+		order: 2;
+		/* Upcoming second */
+		width: 100%;
+		min-width: 0;
+		height: auto;
+		flex: none;
+	}
+
+	.col-side.right {
+		order: 3;
+		/* Past third */
+		width: 100%;
+		min-width: 0;
+		height: auto;
+		flex: none;
+	}
+
+	.upcoming-section-full,
+	.past-section-full {
+		max-height: 600px;
+		min-height: auto;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.main-content-3col {
+		padding: 10px;
+		gap: 30px;
+	}
+
+	.section-header-small {
+		font-size: 0.9rem;
+	}
+}
+
+/* Event Boxes Overhaul */
+.liveEventBox {
+	background: #ffffff !important;
+	/* Back to white for maximum legibility */
+	color: #333 !important;
+	/* Dark text for white background */
+	border: none !important;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+	border-radius: 16px !important;
+	margin-bottom: 25px;
+	padding: 25px !important;
 }
 
 /* Standby Screen */

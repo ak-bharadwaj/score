@@ -17,6 +17,38 @@
 	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	border-left: 6px solid #555;
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+	position: relative;
+}
+
+/* Enhanced Gender Styles - Full Border */
+.result-card.men {
+	border: 2px solid #36a2eb !important;
+	background: linear-gradient(90deg, rgba(54, 162, 235, 0.1) 0%, rgba(40, 40, 40, 0.8) 100%);
+}
+
+.result-card.women {
+	border: 2px solid #ff69b4 !important;
+	background: linear-gradient(90deg, rgba(255, 105, 180, 0.1) 0%, rgba(40, 40, 40, 0.8) 100%);
+}
+
+.past-gender-badge {
+	position: absolute;
+	top: -10px;
+	right: 15px;
+	font-size: 0.65rem;
+	font-weight: 900;
+	padding: 2px 8px;
+	border-radius: 4px;
+	color: white;
+	z-index: 2;
+}
+
+.result-card.men .past-gender-badge {
+	background: #36a2eb;
+}
+
+.result-card.women .past-gender-badge {
+	background: #ff69b4;
 }
 
 .result-card:hover {
@@ -38,76 +70,77 @@
 	font-weight: 500;
 }
 
-.result-card-body {
+/* Horizontal Compact Layout - Strict No Wrap */
+.result-card-body.horizontal-compact {
 	display: flex;
+	flex-direction: row !important;
+	flex-wrap: nowrap !important;
 	align-items: center;
 	justify-content: space-between;
-	gap: 15px;
+	gap: 4px;
+	padding: 6px 0;
+	width: 100%;
 }
 
-.team-result {
+.team-side {
 	display: flex;
+	flex-direction: row !important;
 	align-items: center;
-	gap: 12px;
+	gap: 6px;
 	flex: 1;
+	min-width: 0;
+	max-width: 48%;
 }
 
-.team-result.is-winner .team-name {
-	color: #00ff00;
+.team-side.left {
+	justify-content: flex-start;
+}
+
+.team-side.right {
+	justify-content: flex-end;
+}
+
+.t-name {
+	font-size: 0.8rem;
+	color: #9aa0a6;
 	font-weight: 700;
-	text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-}
-
-.team-result.is-winner .team-score {
-	color: #00ff00;
-	font-size: 1.5rem;
-}
-
-.result-logo {
-	width: 36px;
-	height: 36px;
-	object-fit: contain;
-	filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-}
-
-.result-logo-placeholder {
-	width: 36px;
-	height: 36px;
-	background: #444;
-	color: #fff;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: 50%;
-	font-size: 1rem;
-	font-weight: bold;
-	border: 1px solid #555;
-}
-
-.team-name {
-	font-size: 1rem;
+	text-transform: uppercase;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	min-width: 0;
 	flex: 1;
-	letter-spacing: 0.5px;
 }
 
-.team-score {
-	font-size: 1.3rem;
-	font-weight: bold;
-	min-width: 30px;
+.team-side.win .t-name {
+	color: #4ade80;
+	font-weight: 800;
+}
+
+.team-side.right .t-name {
+	text-align: right;
+}
+
+.t-score {
+	font-size: 1.4rem;
+	font-family: 'Fjalla One';
+	color: #fff;
+	font-weight: 900;
+	flex-shrink: 0;
+	min-width: 20px;
 	text-align: center;
-	font-family: 'Fjalla One', sans-serif;
+	line-height: 1;
 }
 
-.vs-divider {
-	font-size: 0.8rem;
-	color: #777;
+.team-side.win .t-score {
+	color: #4ade80;
+}
+
+.divider {
+	color: #555;
 	font-weight: bold;
-	background: rgba(255, 255, 255, 0.05);
-	padding: 4px 8px;
-	border-radius: 4px;
+	padding: 0 4px;
+	font-size: 1.2rem;
 }
 
 .result-card-footer {
@@ -119,7 +152,7 @@
 .winner-announcement {
 	font-size: 0.9rem;
 	font-weight: bold;
-	color: var(--accent-color);
+	color: #4ade80;
 	letter-spacing: 2px;
 	text-transform: uppercase;
 }
@@ -192,11 +225,55 @@
 			justify-content: space-between;
 			border-bottom: 1px solid gainsboro;
 
-			.dialogue-close {
+			.dialogue-box-head .dialogue-close {
 				font-size: 2em;
 				cursor: pointer;
 			}
 		}
+	}
+}
+
+@media screen and (max-width: 480px) {
+	.result-card {
+		padding: 12px;
+	}
+
+	.team-name {
+		font-size: 0.85rem;
+		max-width: 70px;
+	}
+
+	.team-score {
+		font-size: 1.1rem;
+		min-width: 25px;
+	}
+
+	.result-logo {
+		width: 28px;
+		height: 28px;
+	}
+
+	.result-logo-placeholder {
+		width: 28px;
+		height: 28px;
+		font-size: 0.8rem;
+	}
+
+	.team-side {
+		gap: 4px;
+	}
+
+	.t-name {
+		font-size: 0.7rem;
+	}
+
+	.vs-divider {
+		font-size: 0.7rem;
+		padding: 2px 4px;
+	}
+
+	.winner-announcement {
+		font-size: 0.8rem;
 	}
 }
 

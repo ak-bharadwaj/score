@@ -26,6 +26,10 @@ const docsRouter = express.Router();
 (docsRouter as any).get("/", swaggerUi.setup(swaggerConfig));
 (app as any).use("/api/docs", docsRouter);
 (app as any).use("/", express.static(path.join(__dirname, "../client/build"), { maxAge: "1d", etag: true }));
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+if (process.env.NODE_ENV === "production") {
+  app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+}
 
 app.use((req, res, next) => {
   console.log(`${req.ip} requested: ${req.url}`);
@@ -36,8 +40,21 @@ app.use((req, res, next) => {
 //   res.send("Hello");
 // });
 
+import { EventController } from "./controllers/EventController";
+
 app.use("/api/auth", AuthRoutes);
 app.use("/api/admin", AdminRoutes);
+
+// Explicitly handle Voting Route here to bypass EventRoutes middleware issues
+app.post("/api/events/:id/vote", async (req, res) => {
+  try {
+    await new EventController().vote(req.params.id, req.body);
+    res.sendStatus(204);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 app.use("/api/events", EventRoutes);
 app.use("/api/global", GlobalRoutes);
 

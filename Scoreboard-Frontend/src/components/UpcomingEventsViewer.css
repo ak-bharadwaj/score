@@ -14,6 +14,16 @@
 	transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 	position: relative;
+	opacity: 0;
+	transform: translateX(-30px);
+	animation: slideInLeft 0.5s ease-out forwards;
+}
+
+@keyframes slideInLeft {
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
 }
 
 .upcoming-card:hover {
@@ -24,13 +34,13 @@
 }
 
 .upcoming-card.men {
-	border-right: 4px solid #2ecc71 !important;
-	/* Green for Men */
+	border-left-color: #36a2eb !important;
+	border-right: 4px solid #36a2eb !important;
 }
 
 .upcoming-card.women {
+	border-left-color: #ff69b4 !important;
 	border-right: 4px solid #ff69b4 !important;
-	/* Pink for Women */
 }
 
 .upcoming-gender-badge {
@@ -46,7 +56,7 @@
 }
 
 .upcoming-card.men .upcoming-gender-badge {
-	background: #2ecc71;
+	background: #36a2eb;
 }
 
 .upcoming-card.women .upcoming-gender-badge {
@@ -61,7 +71,8 @@
 }
 
 .upcoming-sport {
-	font-size: 0.75rem;
+	font-size: 0.9rem;
+	font-weight: 800;
 	color: var(--accent-color);
 	letter-spacing: 2px;
 	text-transform: uppercase;
@@ -105,11 +116,13 @@
 }
 
 .upcoming-team-name {
-	font-size: 0.9rem;
-	color: #aaa;
+	font-size: 1.15rem;
+	font-weight: 700;
+	color: #fff;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	flex: 1;
 }
 
 .upcoming-vs {
@@ -139,4 +152,24 @@
 	background: rgba(0, 0, 0, 0.2);
 	border-radius: 12px;
 	border: 1px dashed #333;
+}
+
+@media screen and (max-width: 400px) {
+	.upcoming-card {
+		padding: 12px;
+	}
+
+	.upcoming-card-title {
+		font-size: 0.95rem;
+	}
+
+	.upcoming-team-name {
+		font-size: 1rem;
+		max-width: 110px;
+	}
+
+	.upcoming-mini-logo {
+		width: 22px;
+		height: 22px;
+	}
 }

@@ -67,6 +67,14 @@
     border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.scorebug-container.women .sb-label {
+    background: linear-gradient(135deg, #ff69b4 0%, #e05297 100%);
+}
+
+.scorebug-container.men .sb-label {
+    background: linear-gradient(135deg, #36a2eb 0%, #2980b9 100%);
+}
+
 .sb-phase-tag {
     background: rgba(255, 255, 255, 0.15);
     padding: 2px 8px;

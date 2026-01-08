@@ -2,6 +2,9 @@ import React from 'react';
 import Event from '../../types/Event';
 import CricketEvent from '../../types/CricketEvent';
 import './Scorebug.css';
+import TeamLogo from '../TeamLogo';
+
+import EventCatagories, { getEventGender } from '../../types/EventCategories';
 
 interface ScorebugProps {
     event: Event | null;
@@ -51,9 +54,10 @@ const Scorebug: React.FC<ScorebugProps> = ({ event, variant = 'desktop', inHeade
     };
 
     const phase = getPhase();
+    const gender = getEventGender(event);
 
     return (
-        <div className={`scorebug-container ${variant} ${inHeader ? 'in-header' : ''}`}>
+        <div className={`scorebug-container ${variant} ${inHeader ? 'in-header' : ''} ${gender}`}>
             <div className="scorebug-content">
                 {/* Event Label (e.g. "LIVE | FINALS") */}
                 <div className="sb-label">
@@ -65,7 +69,7 @@ const Scorebug: React.FC<ScorebugProps> = ({ event, variant = 'desktop', inHeade
                 {/* Team A */}
                 <div className="sb-team team-left">
                     <span className="sb-team-name">{teamA?.name || 'TBA'}</span>
-                    {teamA?.logoUrl && <img src={teamA.logoUrl} alt="" className="sb-logo" />}
+                    <TeamLogo src={teamA?.logoUrl} name={teamA?.name || ""} size={28} className="sb-logo" />
                 </div>
 
                 {/* Scores */}
@@ -83,7 +87,7 @@ const Scorebug: React.FC<ScorebugProps> = ({ event, variant = 'desktop', inHeade
 
                 {/* Team B */}
                 <div className="sb-team team-right">
-                    {teamB?.logoUrl && <img src={teamB.logoUrl} alt="" className="sb-logo" />}
+                    <TeamLogo src={teamB?.logoUrl} name={teamB?.name || ""} size={28} className="sb-logo" />
                     <span className="sb-team-name">{teamB?.name || 'TBA'}</span>
                 </div>
 

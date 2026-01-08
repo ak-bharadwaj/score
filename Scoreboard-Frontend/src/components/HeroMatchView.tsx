@@ -1,7 +1,9 @@
 import React from 'react';
 import Event from '../types/Event';
 import EventCatagories, { getEventGender } from '../types/EventCategories';
+import TeamLogo from './TeamLogo';
 import './HeroMatchView.css'; // We will create this
+import VoteWidget from './VoteWidget';
 
 interface HeroMatchViewProps {
     event: Event;
@@ -69,12 +71,15 @@ const HeroMatchView: React.FC<HeroMatchViewProps> = ({ event }) => {
     const isLive = event.isStarted && !event.isCompleted;
 
     return (
-    return (
         <div className={`hero-match-card ${gender} ${isLive ? 'live-glow' : ''}`}>
             <div className="hero-header">
                 <div className="hero-sport-badge-container">
                     <div className="hero-sport-badge">
-                        {gender !== "unknown" && <span className="hero-gender-tag">{gender === "men" ? "MEN" : "WOMEN"}</span>}
+                        {gender !== "unknown" && (
+                            <span className={`hero-gender-indicator ${gender}`}>
+                                {gender === "men" ? "MEN" : "WOMEN"}
+                            </span>
+                        )}
                         <span className="hero-sport">{event.event.split('_')[0]}</span>
                     </div>
                     <div className={`hero-gametype-tag ${gameType.includes('FINAL') ? 'is-final' : ''}`}>
@@ -91,26 +96,14 @@ const HeroMatchView: React.FC<HeroMatchViewProps> = ({ event }) => {
                 {/* TOP ROW: LOGOS AND NAMES */}
                 <div className="hero-teams-top-row">
                     <div className="hero-team-block team-a">
-                        <div className="hero-logo-wrapper big">
-                            {event.teams[0]?.logoUrl ? (
-                                <img src={event.teams[0].logoUrl} alt={event.teams[0].name} className="hero-big-logo" />
-                            ) : (
-                                <div className="hero-logo-placeholder">{event.teams[0]?.name?.[0] || '?'}</div>
-                            )}
-                        </div>
+                        <TeamLogo src={event.teams[0]?.logoUrl} name={event.teams[0]?.name || ""} size={110} className="hero-big-logo" />
                         <div className="hero-team-name-big fjalla">{event.teams[0]?.name || 'TBA'}</div>
                     </div>
 
                     <div className="hero-vs-divider-big fjalla">VS</div>
 
                     <div className="hero-team-block team-b">
-                        <div className="hero-logo-wrapper big">
-                            {event.teams[1]?.logoUrl ? (
-                                <img src={event.teams[1].logoUrl} alt={event.teams[1].name} className="hero-big-logo" />
-                            ) : (
-                                <div className="hero-logo-placeholder">{event.teams[1]?.name?.[0] || '?'}</div>
-                            )}
-                        </div>
+                        <TeamLogo src={event.teams[1]?.logoUrl} name={event.teams[1]?.name || ""} size={110} className="hero-big-logo" />
                         <div className="hero-team-name-big fjalla">{event.teams[1]?.name || 'TBA'}</div>
                     </div>
                 </div>
@@ -119,13 +112,19 @@ const HeroMatchView: React.FC<HeroMatchViewProps> = ({ event }) => {
                 <div className="hero-scores-bottom-row">
                     {renderScore()}
                 </div>
+
+                {isLive && <VoteWidget event={event} />}
             </div>
 
             <div className="hero-event-details">
                 <div className="hero-match-title">{event.title}</div>
                 {event.isCompleted && (
                     <div className={`hero-winner-tag ${gameType.includes('FINAL') ? 'is-final' : ''}`}>
-                        WINNER: <span className="winner-name">{event.winner?.team?.name || 'TBA'}</span>
+                        WINNER:
+                        <span style={{ margin: '0 8px', display: 'flex', alignItems: 'center' }}>
+                            <TeamLogo src={event.winner?.team?.logoUrl} name={event.winner?.team?.name || ""} size={24} />
+                        </span>
+                        <span className="winner-name">{event.winner?.team?.name || 'TBA'}</span>
                     </div>
                 )}
             </div>

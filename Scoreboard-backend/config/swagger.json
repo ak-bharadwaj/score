@@ -328,6 +328,23 @@
 						},
 						"type": "array"
 					},
+					"votes": {
+						"properties": {
+							"teamB": {
+								"type": "number",
+								"format": "double"
+							},
+							"teamA": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"teamB",
+							"teamA"
+						],
+						"type": "object"
+					},
 					"winner": {
 						"$ref": "#/components/schemas/Winner"
 					}
@@ -405,6 +422,23 @@
 							"type": "array"
 						},
 						"type": "array"
+					},
+					"votes": {
+						"properties": {
+							"teamB": {
+								"type": "number",
+								"format": "double"
+							},
+							"teamA": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"teamB",
+							"teamA"
+						],
+						"type": "object"
 					},
 					"winner": {
 						"$ref": "#/components/schemas/Winner"
@@ -504,6 +538,23 @@
 						},
 						"type": "array"
 					},
+					"votes": {
+						"properties": {
+							"teamB": {
+								"type": "number",
+								"format": "double"
+							},
+							"teamA": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"teamB",
+							"teamA"
+						],
+						"type": "object"
+					},
 					"winner": {
 						"$ref": "#/components/schemas/Winner"
 					},
@@ -586,6 +637,23 @@
 						},
 						"type": "array"
 					},
+					"votes": {
+						"properties": {
+							"teamB": {
+								"type": "number",
+								"format": "double"
+							},
+							"teamA": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"teamB",
+							"teamA"
+						],
+						"type": "object"
+					},
 					"winner": {
 						"$ref": "#/components/schemas/Winner"
 					}
@@ -663,6 +731,23 @@
 							"type": "array"
 						},
 						"type": "array"
+					},
+					"votes": {
+						"properties": {
+							"teamB": {
+								"type": "number",
+								"format": "double"
+							},
+							"teamA": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"teamB",
+							"teamA"
+						],
+						"type": "object"
 					},
 					"winner": {
 						"$ref": "#/components/schemas/Winner"
@@ -749,6 +834,23 @@
 						},
 						"type": "array"
 					},
+					"votes": {
+						"properties": {
+							"teamB": {
+								"type": "number",
+								"format": "double"
+							},
+							"teamA": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"teamB",
+							"teamA"
+						],
+						"type": "object"
+					},
 					"winner": {
 						"$ref": "#/components/schemas/Winner"
 					},
@@ -830,6 +932,23 @@
 							"type": "array"
 						},
 						"type": "array"
+					},
+					"votes": {
+						"properties": {
+							"teamB": {
+								"type": "number",
+								"format": "double"
+							},
+							"teamA": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"teamB",
+							"teamA"
+						],
+						"type": "object"
 					},
 					"winner": {
 						"$ref": "#/components/schemas/Winner"
@@ -934,6 +1053,23 @@
 							"type": "array"
 						},
 						"type": "array"
+					},
+					"votes": {
+						"properties": {
+							"teamB": {
+								"type": "number",
+								"format": "double"
+							},
+							"teamA": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"teamB",
+							"teamA"
+						],
+						"type": "object"
 					},
 					"winner": {
 						"$ref": "#/components/schemas/Winner"
@@ -1152,6 +1288,18 @@
 				"required": [
 					"name"
 				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateTeamRequest": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"logoUrl": {
+						"type": "string"
+					}
+				},
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -1910,6 +2058,60 @@
 				}
 			}
 		},
+		"/api/events/{id}/vote": {
+			"post": {
+				"operationId": "Vote",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"tags": [
+					"Events"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"action": {
+										"type": "string",
+										"enum": [
+											"add",
+											"remove"
+										]
+									},
+									"team": {
+										"type": "string",
+										"enum": [
+											"A",
+											"B"
+										]
+									}
+								},
+								"required": [
+									"action",
+									"team"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/api/events/football/{id}": {
 			"put": {
 				"operationId": "UpdateScore",
@@ -2021,6 +2223,39 @@
 				}
 			}
 		},
+		"/api/global/featured-event": {
+			"post": {
+				"operationId": "UpdateFeaturedEvent",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"tags": [
+					"Global"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"eventId": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"eventId"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/api/global/config": {
 			"get": {
 				"operationId": "GetConfig",
@@ -2036,6 +2271,9 @@
 										},
 										{
 											"properties": {
+												"featuredEventId": {
+													"type": "string"
+												},
 												"lastBroadcastDuration": {
 													"type": "number",
 													"format": "double"
@@ -2048,6 +2286,7 @@
 												}
 											},
 											"required": [
+												"featuredEventId",
 												"lastBroadcastDuration",
 												"lastBroadcastMessage",
 												"tickerText"
@@ -2159,6 +2398,23 @@
 						}
 					}
 				}
+			}
+		},
+		"/api/admin/schedule/all": {
+			"delete": {
+				"operationId": "DeleteAllEvents",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Deletes all events from the database.",
+				"tags": [
+					"Admin",
+					"Schedule"
+				],
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/api/events/squashmen/{id}": {
@@ -2387,7 +2643,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CreateTeamRequest"
+								"$ref": "#/components/schemas/UpdateTeamRequest"
 							}
 						}
 					}

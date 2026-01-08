@@ -1,6 +1,6 @@
 import { Body, Example, Get, Patch, Path, Post, Put, Response, Route, Tags } from "tsoa";
 
-import { getEventByID, readEvents, setWinner, toggleEventStarted, updateScore } from "../utils/EventUtils";
+import { getEventByID, readEvents, setWinner, toggleEventStarted, updateScore, updateVote } from "../utils/EventUtils";
 import TennisMenScoreUpdateRequest from "../requests/TennisMenScoreUpdateRequest";
 import TennisWomenScoreUpdateRequest from "../requests/TennisWomenScoreUpdateRequest";
 import ChessScoreUpdateRequest from "../requests/ChessScoreUpdateRequest";
@@ -204,5 +204,11 @@ export class EventController {
   @Response(204)
   public async setWinner(@Path("id") id: string, @Body() winner: Winner) {
     await setWinner(id, winner.team, winner.participants);
+  }
+
+  @Post("/:id/vote")
+  @Response(204)
+  public async vote(@Path("id") id: string, @Body() body: { team: 'A' | 'B'; action: 'add' | 'remove' }) {
+    await updateVote(id, body.team, body.action);
   }
 }

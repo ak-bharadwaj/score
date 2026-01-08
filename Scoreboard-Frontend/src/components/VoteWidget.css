@@ -1,0 +1,169 @@
+.vote-widget-container {
+    width: 100%;
+    margin-top: 15px;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.vote-mobile-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    /* Space for bar text */
+}
+
+.vote-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 100px;
+    justify-content: center;
+}
+
+.vote-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.vote-btn.left {
+    margin-right: 10px;
+}
+
+.vote-btn.right {
+    margin-left: 10px;
+    flex-direction: row-reverse;
+}
+
+.vote-btn.active {
+    background: rgba(33, 150, 243, 0.15);
+    border-color: #2196f3;
+    box-shadow: 0 0 10px rgba(33, 150, 243, 0.2);
+}
+
+.vote-label-mob {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #888;
+    letter-spacing: 1px;
+}
+
+.vote-btn.active .vote-label-mob {
+    color: #fff;
+}
+
+.vote-logo-wrap {
+    position: relative;
+    width: 32px;
+    height: 32px;
+}
+
+.vote-check {
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 16px;
+    height: 16px;
+    background: #2196f3;
+    border-radius: 50%;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border: 2px solid #0f172a;
+    z-index: 2;
+}
+
+.vote-center-text {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.vc-label {
+    font-size: 0.6rem;
+    color: #555;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.vc-count {
+    font-size: 0.8rem;
+    color: #ccc;
+    font-weight: 900;
+    margin-top: 2px;
+}
+
+/* BAR */
+.vote-bar-row {
+    width: 100%;
+    height: 8px;
+    background: #ef4444;
+    /* Team B (Red) */
+    border-radius: 4px;
+    position: relative;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.vote-bar-track {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    /* Important for border radius */
+    border-radius: 4px;
+}
+
+.vote-bar-fill {
+    height: 100%;
+    background: #0ea5e9;
+    /* Team A (Blue) */
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+    position: relative;
+}
+
+/* Diagonal stripe pattern for style */
+.vote-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+    background-size: 1rem 1rem;
+    opacity: 0.3;
+}
+
+.vote-bar-text {
+    position: absolute;
+    top: -18px;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.vote-bar-text.left {
+    left: 2px;
+    color: #0ea5e9;
+}
+
+.vote-bar-text.right {
+    right: 2px;
+    color: #ef4444;
+}
+
+@media (max-width: 768px) {
+    .vote-bar-row {
+        margin-top: 5px;
+        /* Tighter on mobile */
+    }
+}

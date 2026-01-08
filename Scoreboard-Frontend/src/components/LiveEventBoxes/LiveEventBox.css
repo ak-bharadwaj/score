@@ -35,8 +35,8 @@
 }
 
 .liveEventBox.men {
-	border: 3px solid #2ecc71 !important;
-	/* Green for Men */
+	border: 3px solid #36a2eb !important;
+	/* Blue for Men */
 }
 
 .liveEventBox.women {
@@ -62,7 +62,7 @@
 }
 
 .liveEventBox.men .gender-tag {
-	background: #2ecc71;
+	background: #36a2eb;
 }
 
 .liveEventBox.women .gender-tag {
@@ -121,23 +121,23 @@
 	flex-direction: row;
 	align-items: center;
 	gap: 8px;
-}
-
-.admin-score-controls {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	gap: 5px;
-	width: 100%;
-	margin-top: 5px;
+	flex-shrink: 0;
 }
 
 .admin-score-controls .styledButton {
-	width: 100%;
-	padding: 5px;
-	font-size: 0.8rem;
+	padding: 4px 10px;
+	font-size: 1rem;
+	min-width: 32px;
 }
+
+.admin-score-controls .styledInput {
+	width: 45px !important;
+	text-align: center;
+	padding: 4px;
+	font-size: 1rem;
+}
+
+
 
 .cricket-team-row-compact {
 	margin-top: 15px;
@@ -185,4 +185,28 @@
 
 .input-with-label-mini .styledInput:focus {
 	border-color: #04aa6d;
+}
+
+@media screen and (max-width: 480px) {
+	.liveEventBox {
+		padding: 15px;
+	}
+
+	.mini-score-grid {
+		gap: 8px;
+	}
+
+	.input-with-label-mini {
+		min-width: 45px;
+	}
+
+	.input-with-label-mini .styledInput {
+		padding: 5px 8px;
+		font-size: 0.9rem;
+	}
+
+	.score-display-mini {
+		margin: 0 5px;
+		font-size: 1.2rem !important;
+	}
 }

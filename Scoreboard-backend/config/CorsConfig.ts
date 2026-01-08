@@ -5,5 +5,5 @@ const extraOrigins = (process.env.CORS_ORIGINS || "")
   .filter(Boolean);
 
 export const CorsConfig = {
-  origin: [...defaultOrigins, ...extraOrigins],
+  origin: "*",
 };

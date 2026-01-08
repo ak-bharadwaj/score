@@ -20,7 +20,7 @@ router.use((req: AuthenticatedRequest, res, next) => {
     user = user as User;
     delete user?.iat;
     delete user?.exp;
-    if (user.role !== UserRole.ADMIN) res.sendStatus(403);
+    if (user.role !== UserRole.ADMIN) return res.sendStatus(403);
     if (!!user) req.user = user as User;
     next();
   });

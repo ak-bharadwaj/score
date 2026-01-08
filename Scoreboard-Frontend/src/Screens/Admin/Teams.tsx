@@ -1,6 +1,10 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useContext } from "react";
 import TeamRow from "./components/TeamRow";
 import { Team } from "../../types/Team";
+import API from "../../Utilities/ApiEndpoints";
+import { useAuthHeader } from "react-auth-kit";
+import TeamLogo from "../../components/TeamLogo";
+import { ToastContext } from "../../Utilities/ToastContext";
 
 const Teams = ({
 	teams,
@@ -15,9 +19,32 @@ const Teams = ({
 }) => {
 	const addTeamDialog = useRef<HTMLDialogElement | null>(null);
 	const confirmDeleteDialog = useRef<HTMLDialogElement | null>(null);
+	const getAccessToken = useAuthHeader();
+	const setToast = useContext(ToastContext).setToastMessage;
 	const [teamName, setTeamName] = useState("");
 	const [teamLogo, setTeamLogo] = useState("");
 	const [editingId, setEditingId] = useState<string | null>(null);
+	const [uploading, setUploading] = useState(false);
+
+	const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (!file) return;
+
+		setUploading(true);
+		try {
+			console.log("Uploading logo:", file.name, file.type, file.size);
+			const res = await API.UploadLogo(getAccessToken(), file);
+			console.log("Upload response:", res.data);
+			setTeamLogo(res.data.logoUrl);
+			setToast("Logo Uploaded Successfully");
+		} catch (error: any) {
+			console.error("Upload error:", error);
+			const errorMsg = error.response?.data?.message || error.message || "Failed to upload logo";
+			setToast(`Upload failed: ${errorMsg}`);
+		} finally {
+			setUploading(false);
+		}
+	};
 
 	const [teamToDelete, setTeamToDelete] = useState<Team>();
 	const [errorMsg, setErrorMsg] = useState("");
@@ -83,14 +110,25 @@ const Teams = ({
 							/>
 						</div>
 						<div style={{ marginTop: '10px' }}>
-							<label>Logo URL (Optional)</label>
-							<input
-								name="LogoUrl"
-								value={teamLogo}
-								onChange={(e) => setTeamLogo(e.target.value)}
-								className="styledInput"
-								placeholder="https://..."
-							/>
+							<label>Team Logo URL</label>
+							<div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+								<div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+									<TeamLogo src={teamLogo} name={teamName} size={60} />
+									<div style={{ flex: 1 }}>
+										<input
+											name="LogoUrl"
+											value={teamLogo}
+											onChange={(e) => setTeamLogo(e.target.value)}
+											className="styledInput"
+											placeholder="Paste image URL here (e.g., https://i.imgur.com/example.png)"
+											style={{ width: '100%', fontSize: '14px', padding: '10px' }}
+										/>
+										<span style={{ fontSize: '11px', color: '#888', display: 'block', marginTop: '5px' }}>
+											💡 Tip: Right-click any image online → "Copy image address" → Paste here
+										</span>
+									</div>
+								</div>
+							</div>
 						</div>
 						<button className="styledButton" type="submit">
 							{editingId ? "Update" : "Add"}

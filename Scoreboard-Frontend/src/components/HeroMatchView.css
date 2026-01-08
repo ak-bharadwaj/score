@@ -1,14 +1,30 @@
 .hero-match-card {
-    background: linear-gradient(165deg, #121212 0%, #1e1e1e 40%, #252525 100%);
+    background: linear-gradient(145deg, #1e1e1e 0%, #121212 100%);
     border-radius: 24px;
-    padding: 35px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 15px 30px;
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+    max-height: 85vh;
+    /* Further reduced from 420px */
     position: relative;
     overflow: hidden;
-    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     margin-bottom: 25px;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
-    animation: fadeInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: slideInFromBottom 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes slideInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.98);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .hero-match-card::before {
@@ -28,28 +44,37 @@
 }
 
 .hero-match-card.men {
-    border-right: 8px solid #2ecc71;
+    border-left: 8px solid #36a2eb !important;
+    border-right: 8px solid #36a2eb !important;
+}
+
+.hero-match-card.men::before {
+    background: linear-gradient(90deg, transparent, #36a2eb, transparent) !important;
 }
 
 .hero-match-card.women {
-    border-right: 8px solid #ff69b4;
+    border-left: 8px solid #ff69b4 !important;
+    border-right: 8px solid #ff69b4 !important;
 }
 
-.hero-match-card.men .hero-gender-tag {
-    color: #2ecc71;
-    background: rgba(46, 204, 113, 0.1);
+.hero-match-card.women::before {
+    background: linear-gradient(90deg, transparent, #ff69b4, transparent) !important;
 }
 
-.hero-match-card.women .hero-gender-tag {
-    color: #ff69b4;
-    background: rgba(255, 105, 180, 0.1);
+.hero-match-card.men .hero-gender-indicator {
+    color: #36a2eb;
+}
+
+.hero-match-card.women .hero-gender-indicator {
+    color: #fff;
+    background: #ff69b4;
 }
 
 .hero-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 
 .hero-sport-badge-container {
@@ -68,12 +93,10 @@
     gap: 10px;
 }
 
-.hero-gender-tag {
+.hero-gender-indicator {
     font-size: 0.8rem;
-    color: var(--accent-color);
     font-weight: 800;
     letter-spacing: 1px;
-    background: rgba(255, 59, 48, 0.1);
     padding: 2px 8px;
     border-radius: 4px;
 }
@@ -125,14 +148,15 @@
     background: var(--accent-color);
     border-radius: 50%;
     display: inline-block;
-    animation: pulseLive 1s infinite alternate;
+    animation: pulseLive 0.8s infinite alternate;
+    box-shadow: 0 0 12px var(--accent-color);
 }
 
 .hero-main-content.vertical-stack {
     display: flex;
     flex-direction: column;
-    gap: 40px;
-    margin: 30px 0;
+    gap: 12px;
+    margin: 8px 0;
     align-items: center;
 }
 
@@ -150,71 +174,66 @@
     align-items: center;
     gap: 15px;
     flex: 1;
-}
-
-.hero-logo-wrapper.big {
-    width: 160px;
-    height: 160px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    border: 3px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-}
-
-.hero-big-logo {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.6));
+    min-width: 0;
+    /* Critical for truncation */
 }
 
 .hero-team-name-big {
     font-size: 2.8rem;
+    color: #fff;
     text-transform: uppercase;
     text-align: center;
     letter-spacing: 2px;
-    color: #fff;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
 }
 
-.hero-vs-divider-big {
-    font-size: 2rem;
-    color: rgba(255, 255, 255, 0.2);
-    margin: 0 20px;
-    font-weight: 800;
-    text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    background: rgba(255, 255, 255, 0.05);
-    width: 60px;
-    height: 60px;
+.hero-match-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 59, 48, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.hero-logo-wrapper.big {
+    width: 110px;
+    /* Reduced from 160px (approx 31% reduction) */
+    height: 110px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
 }
 
 .hero-scores-bottom-row {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 40px;
-    background: rgba(0, 0, 0, 0.6);
-    padding: 25px 80px;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 0 40px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
+    gap: 30px;
+    background: rgba(20, 20, 20, 0.9);
+    padding: 12px 40px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
 }
 
 .hero-score-value.massive {
-    font-size: 6rem;
+    font-size: 4.5rem;
     color: #fff;
     line-height: 1;
-    text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .hero-score-separator-line {
@@ -247,19 +266,19 @@
 }
 
 .hero-runs {
-    font-size: 5rem;
+    font-size: 3.8rem;
     color: #fff;
     line-height: 1;
 }
 
 .hero-slash {
-    font-size: 3rem;
+    font-size: 2.2rem;
     color: #777;
     margin: 0 4px;
 }
 
 .hero-wickets {
-    font-size: 4rem;
+    font-size: 3.2rem;
     color: var(--accent-color);
     line-height: 1;
 }
@@ -280,18 +299,18 @@
 }
 
 .hero-event-details {
-    margin-top: 40px;
+    margin-top: 15px;
     text-align: center;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 25px;
+    padding-top: 15px;
 }
 
 .hero-match-title {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     color: #aaa;
     text-transform: uppercase;
-    letter-spacing: 3px;
-    margin-bottom: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
 }
 
 .hero-winner-tag {
@@ -324,11 +343,13 @@
     from {
         transform: scale(0.8);
         opacity: 0.5;
+        box-shadow: 0 0 5px var(--accent-color);
     }
 
     to {
-        transform: scale(1.2);
+        transform: scale(1.4);
         opacity: 1;
+        box-shadow: 0 0 15px var(--accent-color);
     }
 }
 
@@ -356,7 +377,7 @@
     }
 
     .hero-team-name-big {
-        font-size: 2.2rem;
+        font-size: 2.8rem;
     }
 
     .hero-score-value.massive {
@@ -365,21 +386,127 @@
 }
 
 @media screen and (max-width: 768px) {
-    .hero-teams-top-row {
+    .hero-match-card {
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+    }
+
+    .hero-main-content.vertical-stack {
         flex-direction: column;
-        gap: 20px;
+        /* Still stack header and row, but inner row is horizontal */
+        gap: 15px;
+        margin: 15px 0;
+    }
+
+    .hero-teams-top-row {
+        flex-direction: row;
+        /* HORIZONTAL LOGOS */
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        align-items: center;
+    }
+
+    .hero-team-block {
+        gap: 8px;
+        flex: 1;
+    }
+
+    .hero-logo-wrapper.big {
+        width: 50px;
+        /* MUCH SMALLER */
+        height: 50px;
+        padding: 5px;
+        border-width: 2px;
+    }
+
+    .hero-team-name-big {
+        font-size: 1.25rem;
+        /* INCREASED NAME */
+        max-width: 120px;
+        word-break: break-word;
     }
 
     .hero-vs-divider-big {
-        display: none;
+        display: flex;
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+        margin: 0;
     }
 
     .hero-scores-bottom-row {
-        padding: 15px 30px;
-        gap: 20px;
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.4);
     }
 
     .hero-score-value.massive {
-        font-size: 5rem;
+        font-size: 2.5rem;
+        /* SMALLER SCORE */
+    }
+
+    .hero-dedicated-score {
+        gap: 15px;
+    }
+
+    .hero-runs {
+        font-size: 2.2rem;
+    }
+
+    .hero-wickets {
+        font-size: 1.8rem;
+    }
+
+    .hero-slash {
+        font-size: 1.2rem;
+    }
+
+    .hero-score-sub {
+        font-size: 0.75rem;
+    }
+
+    .hero-score-divider-vertical {
+        height: 40px;
+    }
+
+    .hero-match-title {
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+    }
+
+    .hero-header {
+        margin-bottom: 10px;
+    }
+
+    .hero-sport-badge {
+        padding: 4px 10px;
+    }
+
+    .hero-sport {
+        font-size: 0.8rem;
+    }
+
+    .hero-gametype-tag {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .hero-team-name-big {
+        font-size: 1rem;
+    }
+
+    .hero-score-value.massive {
+        font-size: 2rem;
+    }
+
+    .hero-logo-wrapper.big {
+        width: 40px;
+        height: 40px;
     }
 }

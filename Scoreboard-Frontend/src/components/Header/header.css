@@ -176,21 +176,57 @@
 	}
 }
 
+@media (max-width: 900px) {
+	.header-center-broadcast {
+		margin: 0 10px;
+	}
+
+	.brand-subtitle {
+		display: none;
+	}
+}
+
 @media (max-width: 768px) {
 	.broadcast-header {
-		padding: 0 15px;
+		padding: 0 12px;
+		height: 60px;
 	}
 
 	.brand-title {
-		font-size: 1.2rem;
+		font-size: 1.1rem;
 	}
 
-	.header-nav {
+	.brand-logo-img {
+		width: 35px;
+		height: 35px;
+	}
+
+	.header-center-broadcast {
 		display: none;
+		/* Hide center scorebug in header on small mobile to prevent overflow */
 	}
 
-	/* Hide nav on small screens */
+	.digital-clock {
+		padding-left: 10px;
+	}
+
+	.clock-time {
+		font-size: 1.1rem;
+	}
+
 	.clock-date {
 		display: none;
+	}
+
+	.connection-pill {
+		display: none;
+		/* Hide to save space */
+	}
+}
+
+@media (max-width: 380px) {
+	.digital-clock {
+		display: none;
+		/* Hide clock on extremely small screens */
 	}
 }

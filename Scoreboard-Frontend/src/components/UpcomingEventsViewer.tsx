@@ -2,6 +2,7 @@ import { StartingDate } from "../App";
 import AthleticsEvent from "../types/AthleticsEvent";
 import Event from "../types/Event";
 import EventCatagories, { formatEventName, getEventGender } from "../types/EventCategories";
+import TeamLogo from "./TeamLogo";
 import "./UpcomingEventsViewer.css";
 
 const UpcomingEventsViewer = ({
@@ -18,7 +19,11 @@ const UpcomingEventsViewer = ({
 			{events.map((event, i) => {
 				const gender = getEventGender(event);
 				return (
-					<div key={i} className={`upcoming-card fjalla ${gender}`}>
+					<div
+						key={i}
+						className={`upcoming-card fjalla ${gender}`}
+						style={{ animationDelay: `${i * 0.1}s` }}
+					>
 						{gender !== "unknown" && (
 							<div className="upcoming-gender-badge">
 								{gender === "men" ? "MEN" : "WOMEN"}
@@ -37,12 +42,12 @@ const UpcomingEventsViewer = ({
 							{event.teams && event.teams.length >= 2 ? (
 								<>
 									<div className="upcoming-team">
-										{event.teams[0].logoUrl && <img src={event.teams[0].logoUrl} alt="" className="upcoming-mini-logo" />}
+										<TeamLogo src={event.teams[0].logoUrl} name={event.teams[0].name} size={24} />
 										<span className="upcoming-team-name">{event.teams[0].name}</span>
 									</div>
 									<div className="upcoming-vs">VS</div>
 									<div className="upcoming-team">
-										{event.teams[1].logoUrl && <img src={event.teams[1].logoUrl} alt="" className="upcoming-mini-logo" />}
+										<TeamLogo src={event.teams[1].logoUrl} name={event.teams[1].name} size={24} />
 										<span className="upcoming-team-name">{event.teams[1].name}</span>
 									</div>
 								</>

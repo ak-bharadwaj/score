@@ -1,5 +1,5 @@
-import { Body, Get, Patch, Response, Route, Tags } from "tsoa";
-import { getNotCompletedEvents, updateExistingEvents } from "../utils/EventUtils";
+import { Body, Delete, Get, Patch, Response, Route, Tags } from "tsoa";
+import { getNotCompletedEvents, updateExistingEvents, deleteAllEvents } from "../utils/EventUtils";
 import UpdateExistingEventsRequest from "../requests/UpdateExistingEventsRequest";
 
 @Route("api/admin/schedule")
@@ -22,5 +22,14 @@ export class ScheduleController {
   @Patch("/")
   public async updateExistingEvents(@Body() { events }: UpdateExistingEventsRequest) {
     await updateExistingEvents(events);
+  }
+
+  /**
+   * Deletes all events from the database.
+   */
+  @Response(204)
+  @Delete("/all")
+  public async deleteAllEvents() {
+    await deleteAllEvents();
   }
 }

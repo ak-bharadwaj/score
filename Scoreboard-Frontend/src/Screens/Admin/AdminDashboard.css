@@ -6,6 +6,7 @@
 		height: 100vh;
 		overflow-y: scroll;
 	}
+
 	.floatingDialogBox {
 		z-index: 1000;
 		position: fixed;
@@ -18,15 +19,45 @@
 		.styledButton {
 			display: flex;
 			align-items: center;
+			padding: 8px 12px;
+			/* Smoother padding */
 		}
 
 		.user-name-text {
 			margin-right: 10px;
 		}
 	}
-	.floatingDialogBox > div {
+
+	.floatingDialogBox>div {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.admin-container {
+		.floatingDialogBox {
+			top: 10px;
+			right: 10px;
+
+			.styledButton {
+				padding: 6px 10px;
+				font-size: 0.8rem;
+			}
+
+			.user-name-text {
+				max-width: 80px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+		}
+
+		.admin-content {
+			height: calc(100vh - 80px);
+			/* Leave room for bottom nav */
+			padding-bottom: 80px;
+		}
 	}
 }

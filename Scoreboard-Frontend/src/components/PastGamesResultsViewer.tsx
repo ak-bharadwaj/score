@@ -1,10 +1,11 @@
 import AthleticsEvent from "../types/AthleticsEvent";
 import CricketEvent from "../types/CricketEvent";
 import Event from "../types/Event";
-import EventCatagories, { formatEventName } from "../types/EventCategories";
+import EventCatagories, { formatEventName, getEventGender } from "../types/EventCategories";
 import TennisEvent from "../types/TennisEvent";
 import AthleticsGamesResultLog from "./AthleticsGamesResultLog";
 import CricketGameResultLog from "./CricketGameResultLog";
+import TeamLogo from "./TeamLogo";
 import "./PastGamesResultsViewer.css";
 
 const PastGamesResultsViewer = ({ events }: { events: Event[] }) => {
@@ -48,32 +49,30 @@ const ResultLog = ({ event }: { event: Event }) => {
 	const teamA = event.teams[0];
 	const teamB = event.teams[1];
 	const winnerId = event.winner?.team?._id;
+	const gender = getEventGender(event);
 
 	return (
-		<div className="result-card fjalla">
+		<div className={`result-card fjalla ${gender}`}>
+			{gender !== "unknown" && (
+				<div className="past-gender-badge">
+					{gender === "men" ? "MEN" : "WOMEN"}
+				</div>
+			)}
 			<div className="result-card-header">
 				<span className="event-type">{formatEventName(event.event)}</span>
 				<span className="event-title">{event.title}</span>
 			</div>
-			<div className="result-card-body">
-				<div className={`team-result ${winnerId === teamA?._id ? "is-winner" : ""}`}>
-					{teamA?.logoUrl ? (
-						<img src={teamA.logoUrl} alt={teamA.name} className="result-logo" />
-					) : (
-						<div className="result-logo-placeholder">{teamA?.name?.[0]}</div>
-					)}
-					<span className="team-name">{teamA?.name}</span>
-					<span className="team-score">{score?.teamA_points ?? "-"}</span>
+			<div className="result-card-body horizontal-compact">
+				<div className={`team-side left ${winnerId === teamA?._id ? "win" : ""}`}>
+					<TeamLogo src={teamA?.logoUrl} name={teamA?.name || ""} size={26} />
+					<span className="t-name">{teamA?.name}</span>
+					<span className="t-score">{score?.teamA_points ?? "0"}</span>
 				</div>
-				<div className="vs-divider">VS</div>
-				<div className={`team-result ${winnerId === teamB?._id ? "is-winner" : ""}`}>
-					<span className="team-score">{score?.teamB_points ?? "-"}</span>
-					<span className="team-name">{teamB?.name}</span>
-					{teamB?.logoUrl ? (
-						<img src={teamB.logoUrl} alt={teamB.name} className="result-logo" />
-					) : (
-						<div className="result-logo-placeholder">{teamB?.name?.[0]}</div>
-					)}
+				<div className="divider">-</div>
+				<div className={`team-side right ${winnerId === teamB?._id ? "win" : ""}`}>
+					<span className="t-score">{score?.teamB_points ?? "0"}</span>
+					<span className="t-name">{teamB?.name}</span>
+					<TeamLogo src={teamB?.logoUrl} name={teamB?.name || ""} size={26} />
 				</div>
 			</div>
 			<div className="result-card-footer">

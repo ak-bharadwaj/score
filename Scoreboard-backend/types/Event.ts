@@ -13,11 +13,12 @@ export default interface Event<T extends Score> {
   isCompleted?: boolean;
   teams: string[]; // list of teamIDs who are compeating
   participants?: Participant[][];
+  votes?: { teamA: number; teamB: number };
 
   winner?: Winner;
 }
 
-export interface Score {}
+export interface Score { }
 
 export interface Winner {
   team?: string;

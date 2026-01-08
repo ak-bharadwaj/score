@@ -19,6 +19,8 @@ import { AthleticsEventWithDistance } from "../../types/AthleticsEventTypes";
 import { Team } from "../../types/Team";
 import EditableCricketEventBox from "../../components/LiveEventBoxes/EditableCricketEventBox";
 import CricketEvent from "../../types/CricketEvent";
+import { socket } from "../../Utilities/Socket";
+import TeamLogo from "../../components/TeamLogo";
 
 const EVENT_START_BUFFER = 15 * 60 * 1000; //the duration BEFORE the startTime from when an event can be started in milliseconds
 
@@ -61,26 +63,43 @@ const EditScores = () => {
 		setLoading(false);
 	};
 
-	const handleScoreUpdate = async (id: string, score: any) => {
-		try {
-			await API.UpdateScore(getAccessToken(), id, score);
-			const newEvents = allEvents.map((e) => {
+	const handleScoreUpdate = (id: string, score: any) => {
+		// Only update local state, don't ping API yet
+		setAllEvents((prevEvents) =>
+			prevEvents.map((e) => {
 				if (e._id === id) return { ...e, score: score };
 				else return e;
-			});
-			setAllEvents(newEvents);
+			})
+		);
+	};
+
+	const submitScore = async (id: string) => {
+		const event = allEvents.find(e => e._id === id);
+		if (!event) return;
+
+		try {
+			await API.UpdateScore(getAccessToken(), id, event.score as any);
+			setToast("Score Updated on Server!");
 		} catch (error: any) {
 			try {
 				setToast(JSON.parse(error.request.response).message);
 			} catch {
 				setToast("Could not connect with the Server");
-				console.log(error);
 			}
+			fetchEvents();
 		}
 	};
 
 	useEffect(() => {
 		fetchEvents();
+
+		socket.on("eventsUpdated", () => {
+			fetchEvents();
+		});
+
+		return () => {
+			socket.off("eventsUpdated");
+		}
 	}, []);
 
 	const getEventBox = (event: Event, i: number): React.JSX.Element => {
@@ -144,14 +163,38 @@ const EditScores = () => {
 		}
 	};
 
+	const handleSetFeatured = async (eventId: string) => {
+		try {
+			await API.UpdateFeaturedEvent(getAccessToken(), eventId);
+			setToast("Event Featured on Header");
+		} catch (e: any) {
+			console.error(e);
+			const msg = typeof e.response?.data === "string" ? e.response.data : e.message;
+			setToast("Failed to feature event: " + msg);
+		}
+	};
+
 	return (
 		<div className="admin-dashboard-container">
 			<h1 className="admin-header">Live Event Management</h1>
 
 			<div className="global-controls-section">
 				<h3>Global Controls</h3>
+
+				<div className="control-group">
+					<button
+						className="styledButton"
+						style={{ backgroundColor: '#8e44ad' }}
+						onClick={() => handleSetFeatured("")}
+					>
+						Reset Featured Event (Auto-Rotation)
+					</button>
+				</div>
+
 				<div className="control-group">
 					<label htmlFor="tickerInput">Ticker Text (Scrolling at bottom):</label>
+					{/* ... */}
+
 					<div className="control-input-row">
 						<input
 							className="styledInput"
@@ -218,7 +261,28 @@ const EditScores = () => {
 				{!loading ? (
 					liveEvents && liveEvents.length > 0 ? (
 						<div className="live-events-grid">
-							{liveEvents.map((event, i) => getEventBox(event, i))}
+							{liveEvents.map((event, i) => (
+								<div key={i} className="live-event-admin-card" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+									{getEventBox(event, i)}
+
+									<div className="admin-actions-row" style={{ display: 'flex', gap: '8px' }}>
+										<button
+											className="styledButton"
+											style={{ flex: 1, backgroundColor: '#04aa6d', fontWeight: 'bold' }}
+											onClick={() => submitScore(event._id!)}
+										>
+											💾 UPDATE SCORE
+										</button>
+										<button
+											className="styledButton"
+											style={{ flex: 1, backgroundColor: '#f39c12' }}
+											onClick={() => handleSetFeatured(event._id!)}
+										>
+											⭐ FEATURE
+										</button>
+									</div>
+								</div>
+							))}
 						</div>
 					) : (
 						<p className="empty-state">No events currently live.</p>
@@ -304,71 +368,77 @@ const EditScores = () => {
 			</div>
 
 			{/* Dialogs remain the same in functionality */}
-			<dialog ref={confirmToggleDialog} style={{ padding: '20px', borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px rgba(0,0,0,0.2)' }}>
-				<h3>Confirm Event End</h3>
-				<p>Are you sure you want to end this event?</p>
-				<p><strong>{eventToToggle?.title}</strong></p>
+			<dialog ref={confirmToggleDialog} className="winner-selection-dialog">
+				<div className="dialog-inner">
+					<h3>End Match: Select Winner</h3>
+					<p className="dialog-subtitle">Please confirm the final result for <strong>{eventToToggle?.title}</strong></p>
 
-				{eventToToggle?.event !== EventCatagories.ATHLETICS &&
-					eventToToggle?.event !== EventCatagories.CRICKET &&
-					(eventToToggle as EventExceptAthleticsOrCricket)?.score.teamA_points ===
-					(eventToToggle as EventExceptAthleticsOrCricket)?.score.teamB_points && (
-						<div style={{ marginBottom: '20px' }}>
-							<label>Select Winner (Manual): </label>
-							<select
-								onChange={(e) => setManualWinner(e.target.value)}
-								value={manualWinner}
-								className="styledInput"
-								style={{ width: '100%', marginTop: '10px' }}
+					<div className="winner-selection-grid">
+						{eventToToggle?.teams.map((team, idx) => (
+							<button
+								key={team._id}
+								className={`winner-option-card ${manualWinner === team.name ? 'selected' : ''}`}
+								onClick={() => setManualWinner(team.name)}
 							>
-								<option value="DRAW">DRAW</option>
-								{eventToToggle?.teams.map(t => (
-									<option key={t._id} value={t.name}>{t.name}</option>
-								))}
-							</select>
-						</div>
-					)}
+								<div className="card-check">✓</div>
+								<TeamLogo src={team.logoUrl} name={team.name} size={48} />
+								<span className="team-name">{team.name}</span>
+								<span className="team-role">TEAM {idx === 0 ? 'A' : 'B'}</span>
+							</button>
+						))}
 
-				<div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
-					<button className="styledButton" style={{ backgroundColor: '#bbb' }} onClick={closeDialog}>Cancel</button>
-					<button
-						className="styledButton"
-						style={{ backgroundColor: '#e74c3c' }}
-						onClick={async () => {
-							if (eventToToggle?.event === EventCatagories.ATHLETICS) {
-								confirmToggleDialog.current?.close();
-								athlEventWinnerDialog.current!.showModal();
-								return;
-							}
-							try {
-								if (manualWinner !== "DRAW") {
-									const winner = {
-										team: eventToToggle!.teams.find(
-											(t) => t.name === manualWinner
-										) as Team,
-									};
-									await API.SetWinnerManually(
-										getAccessToken(),
-										eventToToggle!._id!,
-										winner
-									);
+						<button
+							className={`winner-option-card draw ${manualWinner === 'DRAW' ? 'selected' : ''}`}
+							onClick={() => setManualWinner('DRAW')}
+						>
+							<div className="card-check">✓</div>
+							<div className="draw-icon">🤝</div>
+							<span className="team-name">DRAW</span>
+							<span className="team-role">NO WINNER</span>
+						</button>
+					</div>
+
+					<div className="dialog-actions">
+						<button className="styledButton cancel" onClick={closeDialog}>Cancel</button>
+						<button
+							className="styledButton confirm"
+							disabled={!manualWinner}
+							onClick={async () => {
+								if (eventToToggle?.event === EventCatagories.ATHLETICS) {
+									confirmToggleDialog.current?.close();
+									athlEventWinnerDialog.current!.showModal();
+									return;
 								}
-								await API.ToggleEventStatus(
-									getAccessToken(),
-									eventToToggle!._id!
-								);
-								setToast("Event Ended Successfully");
-								setLoading(true);
-								fetchEvents();
-							} catch (error: any) {
-								setToast("Failed to toggle event status");
-							}
-							confirmToggleDialog.current?.close();
-							setEventToToggle(undefined);
-						}}
-					>
-						Confirm End
-					</button>
+								try {
+									if (manualWinner !== "DRAW") {
+										const winnerTeam = eventToToggle!.teams.find(t => t.name === manualWinner);
+										if (winnerTeam) {
+											await API.SetWinnerManually(
+												getAccessToken(),
+												eventToToggle!._id!,
+												{ team: winnerTeam }
+											);
+										}
+									}
+
+									await API.ToggleEventStatus(
+										getAccessToken(),
+										eventToToggle!._id!
+									);
+
+									setToast("Match Ended - Winner Announced!");
+									setLoading(true);
+									fetchEvents();
+								} catch (error: any) {
+									setToast("Failed to end match correctly");
+								}
+								confirmToggleDialog.current?.close();
+								setEventToToggle(undefined);
+							}}
+						>
+							FINALIZE & END MATCH
+						</button>
+					</div>
 				</div>
 			</dialog>
 		</div>

@@ -7,7 +7,7 @@ import { Participant } from "../types/AthleticsEvent";
 export const RootURL =
 	process.env.NODE_ENV === "production"
 		? process.env.REACT_APP_API_ORIGIN || "/"
-		: "http://localhost:5000/";
+		: `http://${window.location.hostname}:5000/`;
 
 const ServerURL = RootURL + "api/"; //URL for API Endpoints
 
@@ -49,7 +49,7 @@ const API = {
 			{ headers: { Authorization: accessToken } }
 		),
 
-	UpdateScore: (accessToken: string, id: string, score: FootballScore) =>
+	UpdateScore: (accessToken: string, id: string, score: any) =>
 		axios.put(
 			ServerURL + "events/updateScore/" + id,
 			{
@@ -63,6 +63,11 @@ const API = {
 		),
 
 	GetEvents: () => axios.get(ServerURL + "events"),
+
+	DeleteAllEvents: (accessToken: string) =>
+		axios.delete(ServerURL + "admin/schedule/all", {
+			headers: { Authorization: accessToken },
+		}),
 
 	ToggleEventStatus: (accessToken: string, id: string) =>
 		axios.patch(ServerURL + "events/toggleLive/" + id, null, {
@@ -109,6 +114,16 @@ const API = {
 				},
 			}
 		),
+	UploadLogo: (accessToken: string, file: File) => {
+		const formData = new FormData();
+		formData.append("logo", file);
+		return axios.post(ServerURL + "admin/teams/upload", formData, {
+			headers: {
+				Authorization: accessToken,
+				// Don't set Content-Type - let axios set it with the boundary
+			},
+		});
+	},
 
 	GetUsers: (accessToken: string) =>
 		axios.get(ServerURL + "admin/users", {
@@ -191,7 +206,21 @@ const API = {
 		axios.post(
 			ServerURL + "global/ticker",
 			{ text },
-			{ headers: { Authorization: accessToken } }
+			{
+				headers: { Authorization: accessToken },
+			}
 		),
+
+	UpdateFeaturedEvent: (accessToken: string, eventId: string) =>
+		axios.post(
+			ServerURL + "global/featured-event",
+			{ eventId },
+			{
+				headers: { Authorization: accessToken },
+			}
+		),
+
+	Vote: (eventId: string, team: 'A' | 'B', action: 'add' | 'remove') =>
+		axios.post(ServerURL + `events/${eventId}/vote`, { team, action }),
 };
 export default API;

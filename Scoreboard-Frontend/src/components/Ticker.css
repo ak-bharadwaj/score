@@ -59,3 +59,19 @@
         transform: translate3d(-100%, 0, 0);
     }
 }
+
+@media screen and (max-width: 600px) {
+    .ticker-container {
+        height: 40px;
+    }
+
+    .ticker-label {
+        font-size: 0.8rem;
+        padding: 0 10px;
+    }
+
+    .ticker-content {
+        font-size: 1.1rem;
+        animation: ticker 20s linear infinite;
+    }
+}

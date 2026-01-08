@@ -12,17 +12,11 @@ const EditableCricketEventBox = ({
     onScoreUpdate: (score: CricketScore) => void;
 }) => {
     const [score, setScore] = useState<CricketScore>(event.score);
-    const [isSaving, setIsSaving] = useState(false);
 
     const updateLocalScore = (field: keyof CricketScore, value: number) => {
         const newScore = { ...score, [field]: value };
         setScore(newScore);
-    };
-
-    const saveScore = async () => {
-        setIsSaving(true);
-        await onScoreUpdate(score);
-        setTimeout(() => setIsSaving(false), 2000);
+        onScoreUpdate(newScore);
     };
 
     return (
@@ -57,7 +51,7 @@ const EditableCricketEventBox = ({
                 </div>
             </div>
 
-            <div className="cricket-team-row-compact">
+            <div className="cricket-team-row-compact" style={{ marginTop: '10px' }}>
                 <div className="team-info">
                     <TeamLogo src={event.teams[1].logoUrl} name={event.teams[1].name} size={28} />
                     <h3 className="team-name-compact fjalla">{event.teams[1].name}</h3>
@@ -77,28 +71,6 @@ const EditableCricketEventBox = ({
                     </div>
                 </div>
             </div>
-
-            <button
-                className="styledButton"
-                onClick={saveScore}
-                disabled={isSaving}
-                style={{
-                    width: '100%',
-                    marginTop: '15px',
-                    height: '45px',
-                    fontSize: '1rem',
-                    background: isSaving ? '#2ecc71' : '#04aa6d',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '10px',
-                    cursor: isSaving ? 'default' : 'pointer',
-                    fontWeight: '800',
-                    transition: 'all 0.3s',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-                }}
-            >
-                {isSaving ? "SAVED! ✓" : "UPDATE SCOREBOARD"}
-            </button>
         </div>
     );
 };

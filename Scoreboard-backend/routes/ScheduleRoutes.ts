@@ -12,4 +12,9 @@ router.patch("/", async (req, res) => {
   res.sendStatus(204);
 });
 
+router.delete("/all", async (req, res) => {
+  await new ScheduleController().deleteAllEvents();
+  res.sendStatus(204);
+});
+
 export default router;

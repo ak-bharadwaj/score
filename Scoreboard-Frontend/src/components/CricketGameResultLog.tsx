@@ -1,8 +1,16 @@
 import CricketEvent from "../types/CricketEvent";
+import { getEventGender } from "../types/EventCategories";
 
 const CricketGameResultLog = ({ event }: { event: CricketEvent }) => {
+	const gender = getEventGender(event);
+
 	return (
-		<div className="result-card fjalla">
+		<div className={`result-card fjalla ${gender}`}>
+			{gender !== "unknown" && (
+				<div className="past-gender-badge">
+					{gender === "men" ? "MEN" : "WOMEN"}
+				</div>
+			)}
 			<div className="result-card-header">
 				<span className="event-type">{event.event}</span>
 				<span className="event-title">{event.title}</span>

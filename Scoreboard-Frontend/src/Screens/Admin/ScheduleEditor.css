@@ -1,16 +1,48 @@
-/* Hide scrollbar for Chrome, Safari and Opera */
-.tableContainer::-webkit-scrollbar {
-	display: none;
-}
+/* Schedule Editor Table Styles */
 
-/* Hide scrollbar for IE, Edge and Firefox */
 .tableContainer {
-	-ms-overflow-style: none; /* IE and Edge */
-	scrollbar-width: none; /* Firefox */
+	width: 100%;
+	overflow: auto !important;
+	background: #fff;
+	border-radius: 12px;
+	border: 1px solid #ddd;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	margin-bottom: 2rem;
 }
 
+/* Force horizontal scroll on mobile */
 @media screen and (max-width: 900px) {
 	.tableContainer {
-		margin: 0 -10px;
+		height: 450px !important;
+		max-height: 60vh !important;
+		margin-bottom: 40px;
 	}
+}
+
+.tableContainer h3 {
+	color: #333;
+	padding: 15px 20px;
+	margin: 0;
+	border-bottom: 1px solid #eee;
+	background: #f8f9fa;
+	border-radius: 12px 12px 0 0;
+}
+
+/* Gender Row Styling */
+.cell-women {
+	background-color: rgba(255, 105, 180, 0.08) !important;
+	color: #880e4f;
+}
+
+.cell-men {
+	background-color: rgba(54, 162, 235, 0.08) !important;
+	color: #0d47a1;
+}
+
+.first-cell-women {
+	border-left: 5px solid #ff69b4 !important;
+}
+
+.first-cell-men {
+	border-left: 5px solid #36a2eb !important;
 }

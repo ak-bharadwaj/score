@@ -1,5 +1,5 @@
 import AthleticsEvent from "../types/AthleticsEvent";
-import { formatEventName } from "../types/EventCategories";
+import { formatEventName, getEventGender } from "../types/EventCategories";
 import { useState } from "react";
 import "./table.css";
 
@@ -16,6 +16,7 @@ const AthleticsGamesResultLog: React.FC<AthleticsGamesResultLogProps> = ({
 	event,
 }) => {
 	const [dialogueOpen, setDialogueOpen] = useState<boolean>(false);
+	const gender = getEventGender(event);
 	return (
 		<>
 			{dialogueOpen && (
@@ -72,7 +73,12 @@ const AthleticsGamesResultLog: React.FC<AthleticsGamesResultLogProps> = ({
 					</div>
 				</div>
 			)}
-			<div className="result-card fjalla">
+			<div className={`result-card fjalla ${gender}`}>
+				{gender !== "unknown" && (
+					<div className="past-gender-badge">
+						{gender === "men" ? "MEN" : "WOMEN"}
+					</div>
+				)}
 				<div className="result-card-header">
 					<span className="event-type">{formatEventName(event.athleticsEventType)}</span>
 					<span className="event-title">{event.title}</span>

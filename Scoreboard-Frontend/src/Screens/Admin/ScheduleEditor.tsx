@@ -66,15 +66,18 @@ const makeParticipantsAndTeamsObj = (arr: any[]) => {
 
 const makeEventsArrayForDatabase = (data: any[]) => {
 	const events = data.map((arr: any[]) => {
+		const sport = arr[0];
+		const gender = arr[1];
+		const constructedEvent = gender ? `${sport}_${gender}` : sport;
 		return {
-			event: arr[0],
-			matchType: arr[1],
-			title: arr[2],
-			subtitle: arr[3],
-			startTime: getTime(arr[4], arr[5]),
-			endTime: getTime(arr[4], arr[6]),
-			teams: arr.slice(7, 9),
-			eventLink: arr[9],
+			event: constructedEvent,
+			matchType: arr[2],
+			title: arr[3],
+			subtitle: arr[4],
+			startTime: getTime(arr[5], arr[6]),
+			endTime: getTime(arr[5], arr[7]),
+			teams: arr.slice(8, 10),
+			eventLink: arr[10],
 		};
 	});
 	return events;
@@ -118,24 +121,66 @@ const ScheduleEditor = ({ teams }: { teams: Team[] }) => {
 		return indexes;
 	}, [athlEvents]);
 
-	useEffect(() => {
-		const hot = hotRef?.current?.hotInstance;
-		hot?.updateSettings({
-			cells(row, col) {
-				let cellProperties: any = {};
-				if (completedEventsIndexes.includes(row)) {
-					cellProperties.readOnly = true;
-				}
+	const mainCells = (row: number, col: number) => {
+		const props: any = {};
+		if (completedEventsIndexes.includes(row)) {
+			props.readOnly = true;
+		}
 
-				return cellProperties;
-			},
-		});
-	}, [completedEventsIndexes]);
+		if (allEvents[row]) {
+			const gender = ((allEvents[row] as any).gender || '').toLowerCase();
+			if (gender === 'women') {
+				props.className = (props.className || '') + ` cell-women`;
+				if (col === 0 || col === 1) props.className += ` first-cell-women`;
+			} else if (gender === 'men') {
+				props.className = (props.className || '') + ` cell-men`;
+				if (col === 0 || col === 1) props.className += ` first-cell-men`;
+			}
+		}
+		return props;
+	};
+
+	const athlCells = (row: number, col: number) => {
+		const props: any = {};
+		if (completedAthlEventsIndexes.includes(row)) {
+			props.readOnly = true;
+		}
+
+		if (athlEvents[row]) {
+			// Athletics often has type in athleticsEventType
+			// We access the raw data object or the formatted one? 
+			// athlEvents state contains formatted objects.
+			const evt = ((athlEvents[row] as any).athleticsEventType || (athlEvents[row].title) || '').toString().toLowerCase();
+			let gender = '';
+			if (evt.includes('women') || evt.includes('girls') || evt.includes('female')) gender = 'women';
+			else if (evt.includes('men') || evt.includes('boys') || evt.includes('male')) gender = 'men';
+
+			if (gender) {
+				props.className = (props.className || '') + ` cell-${gender}`;
+				if (col === 0) props.className += ` first-cell-${gender}`;
+			}
+		}
+		return props;
+	};
 
 	const formatForTable = (events: any[]) => {
 		const fEvents = events.map((e) => {
+			const eName = e.event || "";
+			let sport = eName;
+			let gender = "";
+			const lower = eName.toLowerCase();
+			if (lower.endsWith("_men")) {
+				gender = "men";
+				sport = eName.substring(0, eName.length - 4);
+			} else if (lower.endsWith("_women")) {
+				gender = "women";
+				sport = eName.substring(0, eName.length - 6);
+			}
+
 			return {
 				...e,
+				sport,
+				gender,
 				date: new Date(e.startTime).toLocaleDateString("en-GB"),
 				startTime: new Date(e.startTime).toLocaleString("en-US", {
 					hour: "numeric",
@@ -236,12 +281,12 @@ const ScheduleEditor = ({ teams }: { teams: Team[] }) => {
 		for (let i = 0; i < validRows!.length; i++) {
 			const row: any[] = validRows![i];
 			let last = row.length;
-			last = row.indexOf(null, 2) !== -1 ? row.indexOf(null, 2) : last;
+			last = row.indexOf(null, 3) !== -1 ? row.indexOf(null, 3) : last;
 			last =
-				row.indexOf("", 2) !== -1 && row.indexOf("", 2) < last
-					? row.indexOf("", 2)
+				row.indexOf("", 3) !== -1 && row.indexOf("", 3) < last
+					? row.indexOf("", 3)
 					: last;
-			if (last <= 8) {
+			if (last <= 9) {
 				setToast("Incomplete Details in a Row!");
 				return;
 			}
@@ -305,31 +350,67 @@ const ScheduleEditor = ({ teams }: { teams: Team[] }) => {
 				<>Loading All Events Data..</>
 			) : (
 				<>
-					<button
-						className="styledButton"
-						style={{ marginTop: "5px" }}
-						onClick={saveTableData}
-					>
-						Save
-					</button>
+					<div style={{ display: 'flex', gap: '10px', marginTop: '5px', alignItems: 'center' }}>
+						<button
+							className="styledButton"
+							onClick={saveTableData}
+						>
+							Save
+						</button>
+						<button
+							className="styledButton"
+							style={{ backgroundColor: '#dc3545', borderColor: '#dc3545' }}
+							onClick={async () => {
+								if (window.confirm('⚠️ WARNING: This will PERMANENTLY delete ALL matches and events from the database. This action CANNOT be undone. Are you absolutely sure?')) {
+									if (window.confirm('⚠️ FINAL WARNING: All live scores, results, and schedules will be deleted. Type OK in your mind and click to proceed.')) {
+										try {
+											// Call the backend to delete all events
+											await API.DeleteAllEvents(getAccessToken());
+											// Clear local state
+											setAllEvents([]);
+											setAthlEvents([]);
+											alert('✅ All data has been permanently deleted from the database.');
+											// Refresh the page to show empty state
+											window.location.reload();
+										} catch (error) {
+											console.error('Error deleting all events:', error);
+											alert('❌ Failed to delete all events. Please try again.');
+										}
+									}
+								}
+							}}
+						>
+							🗑️ Clear All Data
+						</button>
+					</div>
 
 					<div
 						className="tableContainer"
-						style={{ overflowX: "hidden", maxHeight: "80vh" }}
+						style={{ overflowX: "auto", maxHeight: "80vh", width: "100%" }}
 					>
 						<HotTable
 							copyPaste={true}
 							ref={hotRef}
 							data={allEvents}
+							width="100%"
+							height="500"
+							stretchH="all"
 							style={{ marginTop: "5px", boxSizing: "border-box" }}
 							rowHeaders={true}
+							cells={mainCells}
 							columns={[
 								{
-									data: "event",
+									data: "sport",
 									type: "dropdown",
-									source: Object.values(EventCatagories).filter(
-										(s) => s !== EventCatagories.ATHLETICS
-									),
+									source: Array.from(new Set(Object.values(EventCatagories)
+										.filter((s) => s !== EventCatagories.ATHLETICS)
+										.map((s) => s.replace(/_men|_women/i, ''))
+									)),
+								},
+								{
+									data: "gender",
+									type: "dropdown",
+									source: ["men", "women"],
 								},
 								{
 									data: "matchType",
@@ -364,7 +445,8 @@ const ScheduleEditor = ({ teams }: { teams: Team[] }) => {
 								{ data: "eventLink", type: "text" },
 							]}
 							colHeaders={[
-								"Event",
+								"Sport",
+								"Gender",
 								"MatchType?",
 								"Name",
 								"Subtitle",
@@ -376,20 +458,24 @@ const ScheduleEditor = ({ teams }: { teams: Team[] }) => {
 								"Score Link (for Cricket)",
 							]}
 							minSpareRows={2}
-							colWidths={[150, 100, 150, 150, 100, 100, 150, 150, 150, 250]}
+							colWidths={[150, 100, 100, 150, 150, 100, 100, 150, 150, 150, 250]}
 							licenseKey="non-commercial-and-evaluation" // for non-commercial use only
 						/>
 					</div>
 					<div
 						className="tableContainer"
-						style={{ overflowX: "hidden", maxHeight: "80vh" }}
+						style={{ overflowX: "auto", maxHeight: "80vh", width: "100%", marginTop: "30px" }}
 					>
 						<h3>Athletics Events Table</h3>
 						<HotTable
 							ref={athlTableRef}
 							data={athlEvents}
+							width="100%"
+							height="400"
+							stretchH="all"
 							style={{ marginTop: "5px", boxSizing: "border-box" }}
 							rowHeaders={true}
+							cells={athlCells}
 							columns={[
 								{
 									data: "athleticsEventType",

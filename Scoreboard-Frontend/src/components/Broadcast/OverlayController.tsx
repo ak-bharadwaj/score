@@ -23,11 +23,13 @@ const OverlayController: React.FC<OverlayControllerProps> = ({ activeEvent, lowe
 
     return (
         <div className="overlay-layer">
-            {/* Scorebug moved to Header per user request */}
-            {/* <Scorebug
-                event={activeEvent}
-                variant={isMobile ? 'mobile' : 'desktop'}
-            /> */}
+            {/* Show floating Scorebug on mobile since it is hidden in the header */}
+            {isMobile && (
+                <Scorebug
+                    event={activeEvent}
+                    variant="mobile"
+                />
+            )}
 
             <LowerThird
                 data={lowerThirdData}

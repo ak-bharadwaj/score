@@ -18,48 +18,35 @@ import { CantStartEventBeforeTime, CantStopEvenBeforeTime, EventCompleted, Event
 import Participant from "../types/Participant";
 import { isOrderedAscending } from "./AthleticEventUtils";
 
-export const getEventDefaultScore = (eventCatagory: EventCatagories) => {
-  switch (eventCatagory) {
-    case EventCatagories.FOOTBALL:
-      return createFootballDefaultScore;
-    case EventCatagories.CHESS:
-      return createChessDefaultScore;
-    case EventCatagories.CRICKET:
-      return createCricketDefaultScore;
-    case EventCatagories.SQUASH_MEN:
-      return createSquashMenDefaultScore;
-    case EventCatagories.SQUASH_WOMEN:
-      return createSquashWomenDefaultScore;
-    case EventCatagories.TENNIS_WOMEN:
-      return createTennisWomenDefaultScore;
-    case EventCatagories.TENNIS_MEN:
-      return createTennisMenDefaultScore;
-    case EventCatagories.ATHLETICS:
-      return createAthleticsDefaultScore;
-    case EventCatagories.BASKETBALL:
-    case EventCatagories.VOLLEYBALL:
-    case EventCatagories.TABLE_TENNIS:
-    case EventCatagories.BADMINTON:
-    case EventCatagories.HANDBALL:
-    case EventCatagories.BALL_BADMINTON:
-    case EventCatagories.KABADDI:
-    case EventCatagories.THROWBALL:
-    case EventCatagories.RUGBY:
-      return createFootballDefaultScore;
-  }
-};
+export function getEventDefaultScore(eventCategory: string) {
+  const category = (eventCategory || "").toLowerCase();
 
-export const addEvent = async <T extends Event<U>, U extends Score>(eventCatogory: EventCatagories, eventData: T) => {
+  if (category.includes("cricket")) return createCricketDefaultScore;
+  if (category.includes("chess")) return createChessDefaultScore;
+  if (category.includes("squash")) {
+    return category.includes("women") ? createSquashWomenDefaultScore : createSquashMenDefaultScore;
+  }
+  if (category.includes("tennis")) {
+    return category.includes("women") ? createTennisWomenDefaultScore : createTennisMenDefaultScore;
+  }
+  if (category.includes("athletics")) return createAthleticsDefaultScore;
+
+  // For Football, Basketball, Volleyball, etc.
+  return createFootballDefaultScore;
+}
+
+export async function addEvent<T extends Event<U>, U extends Score>(eventCategory: string, eventData: T) {
+  const defaultScoreFn = getEventDefaultScore(eventCategory);
   const eventModel = await EventModel.create<T>({
     ...eventData,
     teams: eventData.teams.map(team => new mongoose.Types.ObjectId(team)),
     isCompleted: false,
     isStarted: false,
-    score: getEventDefaultScore(eventCatogory)(),
+    score: defaultScoreFn(),
   });
   await eventModel.save();
   return eventModel;
-};
+}
 
 export const readEvents = async () => (await EventModel.find<AllEvents>().populate("teams").populate("winner.team")).map(event => event as AllEvents);
 
@@ -119,10 +106,13 @@ export const deleteNotCompletedEvents = async () => await EventModel.deleteMany(
 
 export const getNotCompletedEvents = async () => await EventModel.find().where("isCompleted").equals(false);
 
-export const updateExistingEvents = async (events: AllEvents[]) => {
+export async function updateExistingEvents(events: AllEvents[]) {
   await deleteNotCompletedEvents();
-  events.forEach(async event => addEvent(event.event, { ...event, teams: await Promise.all(event.teams.map(async team => await getTeamID(team))) }));
-};
+  await Promise.all(events.map(async event =>
+    addEvent(event.event, { ...event, teams: await Promise.all(event.teams.map(async team => await getTeamID(team))) })
+  ));
+  SocketServer.io.sockets.emit("eventsUpdated");
+}
 
 export const setWinner = async (eventID: string, winningTeamID?: string, participants?: Participant[]) => {
   let event = (await getEventByID(eventID)) as AthleticsEvent;
@@ -137,4 +127,29 @@ export const setWinner = async (eventID: string, winningTeamID?: string, partici
   return await EventModel.findByIdAndUpdate(eventID, {
     winner: { team: !!winningTeamID ? new mongoose.Types.ObjectId(winningTeamID) : undefined, participants },
   });
+};
+
+export const deleteAllEvents = async () => {
+  await EventModel.deleteMany({});
+};
+
+export const updateVote = async (id: string, team: 'A' | 'B', action: 'add' | 'remove') => {
+  const event = await EventModel.findById(id);
+  if (!event) throw EventNotFound;
+
+  // Initialize votes if they don't exist
+  if (!event.votes) {
+    event.votes = { teamA: 0, teamB: 0 };
+  }
+
+  const change = action === 'add' ? 1 : -1;
+  if (team === 'A') {
+    event.votes.teamA = Math.max(0, (event.votes.teamA || 0) + change);
+  } else {
+    event.votes.teamB = Math.max(0, (event.votes.teamB || 0) + change);
+  }
+
+  await event.save();
+
+  SocketServer.io.sockets.in(id).emit(`voteUpdate/${id}`, JSON.stringify(event.votes));
 };

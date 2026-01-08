@@ -16,9 +16,13 @@ import { getEventByID } from "../utils/EventUtils";
 
 const router = express.Router();
 
+
+
 router.use((req: AuthenticatedRequest, res, next) => {
   // needs to be either admin or score editor
+  if (req.method === "OPTIONS") return res.sendStatus(200);
   if (req.url === "/") return next();
+  if (req.path.includes("/vote")) return next();
   if (!req.headers.authorization) return res.sendStatus(401);
   const [type, token] = req.headers.authorization.split(" ");
   if (!token) return res.sendStatus(401);

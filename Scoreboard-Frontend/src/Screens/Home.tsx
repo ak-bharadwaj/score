@@ -34,6 +34,7 @@ const Home = () => {
 
 	const [tickerText, setTickerText] = useState<string>("");
 	const [lowerThird, setLowerThird] = useState<LowerThirdData | null>(null);
+	const [fixedFeaturedId, setFixedFeaturedId] = useState<string>("");
 
 	// Derive unique teams for Points Table (Optional/Hidden for now)
 	const uniqueTeams = useMemo(() => {
@@ -81,13 +82,22 @@ const Home = () => {
 		return fEvents;
 	}, [events]);
 
-	// Hero Event Logic: Prefer manually featured > First Live Event > First Upcoming
-	const heroEventDisplay = useMemo(() => {
-		if (featuredEvent) return featuredEvent;
+	// 1. Live Broadcast (Rotates automatically)
+	const broadcastEvent = useMemo(() => {
+		if (featuredEvent) return featuredEvent; // Winner Takeover
 		if (liveEvents.length > 0) return liveEvents[heroIndex % liveEvents.length] || liveEvents[0];
 		if (upcomingEvents.length > 0) return upcomingEvents[0];
 		return null;
 	}, [featuredEvent, liveEvents, upcomingEvents, heroIndex]);
+
+	// 2. Header Scorebug (Fixed by Admin or falls back to Broadcast)
+	const headerEvent = useMemo(() => {
+		if (fixedFeaturedId) {
+			const fixed = events.find(e => e._id === fixedFeaturedId);
+			if (fixed) return fixed;
+		}
+		return broadcastEvent;
+	}, [fixedFeaturedId, events, broadcastEvent]);
 
 	const fetchEvents = async () => {
 		try {
@@ -106,8 +116,9 @@ const Home = () => {
 	const fetchGlobalConfig = async () => {
 		try {
 			const config = (await API.GetGlobalConfig()).data;
-			if (config && config.tickerText) {
-				setTickerText(config.tickerText);
+			if (config) {
+				if (config.tickerText) setTickerText(config.tickerText);
+				if (config.featuredEventId) setFixedFeaturedId(config.featuredEventId);
 			}
 		} catch (e) { console.log(e); }
 	};
@@ -200,12 +211,21 @@ const Home = () => {
 		socket.on("eventStartOrEnd", updateEventsStatus);
 		socket.on("broadcastAlert", handleBroadcast);
 		socket.on("tickerUpdate", handleTicker);
+		socket.on("eventsUpdated", () => {
+			console.log("Events updated, refetching...");
+			fetchEvents();
+		});
+		socket.on("featuredEventUpdate", (data: { eventId: string }) => {
+			setFixedFeaturedId(data.eventId);
+		});
 
 		return () => {
 			socket.off("connect");
 			socket.off("eventStartOrEnd", updateEventsStatus);
 			socket.off("broadcastAlert", handleBroadcast);
 			socket.off("tickerUpdate", handleTicker);
+			socket.off("eventsUpdated");
+			socket.off("featuredEventUpdate");
 			if (featuredTimeout.current) clearTimeout(featuredTimeout.current);
 		};
 	}, []);
@@ -222,6 +242,37 @@ const Home = () => {
 		return () => clearInterval(interval);
 	}, [liveEvents.length, rotationSeconds]);
 
+	// REAL-TIME SCORE UPDATES FOR HERO MATCH
+	// REAL-TIME SCORE UPDATES FOR HEADER AND BROADCAST
+	useEffect(() => {
+		const idsToSubscribe = new Set<string>();
+		if (broadcastEvent?._id) idsToSubscribe.add(broadcastEvent._id);
+		if (headerEvent?._id) idsToSubscribe.add(headerEvent._id);
+
+		const ids = Array.from(idsToSubscribe);
+		const cleanups: (() => void)[] = [];
+
+		ids.forEach(eventId => {
+			socket.emit("subscribe", eventId);
+			const handler = (data: string) => {
+				try {
+					const score = JSON.parse(data);
+					updateScoreOfEvent(score, eventId);
+				} catch (e) { console.error("Error parsing score update", e); }
+			};
+			socket.on(`scoreUpdate/${eventId}`, handler);
+
+			cleanups.push(() => {
+				socket.emit("unsubscribe", eventId);
+				socket.off(`scoreUpdate/${eventId}`, handler);
+			});
+		});
+
+		return () => {
+			cleanups.forEach(c => c());
+		};
+	}, [broadcastEvent?._id, headerEvent?._id]);
+
 	return (
 		<div className="sports-channel-layout">
 			{broadcastMessage && (
@@ -233,7 +284,7 @@ const Home = () => {
 
 			{/* Broadcast Overlays - Persistent Layer */}
 			<OverlayController
-				activeEvent={heroEventDisplay}
+				activeEvent={broadcastEvent}
 				lowerThirdData={lowerThird}
 				onLowerThirdComplete={() => setLowerThird(null)}
 			/>
@@ -251,7 +302,7 @@ const Home = () => {
 						<div className="error-banner">{loadError}</div>
 					)}
 					<div className="navbar">
-						<Header activeEvent={heroEventDisplay} />
+						<Header activeEvent={headerEvent} />
 					</div>
 
 					{/* 3-Column Layout: Upcoming (25%) | Live/Hero (50%) | Past (25%) */}
@@ -269,10 +320,10 @@ const Home = () => {
 						{/* CENTER: Consolidated Live Broadcast Area */}
 						<div className="col-center">
 							<div className="live-broadcast-area">
-								{heroEventDisplay ? (
+								{broadcastEvent ? (
 									<div className="hero-section">
 										<h3 className="section-header-small">LIVE BROADCAST</h3>
-										<HeroMatchView event={heroEventDisplay} />
+										<HeroMatchView event={broadcastEvent} />
 
 										{/* Optional: Show others below if many live events exist? 
 										    User said "1 live score section", so I'll keep it focused. 

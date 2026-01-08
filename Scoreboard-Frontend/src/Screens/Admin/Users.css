@@ -50,11 +50,13 @@
 	font-weight: 600;
 	color: #333;
 }
+
 .pill.success {
 	background: color-mix(in srgb, #28a745 20%, #fff 80%);
 	color: #0f5132;
 	border-color: #cce9d8;
 }
+
 .pill.info {
 	background: color-mix(in srgb, #0d6efd 15%, #fff 85%);
 	color: #0c3c78;
@@ -71,7 +73,7 @@
 	border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.usersContainer > .top > dialog {
+.usersContainer>.top>dialog {
 	width: 40vw;
 	min-width: 320px;
 	border-radius: 10px;
@@ -82,59 +84,71 @@
 		padding: 5px 10px;
 	}
 }
-.usersContainer > .top > dialog > .styledButton {
+
+.usersContainer>.top>dialog>.styledButton {
 	position: absolute;
 	top: 10px;
 	right: 10px;
 	padding: 5px 10px;
 	font-size: 12px;
 }
-.usersContainer > .top > dialog > h3 {
+
+.usersContainer>.top>dialog>h3 {
 	text-align: center;
 }
-.usersContainer > .top > dialog .errorText {
+
+.usersContainer>.top>dialog .errorText {
 	color: #c53030;
 	font-weight: 600;
 	text-align: center;
 }
-.usersContainer > .top > dialog > form {
+
+.usersContainer>.top>dialog>form {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	padding: 10px;
 }
-.usersContainer > .top > dialog > form label {
+
+.usersContainer>.top>dialog>form label {
 	display: block;
 }
-.usersContainer > .top > dialog > form input {
+
+.usersContainer>.top>dialog>form input {
 	width: 100%;
 }
-.usersContainer > .top > dialog > form div {
+
+.usersContainer>.top>dialog>form div {
 	margin-bottom: 15px;
 	width: 100%;
 	max-width: 300px;
 }
 
-.usersContainer > .main > table {
+.usersContainer>.main>table {
 	border-collapse: collapse;
 	width: 100%;
 }
-.usersContainer > .main > table thead > tr {
+
+.usersContainer>.main>table thead>tr {
 	border-bottom: 2px solid rgba(0, 0, 0, 0.5);
 
 	font-weight: 600;
 }
-.usersContainer > .main > table tr {
+
+.usersContainer>.main>table tr {
 	text-transform: capitalize;
 	border-bottom: 2px solid rgba(0, 0, 0, 0.2);
 }
-.usersContainer > .main > table td {
+
+.usersContainer>.main>table td {
 	padding: 4px;
 }
-.usersContainer > .main > table .chipCell {
+
+.usersContainer>.main>table .chipCell {
 	padding-top: 0px;
 }
-.usersContainer > .main > table .styledButton {
+
+.usersContainer>.main>table .styledButton {
 	font-size: 12px;
 	padding: 5px 10px;
 }
@@ -142,15 +156,48 @@
 @media screen and (max-width: 900px) {
 	.usersContainer {
 		margin: 10px;
-		padding-bottom: 20vh;
+		padding-bottom: 80px;
 	}
+
 	.topActions {
-		align-items: flex-start;
+		flex-direction: column;
+		align-items: stretch;
 	}
+
 	.topControls {
 		width: 100%;
+		gap: 10px;
 	}
+
 	.searchInput {
+		min-width: 0;
 		flex: 1;
+	}
+
+	.main {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		width: 100%;
+	}
+
+	.main table {
+		min-width: 600px;
+		/* Allow horizontal scroll only for users table */
+	}
+
+	.usersContainer>.top>dialog {
+		width: 90vw;
+		min-width: 0;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.pill {
+		font-size: 11px;
+		padding: 4px 8px;
+	}
+
+	.statChips {
+		justify-content: center;
 	}
 }
