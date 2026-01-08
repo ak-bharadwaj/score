@@ -2,14 +2,23 @@ import { StartingDate } from "../../App";
 import "./LiveEventBox.css";
 import SportsCricketIcon from "@mui/icons-material/SportsCricket";
 import CricketEvent from "../../types/CricketEvent";
+import TeamLogo from "../TeamLogo";
+import { getEventGender } from "../../types/EventCategories";
 
 const CricketEventBox = ({ event }: { event: CricketEvent }) => {
+	const gender = getEventGender(event);
+
 	return (
-		<div className="liveEventBox cricket">
+		<div className={`liveEventBox cricket ${gender}`}>
 			<span className="eventCategory">
 				<SportsCricketIcon />
 				Cricket
 			</span>
+			{gender !== "unknown" && (
+				<div className="gender-tag-container">
+					<span className="gender-tag">{gender === "men" ? "MEN" : "WOMEN"}</span>
+				</div>
+			)}
 			<h3 className="fjalla">{event.title}</h3>
 			<h3 style={{ color: "red" }} className="fjalla">
 				{event.subtitle} | Day{" "}
@@ -24,12 +33,12 @@ const CricketEventBox = ({ event }: { event: CricketEvent }) => {
 			<hr className="hr" />
 			<div className="footballScoresContainer">
 				<div>
-					{event.teams[0].logoUrl && <img src={event.teams[0].logoUrl} alt="" className="team-logo-mini" />}
+					<TeamLogo src={event.teams[0].logoUrl} name={event.teams[0].name} size={30} />
 					<h3 className="fjalla">{event.teams[0].name}</h3>
 				</div>
 				<p className=" fjalla VS">VS</p>
 				<div>
-					{event.teams[1].logoUrl && <img src={event.teams[1].logoUrl} alt="" className="team-logo-mini" />}
+					<TeamLogo src={event.teams[1].logoUrl} name={event.teams[1].name} size={30} />
 					<h3 className="fjalla">{event.teams[1].name}</h3>
 				</div>
 			</div>

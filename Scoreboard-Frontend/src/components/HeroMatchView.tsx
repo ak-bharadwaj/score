@@ -1,6 +1,6 @@
 import React from 'react';
 import Event from '../types/Event';
-import EventCatagories from '../types/EventCategories';
+import EventCatagories, { getEventGender } from '../types/EventCategories';
 import './HeroMatchView.css'; // We will create this
 
 interface HeroMatchViewProps {
@@ -8,15 +8,8 @@ interface HeroMatchViewProps {
 }
 
 const HeroMatchView: React.FC<HeroMatchViewProps> = ({ event }) => {
-    // Helper to determine gender from event name
-    const getGender = () => {
-        const e = event.event.toLowerCase();
-        if (e.includes('women')) return 'WOMENS';
-        if (e.includes('_men') || e.includes(' men')) return 'MENS';
-        return '';
-    };
+    const gender = getEventGender(event);
 
-    // Helper to determine game type (League/Final)
     const getGameType = () => {
         const text = (event.subtitle + ' ' + event.title).toUpperCase();
         if (text.includes('FINAL')) {
@@ -29,7 +22,6 @@ const HeroMatchView: React.FC<HeroMatchViewProps> = ({ event }) => {
         return event.subtitle || 'MATCH';
     };
 
-    const gender = getGender();
     const gameType = getGameType();
 
     // Helper to extract score safely based on event type
@@ -77,11 +69,12 @@ const HeroMatchView: React.FC<HeroMatchViewProps> = ({ event }) => {
     const isLive = event.isStarted && !event.isCompleted;
 
     return (
-        <div className={`hero-match-card ${isLive ? 'live-glow' : ''}`}>
+    return (
+        <div className={`hero-match-card ${gender} ${isLive ? 'live-glow' : ''}`}>
             <div className="hero-header">
                 <div className="hero-sport-badge-container">
                     <div className="hero-sport-badge">
-                        {gender && <span className="hero-gender-tag">{gender}</span>}
+                        {gender !== "unknown" && <span className="hero-gender-tag">{gender === "men" ? "MEN" : "WOMEN"}</span>}
                         <span className="hero-sport">{event.event.split('_')[0]}</span>
                     </div>
                     <div className={`hero-gametype-tag ${gameType.includes('FINAL') ? 'is-final' : ''}`}>

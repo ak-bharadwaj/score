@@ -1,8 +1,8 @@
-import { StartingDate } from "../../App";
-import EventCatagories from "../../types/EventCategories";
+import EventCatagories, { getEventGender } from "../../types/EventCategories";
 import SquashEvent, { SquashScore } from "../../types/SquashEvent";
 import "./LiveEventBox.css";
 import SportsTennisIcon from "@mui/icons-material/SportsTennis";
+import TeamLogo from "../TeamLogo";
 
 const SquashEventBox = ({
 	event,
@@ -13,16 +13,19 @@ const SquashEventBox = ({
 	onScoreUpdate?: (score: SquashScore) => void;
 	event: SquashEvent;
 }) => {
+	const gender = getEventGender(event);
+
 	return (
-		<div className="liveEventBox squash">
+		<div className={`liveEventBox squash ${gender}`}>
 			<span className="eventCategory">
 				<SportsTennisIcon />
-				<span>
-					{event.event === EventCatagories.SQUASH_MEN
-						? "Men's Squash"
-						: "Women's Squash"}
-				</span>
+				Squash
 			</span>
+			{gender !== "unknown" && (
+				<div className="gender-tag-container">
+					<span className="gender-tag">{gender === "men" ? "MEN" : "WOMEN"}</span>
+				</div>
+			)}
 			<div className="event-header-compact">
 				<h3 className="fjalla">{event.title}</h3>
 				<p>{event.subtitle}</p>
@@ -31,6 +34,7 @@ const SquashEventBox = ({
 			<div className="footballScoresContainer">
 				<div className="score-row">
 					<div className="team-info">
+						<TeamLogo src={event.teams[0].logoUrl} name={event.teams[0].name} size={28} />
 						<h3 className="team-name-compact fjalla">{event.teams[0].name}</h3>
 					</div>
 					<div className="score-display-mini fjalla">{event.score.teamA_points}</div>
@@ -50,6 +54,7 @@ const SquashEventBox = ({
 
 				<div className="score-row">
 					<div className="team-info">
+						<TeamLogo src={event.teams[1].logoUrl} name={event.teams[1].name} size={28} />
 						<h3 className="team-name-compact fjalla">{event.teams[1].name}</h3>
 					</div>
 					<div className="score-display-mini fjalla">{event.score.teamB_points}</div>

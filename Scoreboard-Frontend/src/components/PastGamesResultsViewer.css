@@ -70,6 +70,20 @@
 	filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
+.result-logo-placeholder {
+	width: 36px;
+	height: 36px;
+	background: #444;
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	font-size: 1rem;
+	font-weight: bold;
+	border: 1px solid #555;
+}
+
 .team-name {
 	font-size: 1rem;
 	white-space: nowrap;

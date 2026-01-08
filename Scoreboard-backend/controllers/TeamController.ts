@@ -1,7 +1,8 @@
 import { Body, Delete, Get, Patch, Path, Post, Response, Route, Tags } from "tsoa";
 
 import CreateTeamRequest from "../requests/CreateTeamRequest";
-import { addTeam, deleteTeam, getAllTeams, getTeamByName, updateTeam } from "../utils/TeamUtils";
+import UpdateTeamRequest from "../requests/UpdateTeamRequest";
+import { addMedal, addTeam, deleteTeam, getAllTeams, getTeamByName, updateTeam } from "../utils/TeamUtils";
 
 @Route("api/admin/teams")
 @Tags("Teams")
@@ -52,7 +53,7 @@ export class TeamControllers {
   @Patch("/:name/:medal")
   @Response(204)
   public async addMedal(@Path("medal") medal: string, @Path("name") name: string) {
-    await this.addMedal(medal, name);
+    await addMedal(name, medal as any);
   }
 
   /**
@@ -60,8 +61,8 @@ export class TeamControllers {
    * @param id - The ID of the team to update.
    */
   @Patch("/:id")
-  public async updateTeam(@Path("id") id: string, @Body() data: CreateTeamRequest) {
-    // We map CreateTeamRequest to Team partial
+  public async updateTeam(@Path("id") id: string, @Body() data: UpdateTeamRequest) {
+    // We map UpdateTeamRequest to Team partial
     await updateTeam(id, { name: data.name, logoUrl: data.logoUrl });
   }
 }

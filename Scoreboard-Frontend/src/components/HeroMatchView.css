@@ -27,6 +27,24 @@
     box-shadow: 0 0 40px rgba(255, 59, 48, 0.25), 0 25px 60px rgba(0, 0, 0, 0.7);
 }
 
+.hero-match-card.men {
+    border-right: 8px solid #2ecc71;
+}
+
+.hero-match-card.women {
+    border-right: 8px solid #ff69b4;
+}
+
+.hero-match-card.men .hero-gender-tag {
+    color: #2ecc71;
+    background: rgba(46, 204, 113, 0.1);
+}
+
+.hero-match-card.women .hero-gender-tag {
+    color: #ff69b4;
+    background: rgba(255, 105, 180, 0.1);
+}
+
 .hero-header {
     display: flex;
     justify-content: space-between;

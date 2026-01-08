@@ -1,4 +1,5 @@
 import { Team } from "../../../types/Team";
+import TeamLogo from "../../../components/TeamLogo";
 
 const TeamRow = ({
 	team,
@@ -11,7 +12,12 @@ const TeamRow = ({
 }) => {
 	return (
 		<tr>
-			<td>{team.name}</td>
+			<td>
+				<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+					<TeamLogo src={team.logoUrl} name={team.name} size={30} />
+					{team.name}
+				</div>
+			</td>
 			<td>
 				<button onClick={() => onEdit(team)} className="styledButton" style={{ marginRight: '5px' }}>
 					Edit

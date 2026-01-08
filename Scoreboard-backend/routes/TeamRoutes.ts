@@ -25,4 +25,8 @@ router.patch("/:name/:medal", async (req, res) => {
   res.sendStatus(204);
 });
 
+router.patch("/:id", async (req, res) => {
+  res.json(await new TeamControllers().updateTeam(req.params.id, req.body));
+});
+
 export default router;

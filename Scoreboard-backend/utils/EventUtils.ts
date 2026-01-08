@@ -65,9 +65,9 @@ export const readEvents = async () => (await EventModel.find<AllEvents>().popula
 
 export const deleteEvent = async (eventID: string) => await EventModel.findByIdAndDelete(eventID);
 
-export const getLiveEvents = async () => await EventModel.find<AllEvents>().where("isStarted").equals(true);
+export const getLiveEvents = async () => await EventModel.find<AllEvents>().where("isStarted").equals(true).populate("teams").populate("winner.team");
 
-export const getEventByID = async <T extends Event<U>, U extends Score>(id: string) => await EventModel.findById<T>(id);
+export const getEventByID = async <T extends Event<U>, U extends Score>(id: string) => await EventModel.findById<T>(id).populate("teams").populate("winner.team");
 
 export const toggleEventStarted = async (id: string) => {
   let event = await getEventByID<AllEvents, AllScores>(id);

@@ -34,4 +34,38 @@ export const formatEventName = (e: string) => {
 	return fName;
 };
 
+export const getEventGender = (event: { event: string; title: string; subtitle?: string }) => {
+	const e = event.event.toLowerCase();
+	const t = event.title.toLowerCase();
+	const s = (event.subtitle || "").toLowerCase();
+
+	if (
+		e.includes("women") ||
+		t.includes("women") ||
+		s.includes("women") ||
+		t.includes("womens") ||
+		s.includes("womens") ||
+		t.includes("(w)") ||
+		s.includes("(w)") ||
+		t.includes("girls") ||
+		s.includes("girls")
+	) {
+		return "women";
+	}
+	if (
+		e.includes("men") ||
+		t.includes("men") ||
+		s.includes("men") ||
+		t.includes("mens") ||
+		s.includes("mens") ||
+		t.includes("(m)") ||
+		s.includes("(m)") ||
+		t.includes("boys") ||
+		s.includes("boys")
+	) {
+		return "men";
+	}
+	return "unknown";
+};
+
 export default EventCatagories;

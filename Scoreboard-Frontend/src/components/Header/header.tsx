@@ -61,9 +61,9 @@ function Header({ activeEvent }: HeaderProps) {
 			{/* Left: Branding */}
 			<div className="header-brand">
 				<Link to="/" className="brand-link">
-					<img src="/logo192.png" alt="JUNTUA Logo" className="brand-logo-img" />
+					<img src="/logo192.png" alt="JNTUA Logo" className="brand-logo-img" />
 					<div className="brand-text">
-						<span className="brand-title">JUNTUA</span>
+						<span className="brand-title">JNTUA</span>
 						<span className="brand-subtitle">SPORTS MEET UP 2026</span>
 					</div>
 				</Link>

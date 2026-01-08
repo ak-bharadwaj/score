@@ -13,6 +13,7 @@
 	border-left: 4px solid var(--accent-color);
 	transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+	position: relative;
 }
 
 .upcoming-card:hover {
@@ -20,6 +21,36 @@
 	transform: translateX(6px);
 	border-color: #444;
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.upcoming-card.men {
+	border-right: 4px solid #2ecc71 !important;
+	/* Green for Men */
+}
+
+.upcoming-card.women {
+	border-right: 4px solid #ff69b4 !important;
+	/* Pink for Women */
+}
+
+.upcoming-gender-badge {
+	position: absolute;
+	top: -10px;
+	right: 15px;
+	font-size: 0.65rem;
+	font-weight: 900;
+	padding: 2px 8px;
+	border-radius: 4px;
+	color: white;
+	z-index: 2;
+}
+
+.upcoming-card.men .upcoming-gender-badge {
+	background: #2ecc71;
+}
+
+.upcoming-card.women .upcoming-gender-badge {
+	background: #ff69b4;
 }
 
 .upcoming-card-header {

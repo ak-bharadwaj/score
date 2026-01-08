@@ -155,6 +155,7 @@ const AdminDashboard = () => {
 				name: obj.name,
 				medals: { ...obj.medals },
 				points: obj.points,
+				logoUrl: obj.logoUrl,
 			};
 		});
 		setAllTeams(Teams);

@@ -1,7 +1,8 @@
-import { StartingDate } from "../../App";
 import ChessEvent, { ChessScore } from "../../types/ChessEvent";
 import "./LiveEventBox.css";
 import GridOnIcon from "@mui/icons-material/GridOn";
+import TeamLogo from "../TeamLogo";
+import { getEventGender } from "../../types/EventCategories";
 
 const ChessEventBox = ({
 	event,
@@ -12,12 +13,19 @@ const ChessEventBox = ({
 	onScoreUpdate?: (score: ChessScore) => void;
 	event: ChessEvent;
 }) => {
+	const gender = getEventGender(event);
+
 	return (
-		<div className="liveEventBox chess">
+		<div className={`liveEventBox chess ${gender}`}>
 			<span className="eventCategory">
 				<GridOnIcon />
 				Chess
 			</span>
+			{gender !== "unknown" && (
+				<div className="gender-tag-container">
+					<span className="gender-tag">{gender === "men" ? "MEN" : "WOMEN"}</span>
+				</div>
+			)}
 			<div className="event-header-compact">
 				<h3 className="fjalla">{event.title}</h3>
 				<p>{event.subtitle}</p>
@@ -26,6 +34,7 @@ const ChessEventBox = ({
 			<div className="footballScoresContainer">
 				<div className="score-row">
 					<div className="team-info">
+						<TeamLogo src={event.teams[0].logoUrl} name={event.teams[0].name} size={28} />
 						<h3 className="team-name-compact fjalla">{event.teams[0].name}</h3>
 					</div>
 					<div className="score-display-mini fjalla">{event.score.teamA_points}</div>
@@ -46,6 +55,7 @@ const ChessEventBox = ({
 
 				<div className="score-row">
 					<div className="team-info">
+						<TeamLogo src={event.teams[1].logoUrl} name={event.teams[1].name} size={28} />
 						<h3 className="team-name-compact fjalla">{event.teams[1].name}</h3>
 					</div>
 					<div className="score-display-mini fjalla">{event.score.teamB_points}</div>

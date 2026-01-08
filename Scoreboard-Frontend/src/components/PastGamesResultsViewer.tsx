@@ -57,7 +57,11 @@ const ResultLog = ({ event }: { event: Event }) => {
 			</div>
 			<div className="result-card-body">
 				<div className={`team-result ${winnerId === teamA?._id ? "is-winner" : ""}`}>
-					<img src={teamA?.logoUrl || "/placeholder-logo.png"} alt={teamA?.name} className="result-logo" />
+					{teamA?.logoUrl ? (
+						<img src={teamA.logoUrl} alt={teamA.name} className="result-logo" />
+					) : (
+						<div className="result-logo-placeholder">{teamA?.name?.[0]}</div>
+					)}
 					<span className="team-name">{teamA?.name}</span>
 					<span className="team-score">{score?.teamA_points ?? "-"}</span>
 				</div>
@@ -65,7 +69,11 @@ const ResultLog = ({ event }: { event: Event }) => {
 				<div className={`team-result ${winnerId === teamB?._id ? "is-winner" : ""}`}>
 					<span className="team-score">{score?.teamB_points ?? "-"}</span>
 					<span className="team-name">{teamB?.name}</span>
-					<img src={teamB?.logoUrl || "/placeholder-logo.png"} alt={teamB?.name} className="result-logo" />
+					{teamB?.logoUrl ? (
+						<img src={teamB.logoUrl} alt={teamB.name} className="result-logo" />
+					) : (
+						<div className="result-logo-placeholder">{teamB?.name?.[0]}</div>
+					)}
 				</div>
 			</div>
 			<div className="result-card-footer">

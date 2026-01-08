@@ -22,6 +22,7 @@
 	--theme_color: #04aa6d;
 	display: flex;
 	flex-direction: column;
+	position: relative;
 	border: 1px solid #e0e0e0;
 	border-radius: 12px;
 	background: #ffffff;
@@ -31,6 +32,41 @@
 
 .liveEventBox:hover {
 	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.liveEventBox.men {
+	border: 3px solid #2ecc71 !important;
+	/* Green for Men */
+}
+
+.liveEventBox.women {
+	border: 3px solid #ff69b4 !important;
+	/* Pink for Women */
+}
+
+.gender-tag-container {
+	position: absolute;
+	top: 10px;
+	right: 15px;
+	display: flex;
+	gap: 5px;
+}
+
+.gender-tag {
+	font-size: 0.7rem;
+	font-weight: 900;
+	padding: 2px 8px;
+	border-radius: 4px;
+	color: white;
+	letter-spacing: 1px;
+}
+
+.liveEventBox.men .gender-tag {
+	background: #2ecc71;
+}
+
+.liveEventBox.women .gender-tag {
+	background: #ff69b4;
 }
 
 .team-logo-mini {
@@ -101,4 +137,52 @@
 	width: 100%;
 	padding: 5px;
 	font-size: 0.8rem;
+}
+
+.cricket-team-row-compact {
+	margin-top: 15px;
+	padding: 15px;
+	background: #ffffff;
+	border-radius: 12px;
+	border: 1px solid #e0e0e0;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.mini-score-grid {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 15px;
+	align-items: flex-end;
+}
+
+.input-with-label-mini {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	flex: 1;
+	min-width: 60px;
+}
+
+.mini-label {
+	font-size: 0.75rem;
+	font-weight: 800;
+	color: #666;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.input-with-label-mini .styledInput {
+	height: 40px;
+	width: 100% !important;
+	padding: 8px 12px;
+	font-size: 1rem;
+	border: 2px solid #eee;
+	border-radius: 8px;
+}
+
+.input-with-label-mini .styledInput:focus {
+	border-color: #04aa6d;
 }

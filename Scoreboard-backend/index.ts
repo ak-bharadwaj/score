@@ -17,15 +17,15 @@ config();
 
 const app = express();
 
-app.use("/", express.json() as any);
-app.use("/", compression() as any);
-app.use("/", cors(CorsConfig) as any);
+(app as any).use("/", express.json());
+(app as any).use("/", compression());
+(app as any).use("/", cors(CorsConfig));
 // Mount Swagger UI via a Router to avoid type conflicts between different express type instances
 const docsRouter = express.Router();
-docsRouter.use("/", ...(swaggerUi as any).serve);
-docsRouter.get("/", (swaggerUi as any).setup(swaggerConfig));
-app.use("/api/docs", docsRouter);
-app.use("/", express.static(path.join(__dirname, "../client/build"), { maxAge: "1d", etag: true }));
+(docsRouter as any).use("/", ...swaggerUi.serve);
+(docsRouter as any).get("/", swaggerUi.setup(swaggerConfig));
+(app as any).use("/api/docs", docsRouter);
+(app as any).use("/", express.static(path.join(__dirname, "../client/build"), { maxAge: "1d", etag: true }));
 
 app.use((req, res, next) => {
   console.log(`${req.ip} requested: ${req.url}`);

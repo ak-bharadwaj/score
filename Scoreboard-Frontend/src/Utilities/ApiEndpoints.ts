@@ -81,6 +81,7 @@ const API = {
 			ServerURL + "admin/teams",
 			{
 				name: team.name,
+				logoUrl: team.logoUrl,
 			},
 			{
 				headers: {
