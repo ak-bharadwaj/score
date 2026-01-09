@@ -242,11 +242,11 @@ const Home = () => {
 		return () => clearInterval(interval);
 	}, [liveEvents.length, upcomingEvents.length, rotationSeconds]);
 
-	// REAL-TIME SCORE UPDATES FOR HERO MATCH
-	// REAL-TIME SCORE UPDATES FOR HEADER AND BROADCAST
+	// REAL-TIME SCORE UPDATES FOR ALL RELEVANT EVENTS
 	useEffect(() => {
 		const idsToSubscribe = new Set<string>();
-		if (broadcastEvent?._id) idsToSubscribe.add(broadcastEvent._id);
+		// Subscribe to everything that might be visible: Live, Header, and Upcoming
+		liveEvents.forEach(e => idsToSubscribe.add(e._id as string));
 		if (headerEvent?._id) idsToSubscribe.add(headerEvent._id);
 
 		const ids = Array.from(idsToSubscribe);
@@ -271,7 +271,23 @@ const Home = () => {
 		return () => {
 			cleanups.forEach(c => c());
 		};
-	}, [broadcastEvent?._id, headerEvent?._id]);
+	}, [liveEvents.map(e => e._id).join(','), headerEvent?._id]);
+
+	// RE-FETCH ON RECONNECT
+	useEffect(() => {
+		const handleReconnect = () => {
+			console.log("Socket reconnected, refreshing data...");
+			fetchEvents();
+			fetchGlobalConfig();
+		};
+		socket.on("reconnect", handleReconnect);
+		socket.on("connect", handleReconnect);
+
+		return () => {
+			socket.off("reconnect", handleReconnect);
+			socket.off("connect", handleReconnect);
+		};
+	}, []);
 
 	return (
 		<div className="sports-channel-layout">

@@ -91,16 +91,47 @@ const EditScores = () => {
 	};
 
 	useEffect(() => {
-		fetchEvents();
-
-		socket.on("eventsUpdated", () => {
+		const handleRefresh = () => {
+			console.log("Admin refreshing events...");
 			fetchEvents();
-		});
+		};
+
+		fetchEvents();
+		socket.on("eventsUpdated", handleRefresh);
+		socket.on("reconnect", handleRefresh);
+		socket.on("connect", handleRefresh);
 
 		return () => {
-			socket.off("eventsUpdated");
+			socket.off("eventsUpdated", handleRefresh);
+			socket.off("reconnect", handleRefresh);
+			socket.off("connect", handleRefresh);
 		}
 	}, []);
+
+	// Real-time score updates for matches in admin panel
+	useEffect(() => {
+		const liveMatchIds = allEvents.filter(e => e.isStarted).map(e => e._id as string);
+		const cleanups: (() => void)[] = [];
+
+		liveMatchIds.forEach(eventId => {
+			socket.emit("subscribe", eventId);
+			const handler = (data: string) => {
+				try {
+					const score = JSON.parse(data);
+					setAllEvents((prev) =>
+						prev.map((e) => (e._id === eventId ? { ...e, score } : e))
+					);
+				} catch (e) { }
+			};
+			socket.on(`scoreUpdate/${eventId}`, handler);
+			cleanups.push(() => {
+				socket.emit("unsubscribe", eventId);
+				socket.off(`scoreUpdate/${eventId}`, handler);
+			});
+		});
+
+		return () => cleanups.forEach(c => c());
+	}, [allEvents.filter(e => e.isStarted).map(e => e._id).join(',')]);
 
 	const getEventBox = (event: Event, i: number): React.JSX.Element => {
 		switch (event.event) {

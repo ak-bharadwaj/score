@@ -98,7 +98,11 @@ export const toggleEventStarted = async (id: string) => {
   });
 };
 
-export const markEventAsCompleted = async (id: string) => await EventModel.findByIdAndUpdate(id, { isCompleted: true });
+export const markEventAsCompleted = async (id: string) => {
+  const res = await EventModel.findByIdAndUpdate(id, { isCompleted: true });
+  SocketServer.io.sockets.emit("eventsUpdated");
+  return res;
+};
 
 export const updateScore = async (id: string, score: any) => {
   const event = await getEventByID<AllEvents, AllScores>(id);
@@ -139,6 +143,7 @@ export const setWinner = async (eventID: string, winningTeamID?: string, partici
 
 export const deleteAllEvents = async () => {
   await EventModel.deleteMany({});
+  SocketServer.io.sockets.emit("eventsUpdated");
 };
 
 export const updateVote = async (id: string, team: 'A' | 'B', action: 'add' | 'remove') => {

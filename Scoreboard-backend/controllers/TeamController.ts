@@ -33,6 +33,7 @@ export class TeamControllers {
   @Post("")
   public async addTeam(@Body() { name, logoUrl }: CreateTeamRequest) {
     await addTeam(name, logoUrl);
+    require("../types/SocketServer").SocketServer.io.sockets.emit("eventsUpdated");
   }
 
   /**
@@ -42,6 +43,7 @@ export class TeamControllers {
   @Delete("/:id")
   public async deleteTeam(@Path("id") id: string) {
     await deleteTeam(id);
+    require("../types/SocketServer").SocketServer.io.sockets.emit("eventsUpdated");
   }
 
   /**
@@ -54,6 +56,7 @@ export class TeamControllers {
   @Response(204)
   public async addMedal(@Path("medal") medal: string, @Path("name") name: string) {
     await addMedal(name, medal as any);
+    require("../types/SocketServer").SocketServer.io.sockets.emit("eventsUpdated");
   }
 
   /**
@@ -64,5 +67,6 @@ export class TeamControllers {
   public async updateTeam(@Path("id") id: string, @Body() data: UpdateTeamRequest) {
     // We map UpdateTeamRequest to Team partial
     await updateTeam(id, { name: data.name, logoUrl: data.logoUrl });
+    require("../types/SocketServer").SocketServer.io.sockets.emit("eventsUpdated");
   }
 }
