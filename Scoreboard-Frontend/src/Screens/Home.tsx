@@ -50,15 +50,26 @@ const Home = () => {
 	}, [events]);
 
 	const liveEvents = useMemo(
-		() =>
-			events.filter((event) => {
-				if (event.isStarted) return true;
+		() => {
+			// First, get truly live (started but not completed) events
+			const activelyLive = events.filter(e => e.isStarted && !e.isCompleted);
+
+			// If we have actively live matches, only show those
+			if (activelyLive.length > 0) {
+				return activelyLive;
+			}
+
+			// If no live matches, show recently completed ones briefly (30 seconds)
+			const recentlyCompleted = events.filter((event) => {
 				if (event.isCompleted && event.endTime) {
-					const twoMinutesAgo = Date.now() - 2 * 60 * 1000;
-					return (event.endTime as number) > twoMinutesAgo;
+					const thirtySecondsAgo = Date.now() - 30 * 1000;
+					return (event.endTime as number) > thirtySecondsAgo;
 				}
 				return false;
-			}),
+			});
+
+			return recentlyCompleted;
+		},
 		[events]
 	);
 
@@ -174,11 +185,23 @@ const Home = () => {
 						// Trigger Winner Announcement Overlay
 						setWinnerAnnouncement(endedEvent);
 
+						// Check if there are other live matches
+						const otherLiveMatches = updated.filter(
+							e => e.isStarted && !e.isCompleted && e._id !== eventToBeUpdated.eventID
+						);
+
 						if (featuredTimeout.current) clearTimeout(featuredTimeout.current);
 						setFeaturedEvent(endedEvent);
+
+						// If there are other live matches, show winner briefly (1 rotation)
+						// If no other matches, show for 2-3 rotations
+						const displayDuration = otherLiveMatches.length > 0
+							? rotationSeconds * 1000  // 10 seconds (1 rotation)
+							: rotationSeconds * 2500; // 25 seconds (2.5 rotations)
+
 						featuredTimeout.current = setTimeout(
 							() => setFeaturedEvent(null),
-							rotationSeconds * 1000
+							displayDuration
 						);
 					}
 				}
