@@ -9,7 +9,7 @@ export const RootURL =
 		? process.env.REACT_APP_API_ORIGIN || "/"
 		: `http://${window.location.hostname}:5000/`;
 
-const ServerURL = RootURL + "api/"; //URL for API Endpoints
+const ServerURL = RootURL.endsWith('/') ? RootURL + "api/" : RootURL + "/api/"; //URL for API Endpoints
 
 const API = {
 	SetWinnerManually: (
