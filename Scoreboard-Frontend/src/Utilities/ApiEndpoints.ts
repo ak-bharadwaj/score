@@ -4,9 +4,14 @@ import { Team } from "../types/Team";
 import { FootballScore } from "../types/FootballEvent";
 import { Participant } from "../types/AthleticsEvent";
 
+let envURL = process.env.REACT_APP_API_ORIGIN || "";
+if (envURL && !envURL.startsWith("http")) {
+	envURL = "https://" + envURL;
+}
+
 export const RootURL =
 	process.env.NODE_ENV === "production"
-		? process.env.REACT_APP_API_ORIGIN || "/"
+		? (envURL || "/")
 		: `http://${window.location.hostname}:5000/`;
 
 const ServerURL = RootURL.endsWith('/') ? RootURL + "api/" : RootURL + "/api/"; //URL for API Endpoints

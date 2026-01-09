@@ -21,8 +21,19 @@ const router = express.Router();
 router.use((req: AuthenticatedRequest, res, next) => {
   // needs to be either admin or score editor
   if (req.method === "OPTIONS") return res.sendStatus(200);
-  if (req.url === "/") return next();
+
+  // Allow public GET requests for event listing and single event view
+  if (req.method === "GET" && (req.path === "/" || req.path === "")) return next();
+
+  // Allow voting
   if (req.path.includes("/vote")) return next();
+
+  // All other methods (POST, PUT, PATCH, DELETE) or non-root GETs need auth
+  // Actually, let's just check if it's a GET request to a public route
+  if (req.method === "GET" && !req.path.includes("toggleLive") && !req.path.includes("updateScore")) {
+    return next();
+  }
+
   if (!req.headers.authorization) return res.sendStatus(401);
   const [type, token] = req.headers.authorization.split(" ");
   if (!token) return res.sendStatus(401);
