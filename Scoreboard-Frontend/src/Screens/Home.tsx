@@ -66,7 +66,6 @@ const Home = () => {
 		() =>
 			events.filter(
 				(event) =>
-					(event.endTime as number) > new Date().getTime() &&
 					event.isStarted === false &&
 					event.isCompleted === false
 			),

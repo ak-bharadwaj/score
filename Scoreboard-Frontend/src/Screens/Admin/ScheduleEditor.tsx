@@ -266,8 +266,9 @@ const ScheduleEditor = ({ teams }: { teams: Team[] }) => {
 		if (validRows?.length === 0 && validAthlRows?.length === 0) {
 			//set schedule as empty
 			try {
-				API.PostSchedule([], getAccessToken());
+				await API.PostSchedule([], getAccessToken());
 				setToast("Updated Schedule Successfully!");
+				fetchEvents();
 			} catch (error: any) {
 				try {
 					setToast(JSON.parse(error.request.response).message);
@@ -310,8 +311,9 @@ const ScheduleEditor = ({ teams }: { teams: Team[] }) => {
 		];
 		//data to be sent to the server
 		try {
-			API.PostSchedule(data, getAccessToken());
+			await API.PostSchedule(data, getAccessToken());
 			setToast("Updated Schedule Successfully!");
+			fetchEvents();
 		} catch (error: any) {
 			try {
 				setToast(JSON.parse(error.request.response).message);
