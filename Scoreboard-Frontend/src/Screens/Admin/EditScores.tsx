@@ -77,9 +77,12 @@ const EditScores = () => {
 		const event = allEvents.find(e => e._id === id);
 		if (!event) return;
 
+		// Show immediate feedback
+		setToast("Updating score...");
+
 		try {
 			await API.UpdateScore(getAccessToken(), id, event.score as any);
-			setToast("Score Updated on Server!");
+			setToast("✓ Score Updated!");
 		} catch (error: any) {
 			try {
 				setToast(JSON.parse(error.request.response).message);

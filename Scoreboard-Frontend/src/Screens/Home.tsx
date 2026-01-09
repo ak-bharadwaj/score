@@ -252,10 +252,13 @@ const Home = () => {
 		const ids = Array.from(idsToSubscribe);
 		const cleanups: (() => void)[] = [];
 
+		console.log(`[Score Updates] Subscribing to ${ids.length} events:`, ids);
+
 		ids.forEach(eventId => {
 			socket.emit("subscribe", eventId);
 			const handler = (data: string) => {
 				try {
+					console.log(`[Score Update] Received for event ${eventId}`);
 					const score = JSON.parse(data);
 					updateScoreOfEvent(score, eventId);
 				} catch (e) { console.error("Error parsing score update", e); }
@@ -263,6 +266,7 @@ const Home = () => {
 			socket.on(`scoreUpdate/${eventId}`, handler);
 
 			cleanups.push(() => {
+				console.log(`[Score Updates] Unsubscribing from ${eventId}`);
 				socket.emit("unsubscribe", eventId);
 				socket.off(`scoreUpdate/${eventId}`, handler);
 			});
@@ -287,6 +291,42 @@ const Home = () => {
 			socket.off("reconnect", handleReconnect);
 			socket.off("connect", handleReconnect);
 		};
+	}, []);
+
+	// VISIBILITY CHANGE - Force reconnect when tab becomes visible
+	useEffect(() => {
+		const handleVisibilityChange = () => {
+			if (document.visibilityState === 'visible') {
+				console.log("Tab became visible, checking socket connection...");
+				if (!socket.connected) {
+					console.log("Socket disconnected, reconnecting...");
+					socket.connect();
+				}
+				// Always refresh data when tab becomes visible
+				fetchEvents();
+				fetchGlobalConfig();
+			}
+		};
+
+		document.addEventListener('visibilitychange', handleVisibilityChange);
+
+		return () => {
+			document.removeEventListener('visibilitychange', handleVisibilityChange);
+		};
+	}, []);
+
+	// HEARTBEAT - Keep connection alive
+	useEffect(() => {
+		const heartbeatInterval = setInterval(() => {
+			if (socket.connected) {
+				socket.emit('ping');
+			} else {
+				console.log("Socket disconnected, attempting reconnect...");
+				socket.connect();
+			}
+		}, 10000); // Every 10 seconds
+
+		return () => clearInterval(heartbeatInterval);
 	}, []);
 
 	return (
