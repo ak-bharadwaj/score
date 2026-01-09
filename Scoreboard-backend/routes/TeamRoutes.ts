@@ -39,29 +39,53 @@ router.post("/upload", upload.single("logo"), (req: express.Request, res: expres
   res.json({ logoUrl });
 });
 
-router.get("/", async (req, res) => {
-  res.json(await new TeamControllers().getAllTeams());
+router.get("/", async (req, res, next) => {
+  try {
+    res.json(await new TeamControllers().getAllTeams());
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.get("/:name", async (req, res) => {
-  res.json(await new TeamControllers().getTeamByName(req.params.name));
+router.get("/:name", async (req, res, next) => {
+  try {
+    res.json(await new TeamControllers().getTeamByName(req.params.name));
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.post("/", async (req, res) => {
-  res.json(await new TeamControllers().addTeam(req.body));
+router.post("/", async (req, res, next) => {
+  try {
+    res.json(await new TeamControllers().addTeam(req.body));
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.delete("/:id", async (req, res) => {
-  res.json(await new TeamControllers().deleteTeam(req.params.id));
+router.delete("/:id", async (req, res, next) => {
+  try {
+    res.json(await new TeamControllers().deleteTeam(req.params.id));
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.patch("/:name/:medal", async (req, res) => {
-  await new TeamControllers().addMedal(req.params.medal, req.params.name);
-  res.sendStatus(204);
+router.patch("/:name/:medal", async (req, res, next) => {
+  try {
+    await new TeamControllers().addMedal(req.params.medal, req.params.name);
+    res.sendStatus(204);
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.patch("/:id", async (req, res) => {
-  res.json(await new TeamControllers().updateTeam(req.params.id, req.body));
+router.patch("/:id", async (req, res, next) => {
+  try {
+    res.json(await new TeamControllers().updateTeam(req.params.id, req.body));
+  } catch (error) {
+    next(error);
+  }
 });
 
 export default router;

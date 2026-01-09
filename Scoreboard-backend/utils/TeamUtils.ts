@@ -11,7 +11,14 @@ export const deleteTeam = async (id: string) => await TeamModel.findByIdAndDelet
 
 export const getAllTeams = async () => await TeamModel.find<Team>();
 
-export const getTeamID = async (name: string) => (await TeamModel.findOne({ name }))!._id.toString();
+export const getTeamID = async (name: string) => {
+  const team = await TeamModel.findOne({ name });
+  if (!team) {
+    console.error(`Team not found: ${name}`);
+    return null;
+  }
+  return team._id.toString();
+};
 
 export const getTeamById = async (id: string) => await TeamModel.findById(id);
 

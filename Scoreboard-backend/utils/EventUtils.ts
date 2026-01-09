@@ -114,7 +114,7 @@ export const getNotCompletedEvents = async () => await EventModel.find().where("
 export async function updateExistingEvents(events: AllEvents[]) {
   await deleteNotCompletedEvents();
   await Promise.all(events.map(async event =>
-    addEvent(event.event, { ...event, teams: await Promise.all(event.teams.map(async team => await getTeamID(team))) })
+    addEvent(event.event, { ...event, teams: (await Promise.all(event.teams.map(async team => await getTeamID(team)))).filter((t): t is string => t !== null) })
   ));
   SocketServer.io.sockets.emit("eventsUpdated");
 }

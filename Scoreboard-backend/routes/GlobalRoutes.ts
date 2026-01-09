@@ -3,28 +3,39 @@ import { GlobalController } from "../controllers/GlobalController";
 
 const router = express.Router();
 
-router.post("/broadcast", async (req, res) => {
-    await new GlobalController().broadcast(req.body);
-    res.sendStatus(204);
-});
-
-router.post("/ticker", async (req, res) => {
-    await new GlobalController().updateTicker(req.body);
-    res.sendStatus(204);
-});
-
-router.post("/featured-event", async (req, res) => {
+router.post("/broadcast", async (req, res, next) => {
     try {
-        await new GlobalController().updateFeaturedEvent(req.body);
+        await new GlobalController().broadcast(req.body);
         res.sendStatus(204);
-    } catch (e: any) {
-        console.error("Featured Event Error:", e);
-        res.status(500).send(e.toString());
+    } catch (error) {
+        next(error);
     }
 });
 
-router.get("/config", async (req, res) => {
-    res.json(await new GlobalController().getConfig());
+router.post("/ticker", async (req, res, next) => {
+    try {
+        await new GlobalController().updateTicker(req.body);
+        res.sendStatus(204);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.post("/featured-event", async (req, res, next) => {
+    try {
+        await new GlobalController().updateFeaturedEvent(req.body);
+        res.sendStatus(204);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get("/config", async (req, res, next) => {
+    try {
+        res.json(await new GlobalController().getConfig());
+    } catch (error) {
+        next(error);
+    }
 });
 
 export default router;

@@ -4,9 +4,9 @@ import express from "express";
 import FootballRoutes from "./FootballRoutes";
 import ChessRoutes from "./ChessRoutes";
 import SquashMenRoutes from "./SquashMenRoutes";
-import SquashWomenRoutes from "./SquashMenRoutes";
+import SquashWomenRoutes from "./SquashWomenRoutes";
 import TennisMenRoutes from "./TennisMenRoutes";
-import TennisWomenRoutes from "./TennisMenRoutes";
+import TennisWomenRoutes from "./TennisWomenRoutes";
 import AuthenticatedRequest from "../requests/AuthenticatedRequest";
 import AllEvents, { AllScores } from "../types/AllEvents";
 import { User } from "../types/User";
@@ -68,31 +68,32 @@ router.use("/squashwomen", SquashWomenRoutes);
 router.use("/tennismen", TennisMenRoutes);
 router.use("/tenniswomen", TennisWomenRoutes);
 
-router.patch("/toggleLive/:id", async (req, res) => {
+router.patch("/toggleLive/:id", async (req, res, next) => {
   try {
     await new EventController().toggleLive(req.params.id);
     res.sendStatus(204);
   } catch (error: any) {
-    res.status(400).json({ message: error.message });
+    next(error);
   }
 });
 
-router.put("/updateScore/:id", async (req: AuthenticatedRequest, res) => {
+router.put("/updateScore/:id", async (req: AuthenticatedRequest, res, next) => {
   try {
-    await saveHistory(req.params.id, (await getEventByID<AllEvents, AllScores>(req.params.id))?.score, req.body, req.user?.name as string);
+    const event = await getEventByID<AllEvents, AllScores>(req.params.id);
+    await saveHistory(req.params.id, event?.score, req.body, req.user?.name as string);
     await new EventController().updateScore(req.params.id, req.body);
     res.sendStatus(204);
   } catch (error: any) {
-    res.status(400).json({ message: error.message });
+    next(error);
   }
 });
 
-router.post("/:id/winner", async (req, res) => {
+router.post("/:id/winner", async (req, res, next) => {
   try {
     await new EventController().setWinner(req.params.id, req.body);
     res.sendStatus(204);
-  } catch {
-    res.sendStatus(404);
+  } catch (error) {
+    next(error);
   }
 });
 
