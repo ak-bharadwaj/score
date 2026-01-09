@@ -170,10 +170,6 @@ body {
 	.section-header-small {
 		font-size: 0.9rem;
 	}
-
-	.live-broadcast-area {
-		display: none !important;
-	}
 }
 
 /* Event Boxes Overhaul */

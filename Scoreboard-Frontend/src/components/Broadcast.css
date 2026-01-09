@@ -16,21 +16,39 @@
 .broadcast-content {
     text-align: center;
     color: white;
-    border: 5px solid #ff3b30;
-    padding: 40px;
-    background: rgba(255, 0, 0, 0.1);
-    box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
+    padding: 60px 80px;
+    background: rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(14, 165, 233, 0.3);
+    max-width: 80%;
 }
 
 .broadcast-title {
     font-family: 'Fjalla One', sans-serif;
-    font-size: 3rem;
-    color: #ff3b30;
-    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #0ea5e9;
+    background: rgba(14, 165, 233, 0.15);
+    padding: 8px 32px;
+    border-radius: 50px;
+    display: inline-block;
+    margin-bottom: 30px;
     text-transform: uppercase;
-    letter-spacing: 5px;
-    animation: pulse 1.5s infinite;
+    letter-spacing: 8px;
+    border: 1px solid rgba(14, 165, 233, 0.3);
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 5px rgba(14, 165, 233, 0.2);
+    }
+
+    to {
+        box-shadow: 0 0 20px rgba(14, 165, 233, 0.5);
+    }
 }
 
 .broadcast-message {
@@ -50,12 +68,12 @@
     background: #1a1a1a;
     display: flex;
     z-index: 100;
-    border-top: 2px solid #ff3b30;
+    border-top: 2px solid #0ea5e9;
     box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.5);
 }
 
 .ticker-label {
-    background: #ff3b30;
+    background: #0ea5e9;
     color: white;
     padding: 0 20px;
     font-family: 'Fjalla One', sans-serif;
