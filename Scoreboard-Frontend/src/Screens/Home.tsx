@@ -364,6 +364,7 @@ const Home = () => {
 					</div>
 
 					<div className="footer-spacer"></div>
+					<div className="site-branding">@AK</div>
 					{tickerText && <ScrollingTicker text={tickerText} />}
 				</>
 			)}
