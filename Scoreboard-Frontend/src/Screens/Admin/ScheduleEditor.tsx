@@ -201,6 +201,12 @@ const ScheduleEditor = ({ teams }: { teams: Team[] }) => {
 				const key: string = "team" + i;
 				e[key] = team.name;
 			});
+			// Add winner name if match is completed
+			if (e.isCompleted && e.winner?.team) {
+				e.winnerName = typeof e.winner.team === 'string' ? e.winner.team : e.winner.team.name;
+			} else {
+				e.winnerName = e.isCompleted ? "DRAW" : "";
+			}
 		});
 		return fEvents as Event[];
 	};
@@ -327,13 +333,21 @@ const ScheduleEditor = ({ teams }: { teams: Team[] }) => {
 	useEffect(() => {
 		const updateEventsStatus = (data: string) => {
 			const eventToBeUpdated = JSON.parse(data);
-			setAllEvents((prev) =>
-				prev.map((event) =>
-					eventToBeUpdated.eventID === event._id
-						? { ...event, isStarted: eventToBeUpdated.isStarted }
-						: event
-				)
-			);
+
+			// If match just ended, refresh the entire schedule to show winner
+			if (!eventToBeUpdated.isStarted && eventToBeUpdated.isCompleted) {
+				console.log("Match ended, refreshing schedule to show winner...");
+				fetchEvents();
+			} else {
+				// Just update the status for other changes
+				setAllEvents((prev) =>
+					prev.map((event) =>
+						eventToBeUpdated.eventID === event._id
+							? { ...event, isStarted: eventToBeUpdated.isStarted }
+							: event
+					)
+				);
+			}
 		};
 		socket.on("eventStartOrEnd", updateEventsStatus);
 		fetchEvents();
@@ -445,6 +459,7 @@ const ScheduleEditor = ({ teams }: { teams: Team[] }) => {
 									source: teams.map((team) => team.name),
 								},
 								{ data: "eventLink", type: "text" },
+								{ data: "winnerName", type: "text", readOnly: true },
 							]}
 							colHeaders={[
 								"Sport",
@@ -458,9 +473,10 @@ const ScheduleEditor = ({ teams }: { teams: Team[] }) => {
 								"Team 1",
 								"Team 2",
 								"Score Link (for Cricket)",
+								"Winner",
 							]}
 							minSpareRows={2}
-							colWidths={[150, 100, 100, 150, 150, 100, 100, 150, 150, 150, 250]}
+							colWidths={[150, 100, 100, 150, 150, 100, 100, 150, 150, 150, 250, 150]}
 							licenseKey="non-commercial-and-evaluation" // for non-commercial use only
 						/>
 					</div>
