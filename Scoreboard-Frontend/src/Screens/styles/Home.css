@@ -168,6 +168,7 @@ body {
 		min-height: auto;
 		overflow-y: visible !important;
 		padding: 15px 5px;
+		margin-bottom: 60px;
 	}
 
 	.section-header-small {

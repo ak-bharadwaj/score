@@ -85,7 +85,7 @@ export const toggleEventStarted = async (id: string) => {
     JSON.stringify({
       eventID: event._id,
       isStarted: event.isStarted,
-      winner: { ...event.winner, team: await getTeamById(event.winner?.team!) },
+      winner: event.winner,
       isCompleted: event.isCompleted,
     })
   );
