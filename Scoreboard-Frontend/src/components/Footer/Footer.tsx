@@ -12,7 +12,7 @@ const Footer = () => {
 					<span className="footer-label">VERSION:</span> 2.0.0 (Broadcast)
 				</div>
 				<div className="footer-right">
-					INTER IIT SPORTS MEET {year} &copy; OFFICIAL SCOREBOARD
+					JNTUA GAMES 2026 &copy; OFFICIAL SCOREBOARD
 				</div>
 			</div>
 		</footer>
