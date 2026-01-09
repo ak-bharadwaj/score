@@ -42,9 +42,11 @@
 	animation: spin 1s infinite linear;
 }
 
-.splash-img {
-	width: 70%;
-	filter: grayscale(100%);
+.splash-initials {
+	font-family: 'Fjalla One', sans-serif;
+	color: white;
+	font-size: 1.2rem;
+	letter-spacing: 1px;
 }
 
 .splash-text h1 {
