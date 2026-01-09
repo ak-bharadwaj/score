@@ -89,7 +89,12 @@ export const toggleEventStarted = async (id: string) => {
       isCompleted: event.isCompleted,
     })
   );
-  return await EventModel.findByIdAndUpdate(id, event);
+  return await EventModel.findByIdAndUpdate(id, {
+    isStarted: event.isStarted,
+    isCompleted: event.isCompleted,
+    endTime: event.endTime,
+    winner: event.winner
+  });
 };
 
 export const markEventAsCompleted = async (id: string) => await EventModel.findByIdAndUpdate(id, { isCompleted: true });
