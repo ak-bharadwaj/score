@@ -85,7 +85,7 @@ const Home = () => {
 	const broadcastEvent = useMemo(() => {
 		if (featuredEvent) return featuredEvent; // Winner Takeover
 		if (liveEvents.length > 0) return liveEvents[heroIndex % liveEvents.length] || liveEvents[0];
-		if (upcomingEvents.length > 0) return upcomingEvents[0];
+		if (upcomingEvents.length > 0) return upcomingEvents[heroIndex % upcomingEvents.length] || upcomingEvents[0];
 		return null;
 	}, [featuredEvent, liveEvents, upcomingEvents, heroIndex]);
 
@@ -229,17 +229,18 @@ const Home = () => {
 		};
 	}, []);
 
-	// Rotate hero match if multiple live events exist
+	// Rotate hero match if multiple live events exist (or multiple upcoming if standby)
 	useEffect(() => {
-		if (liveEvents.length <= 1) {
+		const poolSize = liveEvents.length > 0 ? liveEvents.length : upcomingEvents.length;
+		if (poolSize <= 1) {
 			setHeroIndex(0);
 			return;
 		}
 		const interval = setInterval(() => {
-			setHeroIndex((prev) => (prev + 1) % liveEvents.length);
+			setHeroIndex((prev) => (prev + 1) % poolSize);
 		}, rotationSeconds * 1000);
 		return () => clearInterval(interval);
-	}, [liveEvents.length, rotationSeconds]);
+	}, [liveEvents.length, upcomingEvents.length, rotationSeconds]);
 
 	// REAL-TIME SCORE UPDATES FOR HERO MATCH
 	// REAL-TIME SCORE UPDATES FOR HEADER AND BROADCAST
@@ -322,7 +323,7 @@ const Home = () => {
 								{broadcastEvent ? (
 									<div className="hero-section">
 										<h3 className="section-header-small">LIVE BROADCAST</h3>
-										<HeroMatchView event={broadcastEvent} />
+										<HeroMatchView key={broadcastEvent._id} event={broadcastEvent} />
 
 										{/* Optional: Show others below if many live events exist? 
 										    User said "1 live score section", so I'll keep it focused. 

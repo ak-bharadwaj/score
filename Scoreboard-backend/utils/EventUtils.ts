@@ -89,6 +89,7 @@ export const toggleEventStarted = async (id: string) => {
       isCompleted: event.isCompleted,
     })
   );
+  SocketServer.io.sockets.emit("eventsUpdated");
   return await EventModel.findByIdAndUpdate(id, {
     isStarted: event.isStarted,
     isCompleted: event.isCompleted,
@@ -129,9 +130,11 @@ export const setWinner = async (eventID: string, winningTeamID?: string, partici
     participants.sort((a, b) => (!isOrderedAscending(event.athleticsEventType) ? b.distance! - a.distance! : a.time! - b.time!));
   }
 
-  return await EventModel.findByIdAndUpdate(eventID, {
+  const updated = await EventModel.findByIdAndUpdate(eventID, {
     winner: { team: !!winningTeamID ? new mongoose.Types.ObjectId(winningTeamID) : undefined, participants },
   });
+  SocketServer.io.sockets.emit("eventsUpdated");
+  return updated;
 };
 
 export const deleteAllEvents = async () => {
