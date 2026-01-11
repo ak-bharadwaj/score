@@ -34,42 +34,42 @@ const ChessEventBox = ({
 			<div className="footballScoresContainer">
 				<div className="score-row">
 					<div className="team-info">
-						<TeamLogo src={event.teams[0].logoUrl} name={event.teams[0].name} size={28} />
-						<h3 className="team-name-compact fjalla">{event.teams[0].name}</h3>
+						<TeamLogo src={event.teams[0]?.logoUrl} name={event.teams[0]?.name || "TBA"} size={28} />
+						<h3 className="team-name-compact fjalla">{event.teams[0]?.name || "TBA"}</h3>
 					</div>
-					<div className="score-display-mini fjalla">{event.score.teamA_points}</div>
+					<div className="score-display-mini fjalla">{event.score?.teamA_points ?? 0}</div>
 					{isAdmin && (
 						<div className="admin-score-controls">
-							<button onClick={() => onScoreUpdate!({ ...event.score, teamA_points: event.score.teamA_points - 0.5 })} className="styledButton">-</button>
+							<button onClick={() => onScoreUpdate!({ ...event.score, teamA_points: (event.score?.teamA_points || 0) - 0.5 })} className="styledButton">-</button>
 							<input
 								type="number"
 								step="0.5"
 								className="styledInput"
-								value={event.score.teamA_points}
+								value={event.score?.teamA_points || 0}
 								onChange={(e) => onScoreUpdate!({ ...event.score, teamA_points: Number(e.target.value) })}
 							/>
-							<button onClick={() => onScoreUpdate!({ ...event.score, teamA_points: event.score.teamA_points + 0.5 })} className="styledButton">+</button>
+							<button onClick={() => onScoreUpdate!({ ...event.score, teamA_points: (event.score?.teamA_points || 0) + 0.5 })} className="styledButton">+</button>
 						</div>
 					)}
 				</div>
 
 				<div className="score-row">
 					<div className="team-info">
-						<TeamLogo src={event.teams[1].logoUrl} name={event.teams[1].name} size={28} />
-						<h3 className="team-name-compact fjalla">{event.teams[1].name}</h3>
+						<TeamLogo src={event.teams[1]?.logoUrl} name={event.teams[1]?.name || "TBA"} size={28} />
+						<h3 className="team-name-compact fjalla">{event.teams[1]?.name || "TBA"}</h3>
 					</div>
-					<div className="score-display-mini fjalla">{event.score.teamB_points}</div>
+					<div className="score-display-mini fjalla">{event.score?.teamB_points ?? 0}</div>
 					{isAdmin && (
 						<div className="admin-score-controls">
-							<button onClick={() => onScoreUpdate!({ ...event.score, teamB_points: event.score.teamB_points - 0.5 })} className="styledButton">-</button>
+							<button onClick={() => onScoreUpdate!({ ...event.score, teamB_points: (event.score?.teamB_points || 0) - 0.5 })} className="styledButton">-</button>
 							<input
 								type="number"
 								step="0.5"
 								className="styledInput"
-								value={event.score.teamB_points}
+								value={event.score?.teamB_points || 0}
 								onChange={(e) => onScoreUpdate!({ ...event.score, teamB_points: Number(e.target.value) })}
 							/>
-							<button onClick={() => onScoreUpdate!({ ...event.score, teamB_points: event.score.teamB_points + 0.5 })} className="styledButton">+</button>
+							<button onClick={() => onScoreUpdate!({ ...event.score, teamB_points: (event.score?.teamB_points || 0) + 0.5 })} className="styledButton">+</button>
 						</div>
 					)}
 				</div>

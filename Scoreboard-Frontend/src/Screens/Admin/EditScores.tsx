@@ -380,13 +380,13 @@ const EditScores = () => {
 									</p>
 									<ul style={{ margin: '10px 0 0 20px', fontSize: '0.85rem', color: '#666' }}>
 										{event.event === EventCatagories.ATHLETICS
-											? (event as AthleticsEvent).participants[0].map((p, idx) => (
+											? (event as AthleticsEvent).participants?.[0]?.map((p, idx) => (
 												<li key={idx}>
 													{p.name} ({p.team})
 												</li>
 											))
-											: event.teams.map((team, idx) => (
-												<li key={idx}>{team.name}</li>
+											: event.teams?.map((team, idx) => (
+												<li key={idx}>{team?.name || "Unknown Team"}</li>
 											))}
 									</ul>
 								</div>
