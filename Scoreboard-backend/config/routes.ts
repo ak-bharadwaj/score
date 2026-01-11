@@ -179,8 +179,8 @@ const models: TsoaRoute.Models = {
             "title": {"dataType":"string","required":true},
             "event": {"ref":"EventCatagories","required":true},
             "isStarted": {"dataType":"boolean"},
-            "startTime": {"dataType":"double","required":true},
-            "endTime": {"dataType":"double","required":true},
+            "startTime": {"dataType":"double"},
+            "endTime": {"dataType":"double"},
             "score": {"ref":"FootballScore"},
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
@@ -208,8 +208,8 @@ const models: TsoaRoute.Models = {
             "title": {"dataType":"string","required":true},
             "event": {"ref":"EventCatagories","required":true},
             "isStarted": {"dataType":"boolean"},
-            "startTime": {"dataType":"double","required":true},
-            "endTime": {"dataType":"double","required":true},
+            "startTime": {"dataType":"double"},
+            "endTime": {"dataType":"double"},
             "score": {"ref":"ChessScore"},
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
@@ -241,8 +241,8 @@ const models: TsoaRoute.Models = {
             "title": {"dataType":"string","required":true},
             "event": {"ref":"EventCatagories","required":true},
             "isStarted": {"dataType":"boolean"},
-            "startTime": {"dataType":"double","required":true},
-            "endTime": {"dataType":"double","required":true},
+            "startTime": {"dataType":"double"},
+            "endTime": {"dataType":"double"},
             "score": {"ref":"CricketScore"},
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
@@ -271,8 +271,8 @@ const models: TsoaRoute.Models = {
             "title": {"dataType":"string","required":true},
             "event": {"ref":"EventCatagories","required":true},
             "isStarted": {"dataType":"boolean"},
-            "startTime": {"dataType":"double","required":true},
-            "endTime": {"dataType":"double","required":true},
+            "startTime": {"dataType":"double"},
+            "endTime": {"dataType":"double"},
             "score": {"ref":"SquashMenScore"},
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
@@ -300,8 +300,8 @@ const models: TsoaRoute.Models = {
             "title": {"dataType":"string","required":true},
             "event": {"ref":"EventCatagories","required":true},
             "isStarted": {"dataType":"boolean"},
-            "startTime": {"dataType":"double","required":true},
-            "endTime": {"dataType":"double","required":true},
+            "startTime": {"dataType":"double"},
+            "endTime": {"dataType":"double"},
             "score": {"ref":"SquashWomenScore"},
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
@@ -334,8 +334,8 @@ const models: TsoaRoute.Models = {
             "title": {"dataType":"string","required":true},
             "event": {"ref":"EventCatagories","required":true},
             "isStarted": {"dataType":"boolean"},
-            "startTime": {"dataType":"double","required":true},
-            "endTime": {"dataType":"double","required":true},
+            "startTime": {"dataType":"double"},
+            "endTime": {"dataType":"double"},
             "score": {"ref":"TennisMenScore"},
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
@@ -364,8 +364,8 @@ const models: TsoaRoute.Models = {
             "title": {"dataType":"string","required":true},
             "event": {"ref":"EventCatagories","required":true},
             "isStarted": {"dataType":"boolean"},
-            "startTime": {"dataType":"double","required":true},
-            "endTime": {"dataType":"double","required":true},
+            "startTime": {"dataType":"double"},
+            "endTime": {"dataType":"double"},
             "score": {"ref":"TennisWomenScore"},
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
@@ -397,8 +397,8 @@ const models: TsoaRoute.Models = {
             "title": {"dataType":"string","required":true},
             "event": {"ref":"EventCatagories","required":true},
             "isStarted": {"dataType":"boolean"},
-            "startTime": {"dataType":"double","required":true},
-            "endTime": {"dataType":"double","required":true},
+            "startTime": {"dataType":"double"},
+            "endTime": {"dataType":"double"},
             "score": {"ref":"AthleticsEventScore"},
             "isCompleted": {"dataType":"boolean"},
             "teams": {"dataType":"array","array":{"dataType":"string"},"required":true},
@@ -777,6 +777,31 @@ export function RegisterRoutes(app: Router) {
 
 
               const promise = controller.toggleLive.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/api/events/:id',
+            ...(fetchMiddlewares<RequestHandler>(EventController)),
+            ...(fetchMiddlewares<RequestHandler>(EventController.prototype.deleteEvent)),
+
+            function EventController_deleteEvent(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new EventController();
+
+
+              const promise = controller.deleteEvent.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

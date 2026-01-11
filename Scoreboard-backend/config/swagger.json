@@ -352,8 +352,6 @@
 				"required": [
 					"title",
 					"event",
-					"startTime",
-					"endTime",
 					"teams"
 				],
 				"type": "object",
@@ -447,8 +445,6 @@
 				"required": [
 					"title",
 					"event",
-					"startTime",
-					"endTime",
 					"teams"
 				],
 				"type": "object",
@@ -565,8 +561,6 @@
 				"required": [
 					"title",
 					"event",
-					"startTime",
-					"endTime",
 					"teams",
 					"eventLink"
 				],
@@ -661,8 +655,6 @@
 				"required": [
 					"title",
 					"event",
-					"startTime",
-					"endTime",
 					"teams"
 				],
 				"type": "object",
@@ -756,8 +748,6 @@
 				"required": [
 					"title",
 					"event",
-					"startTime",
-					"endTime",
 					"teams"
 				],
 				"type": "object",
@@ -861,8 +851,6 @@
 				"required": [
 					"title",
 					"event",
-					"startTime",
-					"endTime",
 					"teams",
 					"matchType"
 				],
@@ -960,8 +948,6 @@
 				"required": [
 					"title",
 					"event",
-					"startTime",
-					"endTime",
 					"teams",
 					"matchType"
 				],
@@ -1081,8 +1067,6 @@
 				"required": [
 					"title",
 					"event",
-					"startTime",
-					"endTime",
 					"teams",
 					"athleticsEventType"
 				],
@@ -1756,6 +1740,63 @@
 				]
 			}
 		},
+		"/api/events/{id}": {
+			"delete": {
+				"operationId": "DeleteEvent",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Deletes an event by its ID.",
+				"tags": [
+					"Events"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "- The ID of the event to delete.",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"get": {
+				"operationId": "GetEventById",
+				"responses": {
+					"200": {
+						"description": "The event with the specified ID.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AllEvents"
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieves an event by its ID.",
+				"tags": [
+					"Events"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "The ID of the event.",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/api/events": {
 			"get": {
 				"operationId": "GetAllEvents",
@@ -1947,39 +1988,6 @@
 				],
 				"security": [],
 				"parameters": []
-			}
-		},
-		"/api/events/{id}": {
-			"get": {
-				"operationId": "GetEventById",
-				"responses": {
-					"200": {
-						"description": "The event with the specified ID.",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AllEvents"
-								}
-							}
-						}
-					}
-				},
-				"description": "Retrieves an event by its ID.",
-				"tags": [
-					"Events"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "The ID of the event.",
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
 			}
 		},
 		"/api/events/updateScore/{id}": {

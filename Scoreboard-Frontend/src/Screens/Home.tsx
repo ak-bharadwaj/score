@@ -56,7 +56,11 @@ const Home = () => {
 
 			// If we have actively live matches, only show those
 			if (activelyLive.length > 0) {
-				return activelyLive;
+				return activelyLive.sort((a, b) => {
+					const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+					const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+					return timeB - timeA;
+				});
 			}
 
 			// If no live matches, show recently completed ones briefly (30 seconds)
@@ -79,16 +83,21 @@ const Home = () => {
 				(event) =>
 					event.isStarted === false &&
 					event.isCompleted === false
-			),
+			).sort((a, b) => {
+				const timeA = a.startTime ? new Date(a.startTime).getTime() : Infinity;
+				const timeB = b.startTime ? new Date(b.startTime).getTime() : Infinity;
+				return timeA - timeB; // Next starting match first
+			}),
 		[events]
 	);
 
 	const pastEvents = useMemo(() => {
 		let fEvents = events.filter((e) => e.isCompleted);
-		fEvents.sort(
-			(e1, e2) => (e1.startTime as number) - (e2.startTime as number)
-		);
-		fEvents.reverse();
+		fEvents.sort((a, b) => {
+			const timeA = a.endTime ? new Date(a.endTime).getTime() : 0;
+			const timeB = b.endTime ? new Date(b.endTime).getTime() : 0;
+			return timeB - timeA; // Most recently finished first
+		});
 		return fEvents;
 	}, [events]);
 

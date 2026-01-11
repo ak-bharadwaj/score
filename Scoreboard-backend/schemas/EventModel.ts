@@ -4,11 +4,11 @@ import { AllEventsUnion } from "../types/AllEvents";
 
 const eventSchema = new mongoose.Schema<AllEventsUnion>({
   title: { type: String, required: true },
-  endTime: { type: Number, required: true },
-  startTime: { type: Number, required: true },
+  endTime: { type: Number },
+  startTime: { type: Number },
   event: { type: String, required: true },
-  isStarted: { type: Boolean, required: true },
-  isCompleted: { type: Boolean, required: true },
+  isStarted: { type: Boolean, default: false },
+  isCompleted: { type: Boolean, default: false },
   teams: [{ type: mongoose.SchemaTypes.ObjectId, ref: "Teams" }],
   participants: [
     [
@@ -59,7 +59,7 @@ const eventSchema = new mongoose.Schema<AllEventsUnion>({
     teamA: { type: Number, default: 0 },
     teamB: { type: Number, default: 0 }
   }
-});
+}, { timestamps: true });
 
 const EventModel = mongoose.model("Events", eventSchema);
 

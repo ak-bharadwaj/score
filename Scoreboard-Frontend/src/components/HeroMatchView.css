@@ -142,6 +142,34 @@
     border: 1px solid rgba(255, 59, 48, 0.4);
 }
 
+/* NEW BIG SPORT DISPLAY */
+.hero-sport-display-big {
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 3.5rem;
+    /* Very large */
+    background: -webkit-linear-gradient(90deg, #fff, #bbb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 5px;
+    text-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    line-height: 1;
+}
+
+.hero-gender-small {
+    font-size: 1.2rem;
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-text-fill-color: #fff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .live-dot {
     width: 8px;
     height: 8px;
@@ -306,11 +334,16 @@
 }
 
 .hero-match-title {
-    font-size: 1.1rem;
-    color: #aaa;
+    font-size: 2.5rem;
+    color: #fff;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
+    letter-spacing: 4px;
+    margin-bottom: 25px;
+    font-weight: 800;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    line-height: 1.2;
+    text-align: center;
+    width: 100%;
 }
 
 .hero-winner-tag {

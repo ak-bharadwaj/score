@@ -6,14 +6,16 @@ export default interface Event {
 	title: string;
 	subtitle?: string;
 	event: EventCatagories;
-	isStarted: boolean;
-	isCompleted: boolean;
-	startTime: number | string;
-	endTime: number | string;
+	isStarted?: boolean;
+	isCompleted?: boolean;
+	startTime?: number | string;
+	endTime?: number | string;
 	teams: Team[]; // list of teams who are compeating
 	score: {};
 	votes?: { teamA: number; teamB: number };
 	winner?: { team: Team; participants?: any[] };
+	createdAt?: string;
+	updatedAt?: string;
 }
 
 export interface EventExceptAthleticsOrCricket extends Event {

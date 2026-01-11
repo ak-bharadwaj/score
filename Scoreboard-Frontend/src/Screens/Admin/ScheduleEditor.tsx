@@ -29,26 +29,60 @@ registerCellType(DateCellType);
 registerPlugin(ExportFile);
 registerPlugin(CopyPaste);
 
-const getTime = (dateString: string, time: string) => {
-	var dateParts = dateString.split("/");
-	var dateObject = new Date(
-		dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2]
-	);
+const getTime = (dateString: string | null, time: string | null, defaultToNow: boolean = false) => {
+	let dateObject: Date;
+
+	if (!dateString) {
+		dateObject = new Date(); // Today
+	} else {
+		var dateParts = dateString.split("/");
+		if (dateParts.length === 3) {
+			dateObject = new Date(
+				dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2]
+			);
+		} else {
+			dateObject = new Date();
+		}
+	}
+
+	if (!time) {
+		if (defaultToNow) return dateObject.getTime();
+		return dateObject.getTime(); // Just returns start of the day or now if date was now
+	}
+
 	function getSeconds(time: string): number {
 		let timeParts = time.split(":");
-		timeParts[3] = timeParts[2].split(" ")[1];
-		timeParts[2] = timeParts[2].split(" ")[0];
-		let seconds =
-			(Number(timeParts[0]) * 60 + Number(timeParts[1])) * 60 +
-			Number(timeParts[2]);
-		if (
-			(timeParts[3] === "pm" && Number(timeParts[0]) !== 12) ||
-			(timeParts[3] === "PM" && Number(timeParts[0]) !== 12)
-		)
-			seconds += 12 * 60 * 60;
-		return seconds;
+		if (timeParts.length < 2) return 0;
+
+		let suffix = "";
+		if (timeParts[timeParts.length - 1].includes(" ")) {
+			const subParts = timeParts[timeParts.length - 1].split(" ");
+			timeParts[timeParts.length - 1] = subParts[0];
+			suffix = subParts[1].toLowerCase();
+		}
+
+		let hours = Number(timeParts[0]);
+		let minutes = Number(timeParts[1]);
+		let seconds = timeParts[2] ? Number(timeParts[2]) : 0;
+
+		let totalSeconds = (hours * 60 + minutes) * 60 + seconds;
+		if (suffix === "pm" && hours !== 12) totalSeconds += 12 * 60 * 60;
+		if (suffix === "am" && hours === 12) totalSeconds -= 12 * 60 * 60;
+
+		return totalSeconds;
 	}
-	dateObject.setTime(dateObject.getTime() + getSeconds(time) * 1000);
+
+	const seconds = getSeconds(time);
+	if (dateString) {
+		// If date was provided, we set the time on that specific day
+		dateObject.setHours(0, 0, 0, 0);
+		dateObject.setTime(dateObject.getTime() + seconds * 1000);
+	} else {
+		// If no date, but time provided, we use today at that time
+		dateObject.setHours(0, 0, 0, 0);
+		dateObject.setTime(dateObject.getTime() + seconds * 1000);
+	}
+
 	return dateObject.getTime();
 };
 
@@ -69,27 +103,41 @@ const makeEventsArrayForDatabase = (data: any[]) => {
 		const sport = arr[0];
 		const gender = arr[1];
 		const constructedEvent = gender ? `${sport}_${gender}` : sport;
+
+		const startTime = getTime(arr[5], arr[6], true);
+		let endTime = getTime(arr[5], arr[7]);
+		// If endTime is effectively same as startTime (or missing), default to +2 hours
+		if (!arr[7]) {
+			endTime = startTime + 3600000 * 2;
+		}
+
 		return {
 			event: constructedEvent,
-			matchType: arr[2],
-			title: arr[3],
-			subtitle: arr[4],
-			startTime: getTime(arr[5], arr[6]),
-			endTime: getTime(arr[5], arr[7]),
-			teams: arr.slice(8, 10),
-			eventLink: arr[10],
+			matchType: arr[2] || "Singles",
+			title: arr[3] || "Match",
+			subtitle: arr[4] || "",
+			startTime: startTime,
+			endTime: endTime,
+			teams: arr.slice(8, 10).filter(t => !!t),
+			eventLink: arr[10] || "",
 		};
 	});
 	return events;
 };
 const makeAthlEventsArrayForDatabase = (data: any[]) => {
 	const events = data.map((arr: any[]) => {
+		const startTime = getTime(arr[2], arr[3], true);
+		let endTime = getTime(arr[2], arr[4]);
+		if (!arr[4]) {
+			endTime = startTime + 3600000 * 2;
+		}
+
 		return {
 			event: EventCatagories.ATHLETICS,
 			athleticsEventType: arr[0],
-			title: arr[1],
-			startTime: getTime(arr[2], arr[3]),
-			endTime: getTime(arr[2], arr[4]),
+			title: arr[1] || "Final",
+			startTime: startTime,
+			endTime: endTime,
 			...makeParticipantsAndTeamsObj(arr.slice(5)),
 		};
 	});
@@ -181,19 +229,19 @@ const ScheduleEditor = ({ teams }: { teams: Team[] }) => {
 				...e,
 				sport,
 				gender,
-				date: new Date(e.startTime).toLocaleDateString("en-GB"),
-				startTime: new Date(e.startTime).toLocaleString("en-US", {
+				date: e.startTime ? new Date(e.startTime).toLocaleDateString("en-GB") : "",
+				startTime: e.startTime ? new Date(e.startTime).toLocaleString("en-US", {
 					hour: "numeric",
 					minute: "numeric",
 					second: "numeric",
 					hour12: true,
-				}),
-				endTime: new Date(e.endTime).toLocaleString("en-US", {
+				}) : "",
+				endTime: e.endTime ? new Date(e.endTime).toLocaleString("en-US", {
 					hour: "numeric",
 					minute: "numeric",
 					second: "numeric",
 					hour12: true,
-				}),
+				}) : "",
 			};
 		});
 		fEvents.forEach((e) => {
@@ -215,19 +263,19 @@ const ScheduleEditor = ({ teams }: { teams: Team[] }) => {
 		const fEvents: any[] = events.map((e) => {
 			return {
 				...e,
-				date: new Date(e.startTime).toLocaleDateString("en-GB"),
-				startTime: new Date(e.startTime).toLocaleString("en-US", {
+				date: e.startTime ? new Date(e.startTime).toLocaleDateString("en-GB") : "",
+				startTime: e.startTime ? new Date(e.startTime).toLocaleString("en-US", {
 					hour: "numeric",
 					minute: "numeric",
 					second: "numeric",
 					hour12: true,
-				}),
-				endTime: new Date(e.endTime).toLocaleString("en-US", {
+				}) : "",
+				endTime: e.endTime ? new Date(e.endTime).toLocaleString("en-US", {
 					hour: "numeric",
 					minute: "numeric",
 					second: "numeric",
 					hour12: true,
-				}),
+				}) : "",
 			};
 		});
 		fEvents.forEach((e) => {
@@ -287,27 +335,17 @@ const ScheduleEditor = ({ teams }: { teams: Team[] }) => {
 		}
 		for (let i = 0; i < validRows!.length; i++) {
 			const row: any[] = validRows![i];
-			let last = row.length;
-			last = row.indexOf(null, 3) !== -1 ? row.indexOf(null, 3) : last;
-			last =
-				row.indexOf("", 3) !== -1 && row.indexOf("", 3) < last
-					? row.indexOf("", 3)
-					: last;
-			if (last <= 9) {
-				setToast("Incomplete Details in a Row!");
+			// Relaxed validation: only Sport (0) and Team 1 (8) are absolutely required for most sports
+			// Name (3) is also good but we can default it.
+			if (!row[0] || !row[8]) {
+				setToast("Row " + (i + 1) + ": Sport and Team 1 are minimum requirements!");
 				return;
 			}
 		}
 		for (let i = 0; i < validAthlRows!.length; i++) {
 			const row: any[] = validAthlRows![i];
-			let last = row.length;
-			last = row.indexOf(null, 1) !== -1 ? row.indexOf(null, 1) : last;
-			last =
-				row.indexOf("", 1) !== -1 && row.indexOf("", 1) < last
-					? row.indexOf("", 1)
-					: last;
-			if (last <= 8 || (last - 5) % 2 !== 0) {
-				setToast("Incomplete Details in a Row!");
+			if (!row[0]) {
+				setToast("Row " + (i + 1) + ": Athletics Event type is required!");
 				return;
 			}
 		}

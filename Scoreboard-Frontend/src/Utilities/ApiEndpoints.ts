@@ -20,11 +20,11 @@ const API = {
 	SetWinnerManually: (
 		accessToken: string,
 		id: string,
-		winner: { team: Team }
+		winner: { team: Team | null }
 	) =>
 		axios.post(
 			ServerURL + "events/" + id + "/winner",
-			{ team: winner.team._id },
+			{ team: winner.team?._id || null },
 			{ headers: { Authorization: accessToken } }
 		),
 	SetAthleticsEventDetails: (
@@ -71,6 +71,11 @@ const API = {
 
 	DeleteAllEvents: (accessToken: string) =>
 		axios.delete(ServerURL + "admin/schedule/all", {
+			headers: { Authorization: accessToken },
+		}),
+
+	DeleteEvent: (accessToken: string, id: string) =>
+		axios.delete(ServerURL + "events/" + id, {
 			headers: { Authorization: accessToken },
 		}),
 

@@ -73,15 +73,8 @@ const HeroMatchView: React.FC<HeroMatchViewProps> = ({ event }) => {
     return (
         <div className={`hero-match-card ${gender} ${isLive ? 'live-glow' : ''}`}>
             <div className="hero-header">
+                {/* Repurposed header for Game Type only */}
                 <div className="hero-sport-badge-container">
-                    <div className="hero-sport-badge">
-                        {gender !== "unknown" && (
-                            <span className={`hero-gender-indicator ${gender}`}>
-                                {gender === "men" ? "MEN" : "WOMEN"}
-                            </span>
-                        )}
-                        <span className="hero-sport">{event.event.split('_')[0]}</span>
-                    </div>
                     <div className={`hero-gametype-tag ${gameType.includes('FINAL') ? 'is-final' : ''}`}>
                         {gameType}
                     </div>
@@ -93,6 +86,12 @@ const HeroMatchView: React.FC<HeroMatchViewProps> = ({ event }) => {
             </div>
 
             <div className="hero-main-content vertical-stack">
+                <div className="hero-sport-display-big">
+                    {(event.event || "").split('_')[0].toUpperCase()}
+                    {gender !== "unknown" && <span className="hero-gender-small">{gender === "men" ? "MEN" : "WOMEN"}</span>}
+                </div>
+                <div className="hero-match-title">{event.title}</div>
+
                 {/* TOP ROW: LOGOS AND NAMES */}
                 <div className="hero-teams-top-row">
                     <div className="hero-team-block team-a">
@@ -117,7 +116,6 @@ const HeroMatchView: React.FC<HeroMatchViewProps> = ({ event }) => {
             </div>
 
             <div className="hero-event-details">
-                <div className="hero-match-title">{event.title}</div>
                 {event.isCompleted && (
                     <div className={`hero-winner-tag ${gameType.includes('FINAL') ? 'is-final' : ''}`}>
                         WINNER:

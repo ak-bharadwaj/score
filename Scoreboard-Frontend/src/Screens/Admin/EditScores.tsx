@@ -32,7 +32,7 @@ const EditScores = () => {
 
 	const [allEvents, setAllEvents] = useState<Event[]>([]);
 	const liveEvents = useMemo(
-		() => allEvents.filter((event) => event.isStarted),
+		() => allEvents.filter((event) => event.isStarted).reverse(),
 		[allEvents]
 	);
 	const liveAbleEvents = useMemo(
@@ -41,7 +41,7 @@ const EditScores = () => {
 				(e) =>
 					!e.isCompleted &&
 					(e.startTime as number) <= new Date().getTime() + EVENT_START_BUFFER
-			),
+			).reverse(),
 		[allEvents]
 	);
 	const [eventToToggle, setEventToToggle] = useState<Event>();
@@ -84,11 +84,9 @@ const EditScores = () => {
 			await API.UpdateScore(getAccessToken(), id, event.score as any);
 			setToast("✓ Score Updated!");
 		} catch (error: any) {
-			try {
-				setToast(JSON.parse(error.request.response).message);
-			} catch {
-				setToast("Could not connect with the Server");
-			}
+			console.error(error);
+			const errorMsg = error.response?.data?.message || error.message || "Failed to update score";
+			setToast("❌ " + errorMsg);
 			fetchEvents();
 		}
 	};
@@ -208,6 +206,24 @@ const EditScores = () => {
 		}
 	};
 
+	const handleDeleteEvent = async (id: string) => {
+		if (!window.confirm("Are you sure you want to PERMANENTLY delete this event?")) return;
+		try {
+			await API.DeleteEvent(getAccessToken(), id);
+			setToast("Event Deleted Successfully");
+			fetchEvents();
+		} catch (e: any) {
+			console.error("Deletion failed:", e);
+			const msg = e.response?.data?.message || e.message || "Unknown error";
+			setToast("Failed to delete event: " + msg);
+		}
+	};
+
+	const completedEvents = useMemo(
+		() => allEvents.filter((event) => event.isCompleted),
+		[allEvents]
+	);
+
 	return (
 		<div className="admin-dashboard-container">
 			<h1 className="admin-header">Live Event Management</h1>
@@ -314,6 +330,21 @@ const EditScores = () => {
 										>
 											⭐ FEATURE
 										</button>
+										<button
+											className="styledButton"
+											style={{
+												width: '45px',
+												backgroundColor: '#ff3b30',
+												display: 'flex',
+												justifyContent: 'center',
+												alignItems: 'center',
+												border: '1px solid rgba(255,255,255,0.2)'
+											}}
+											onClick={() => handleDeleteEvent(event._id!)}
+											title="Delete Event"
+										>
+											🗑️
+										</button>
 									</div>
 								</div>
 							))}
@@ -339,13 +370,13 @@ const EditScores = () => {
 									</h4>
 									<p>
 										{(event as AthleticsEvent).athleticsEventType ? (event as AthleticsEvent).athleticsEventType + " | " : ""}
-										{new Date(event.startTime).toLocaleString("en-US", {
+										{event.startTime ? new Date(event.startTime).toLocaleString("en-US", {
 											weekday: 'short',
 											month: 'short',
 											day: 'numeric',
 											hour: 'numeric',
 											minute: 'numeric',
-										})}
+										}) : "Time Unscheduled"}
 									</p>
 									<ul style={{ margin: '10px 0 0 20px', fontSize: '0.85rem', color: '#666' }}>
 										{event.event === EventCatagories.ATHLETICS
@@ -365,7 +396,7 @@ const EditScores = () => {
 									style={{ backgroundColor: event.isStarted ? '#e74c3c' : '#2ecc71' }}
 									onClick={async () => {
 										if (event!.isStarted) {
-											if ((event!.startTime as number) > new Date().getTime()) {
+											if (event!.startTime && (event!.startTime as number) > new Date().getTime()) {
 												setToast("Can't end this event right now!");
 												return;
 											}
@@ -398,6 +429,57 @@ const EditScores = () => {
 					) : (
 						<p className="empty-state">No events scheduled for the near future.</p>
 					)}
+				</div>
+			</div>
+
+			<div className="live-events-section" style={{ marginTop: '60px', borderTop: '2px dashed #ccc', paddingTop: '30px' }}>
+				<h2 className="admin-header" style={{ fontSize: '1.5rem', color: '#e67e22' }}>🛠️ Results Correction (Completed Matches)</h2>
+				<p style={{ color: '#666', marginBottom: '20px' }}>Use this section to fix scores or winners for matches that have already ended.</p>
+				<div className="live-events-grid">
+					{completedEvents.slice(-12).reverse().map((event, i) => (
+						<div key={i} className="live-event-admin-card" style={{ display: 'flex', flexDirection: 'column', gap: '8px', opacity: 0.95, border: '1px solid #ddd' }}>
+							{getEventBox(event, i)}
+
+							<div className="admin-actions-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+								<button
+									className="styledButton"
+									style={{ flex: 1.5, backgroundColor: '#3498db', fontWeight: 'bold' }}
+									onClick={() => submitScore(event._id!)}
+								>
+									💾 UPDATE SCORE
+								</button>
+								<button
+									className="styledButton"
+									style={{ flex: 1.5, backgroundColor: '#f39c12', color: 'white', fontWeight: 'bold' }}
+									onClick={() => {
+										setEventToToggle(event);
+										// Find current winner name
+										const currentWinnerName = event.winner?.team
+											? (typeof event.winner.team === 'string' ? event.winner.team : (event.winner.team as any).name)
+											: "DRAW";
+										setManualWinner(currentWinnerName);
+										openDialog();
+									}}
+								>
+									🏆 CHANGE WINNER
+								</button>
+								<button
+									className="styledButton"
+									style={{
+										width: '45px',
+										backgroundColor: '#ff3b30',
+										display: 'flex',
+										justifyContent: 'center',
+										alignItems: 'center'
+									}}
+									onClick={() => handleDeleteEvent(event._id!)}
+									title="Delete Result"
+								>
+									🗑️
+								</button>
+							</div>
+						</div>
+					))}
 				</div>
 			</div>
 
@@ -453,18 +535,30 @@ const EditScores = () => {
 												{ team: winnerTeam }
 											);
 										}
+									} else {
+										// Set winner as null/undefined for DRAW
+										await API.SetWinnerManually(
+											getAccessToken(),
+											eventToToggle!._id!,
+											{ team: null as any }
+										);
 									}
 
-									await API.ToggleEventStatus(
-										getAccessToken(),
-										eventToToggle!._id!
-									);
-
-									setToast("Match Ended - Winner Announced!");
+									if (!eventToToggle?.isCompleted) {
+										await API.ToggleEventStatus(
+											getAccessToken(),
+											eventToToggle!._id!
+										);
+										setToast("Match Ended - Winner Announced!");
+									} else {
+										setToast("Winner Correction Successful!");
+									}
 									setLoading(true);
 									fetchEvents();
 								} catch (error: any) {
-									setToast("Failed to end match correctly");
+									console.error(error);
+									const errorMsg = error.response?.data?.message || error.message || "Failed to end match";
+									setToast("❌ " + errorMsg);
 								}
 								confirmToggleDialog.current?.close();
 								setEventToToggle(undefined);

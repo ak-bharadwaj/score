@@ -1,8 +1,9 @@
 import FootballEvent, { FootballScore } from "../../types/FootballEvent";
 import "./LiveEventBox.css";
 import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import TeamLogo from "../TeamLogo";
-import { getEventGender } from "../../types/EventCategories";
+import { getEventGender, formatEventName } from "../../types/EventCategories";
 
 const FootballEventBox = ({
 	event,
@@ -18,8 +19,8 @@ const FootballEventBox = ({
 	return (
 		<div className={`liveEventBox ${gender}`}>
 			<span className="eventCategory">
-				<SportsSoccerIcon />
-				Football
+				<EmojiEventsIcon />
+				{formatEventName(event.event)}
 			</span>
 			{gender !== "unknown" && (
 				<div className="gender-tag-container">

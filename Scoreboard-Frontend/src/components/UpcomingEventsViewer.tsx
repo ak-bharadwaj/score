@@ -32,7 +32,7 @@ const UpcomingEventsViewer = ({
 						<div className="upcoming-card-header">
 							<span className="upcoming-sport">{event.event}</span>
 							<span className="upcoming-time-badge">
-								{new Date(event.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+								{event.startTime ? new Date(event.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "TBD"}
 							</span>
 						</div>
 
@@ -42,12 +42,12 @@ const UpcomingEventsViewer = ({
 							{event.teams && event.teams.length >= 2 ? (
 								<>
 									<div className="upcoming-team">
-										<TeamLogo src={event.teams[0].logoUrl} name={event.teams[0].name} size={24} />
+										<TeamLogo src={event.teams[0].logoUrl} name={event.teams[0].name} size={32} />
 										<span className="upcoming-team-name">{event.teams[0].name}</span>
 									</div>
 									<div className="upcoming-vs">VS</div>
 									<div className="upcoming-team">
-										<TeamLogo src={event.teams[1].logoUrl} name={event.teams[1].name} size={24} />
+										<TeamLogo src={event.teams[1].logoUrl} name={event.teams[1].name} size={32} />
 										<span className="upcoming-team-name">{event.teams[1].name}</span>
 									</div>
 								</>
@@ -58,7 +58,7 @@ const UpcomingEventsViewer = ({
 
 						<div className="upcoming-card-footer">
 							<span className="upcoming-date">
-								DAY {new Date(event.startTime).getDate() - StartingDate + 1} • {new Date(event.startTime).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+								DAY {event.startTime ? new Date(event.startTime).getDate() - StartingDate + 1 : "?"} • {event.startTime ? new Date(event.startTime).toLocaleDateString([], { month: 'short', day: 'numeric' }) : "TBD"}
 							</span>
 						</div>
 					</div>

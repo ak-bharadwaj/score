@@ -84,7 +84,8 @@ router.put("/updateScore/:id", async (req: AuthenticatedRequest, res, next) => {
     await new EventController().updateScore(req.params.id, req.body);
     res.sendStatus(204);
   } catch (error: any) {
-    next(error);
+    console.error("Score update failed:", error);
+    res.status(400).json({ message: error.message || "Score update failed" });
   }
 });
 
@@ -92,7 +93,19 @@ router.post("/:id/winner", async (req, res, next) => {
   try {
     await new EventController().setWinner(req.params.id, req.body);
     res.sendStatus(204);
+  } catch (error: any) {
+    console.error("Winner set failed:", error);
+    res.status(400).json({ message: error.message || "Failed to set winner" });
+  }
+});
+
+router.delete("/:id", async (req, res, next) => {
+  try {
+    console.log(`Deleting event: ${req.params.id}`);
+    await new EventController().deleteEvent(req.params.id);
+    res.sendStatus(204);
   } catch (error) {
+    console.error(`Error deleting event ${req.params.id}:`, error);
     next(error);
   }
 });

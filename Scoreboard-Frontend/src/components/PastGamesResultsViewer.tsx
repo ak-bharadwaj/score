@@ -64,7 +64,7 @@ const ResultLog = ({ event }: { event: Event }) => {
 			</div>
 			<div className="result-card-body horizontal-compact">
 				<div className={`team-side left ${winnerId === teamA?._id ? "win" : ""}`}>
-					<TeamLogo src={teamA?.logoUrl} name={teamA?.name || ""} size={26} />
+					<TeamLogo src={teamA?.logoUrl} name={teamA?.name || ""} size={34} />
 					<span className="t-name">{teamA?.name}</span>
 					<span className="t-score">{score?.teamA_points ?? "0"}</span>
 				</div>
@@ -72,7 +72,7 @@ const ResultLog = ({ event }: { event: Event }) => {
 				<div className={`team-side right ${winnerId === teamB?._id ? "win" : ""}`}>
 					<span className="t-score">{score?.teamB_points ?? "0"}</span>
 					<span className="t-name">{teamB?.name}</span>
-					<TeamLogo src={teamB?.logoUrl} name={teamB?.name || ""} size={26} />
+					<TeamLogo src={teamB?.logoUrl} name={teamB?.name || ""} size={34} />
 				</div>
 			</div>
 			<div className="result-card-footer">

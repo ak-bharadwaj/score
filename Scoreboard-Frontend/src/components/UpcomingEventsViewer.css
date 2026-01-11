@@ -71,7 +71,7 @@
 }
 
 .upcoming-sport {
-	font-size: 0.9rem;
+	font-size: 1.2rem;
 	font-weight: 800;
 	color: var(--accent-color);
 	letter-spacing: 2px;
@@ -79,19 +79,25 @@
 }
 
 .upcoming-time-badge {
-	font-size: 0.8rem;
-	background: rgba(255, 255, 255, 0.05);
-	padding: 3px 10px;
+	font-size: 1.2rem;
+	/* Increased slightly */
+	background: rgba(255, 255, 255, 0.1);
+	/* Lighter bg for contrast */
+	padding: 4px 12px;
 	border-radius: 4px;
 	color: #fff;
+	font-weight: 700;
+	/* Bold */
 }
 
 .upcoming-card-title {
-	font-size: 1.1rem;
+	font-size: 1.4rem;
 	color: #fff;
 	margin-bottom: 14px;
 	text-transform: uppercase;
 	letter-spacing: 1px;
+	font-weight: 700;
+	/* Explicit bold */
 }
 
 .upcoming-teams-row {
@@ -116,8 +122,9 @@
 }
 
 .upcoming-team-name {
-	font-size: 1.15rem;
-	font-weight: 700;
+	font-size: 1.4rem;
+	font-weight: 800;
+	/* Extra bold */
 	color: #fff;
 	white-space: nowrap;
 	overflow: hidden;
@@ -126,22 +133,28 @@
 }
 
 .upcoming-vs {
-	font-size: 0.8rem;
-	color: #555;
-	font-weight: bold;
+	font-size: 1.1rem;
+	/* Increased from 0.8rem */
+	color: #888;
+	/* Lighter grey */
+	font-weight: 800;
+	/* Extra bold */
 }
 
 .upcoming-card-footer {
-	border-top: 1px solid rgba(255, 255, 255, 0.05);
+	border-top: 1px solid rgba(255, 255, 255, 0.1);
 	padding-top: 12px;
 	display: flex;
 	justify-content: flex-end;
 }
 
 .upcoming-date {
-	font-size: 0.75rem;
-	color: #666;
+	font-size: 1.0rem;
+	/* Increased from 0.75rem */
+	color: #aaa;
 	letter-spacing: 1px;
+	font-weight: 600;
+	/* Bold */
 }
 
 .no-events-placeholder {

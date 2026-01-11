@@ -7,8 +7,8 @@ export default interface Event<T extends Score> {
   title: string;
   event: EventCatagories;
   isStarted?: boolean;
-  startTime: number;
-  endTime: number;
+  startTime?: number;
+  endTime?: number;
   score?: T;
   isCompleted?: boolean;
   teams: string[]; // list of teamIDs who are compeating

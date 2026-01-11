@@ -1,6 +1,6 @@
-import { Body, Example, Get, Patch, Path, Post, Put, Response, Route, Tags } from "tsoa";
+import { Body, Delete, Example, Get, Patch, Path, Post, Put, Response, Route, Tags } from "tsoa";
 
-import { getEventByID, readEvents, setWinner, toggleEventStarted, updateScore, updateVote } from "../utils/EventUtils";
+import { deleteEvent, getEventByID, readEvents, setWinner, toggleEventStarted, updateScore, updateVote } from "../utils/EventUtils";
 import TennisMenScoreUpdateRequest from "../requests/TennisMenScoreUpdateRequest";
 import TennisWomenScoreUpdateRequest from "../requests/TennisWomenScoreUpdateRequest";
 import ChessScoreUpdateRequest from "../requests/ChessScoreUpdateRequest";
@@ -22,6 +22,16 @@ export class EventController {
   @Response(400, "If you try to start or close a event before time or start a completed event, event doesn't exist")
   public async toggleLive(@Path("id") id: string) {
     await toggleEventStarted(id);
+  }
+
+  /**
+   * Deletes an event by its ID.
+   * @param id - The ID of the event to delete.
+   */
+  @Delete("/:id")
+  @Response(204)
+  public async deleteEvent(@Path("id") id: string) {
+    await deleteEvent(id);
   }
 
   /**
